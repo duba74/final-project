@@ -6,7 +6,7 @@ import migrations from "./model/migrations";
 import { createAdapter } from "./adapter";
 import { setGenerator } from "@nozbe/watermelondb/utils/common/randomId";
 
-import Item from "./model/Item";
+import Item from "./model/Module";
 
 setGenerator(() => randomUUID());
 
