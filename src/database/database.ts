@@ -6,15 +6,19 @@ import migrations from "./model/migrations";
 import { createAdapter } from "./adapter";
 import { setGenerator } from "@nozbe/watermelondb/utils/common/randomId";
 
-import Item from "./model/Module";
+import TrainingModule from "./model/TrainingModule";
+import TrainingEvent from "./model/TrainingEvent";
 
 setGenerator(() => randomUUID());
 
 const database = new Database({
     adapter: createAdapter({ schema /*, migrations*/ }),
-    modelClasses: [Item],
+    modelClasses: [TrainingModule, TrainingEvent],
 });
 
 export default database;
 
-export const itemsCollection = database.get<Item>("items");
+export const trainingModuleCollection =
+    database.get<TrainingModule>("training_module");
+export const trainingEventCollection =
+    database.get<TrainingEvent>("training_event");

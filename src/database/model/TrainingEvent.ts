@@ -7,7 +7,7 @@ import {
     readonly,
     immutableRelation,
 } from "@nozbe/watermelondb/decorators";
-import Module from "./Module";
+import TrainingModule from "./TrainingModule";
 
 export default class TrainingEvent extends Model {
     static table = "training_event";
@@ -23,5 +23,5 @@ export default class TrainingEvent extends Model {
     @nochange @field("location") location!: string;
     @text("comments") comments!: string;
 
-    @immutableRelation("module", "module_id") module!: Module;
+    @immutableRelation("training_module", "module_id") module!: TrainingModule;
 }
