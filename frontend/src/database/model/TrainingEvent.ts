@@ -1,4 +1,4 @@
-import { Model } from "@nozbe/watermelondb";
+import { Model, Relation } from "@nozbe/watermelondb";
 import {
     field,
     text,
@@ -12,7 +12,7 @@ import TrainingModule from "./TrainingModule";
 export default class TrainingEvent extends Model {
     static table = "training_event";
     static associations: {
-        module: { type: "belongs_to"; key: "module_id" };
+        training_module: { type: "belongs_to"; key: "training_module_id" };
     };
 
     @nochange @field("created_by") createdBy!: string;
@@ -23,5 +23,6 @@ export default class TrainingEvent extends Model {
     @nochange @field("location") location!: string;
     @text("comments") comments!: string;
 
-    @immutableRelation("training_module", "module_id") module!: TrainingModule;
+    @immutableRelation("training_module", "training_module_id")
+    trainingModule!: Relation<TrainingModule>;
 }

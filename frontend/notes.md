@@ -11,3 +11,7 @@
 -   Update the synced status in the WatermelonDB table; WatermelonDB just store the file name and/or URL, and its sync status
 -   [One approach with Express and Google Cloud](https://medium.com/google-cloud/upload-images-to-google-cloud-storage-with-react-native-and-expressjs-61b8874abc49)
 -   [Use this approach for Django](https://docs.djangoproject.com/en/5.1/topics/http/file-uploads/)
+
+## Example app with relations between models
+
+-   [WatemelonDB app with relations](https://gitlab.com/-/snippets/2361773)

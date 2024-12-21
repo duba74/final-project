@@ -9,7 +9,7 @@ export default appSchema({
                 { name: "created_by", type: "string" },
                 { name: "created_at", type: "number" },
                 { name: "updated_at", type: "number" },
-                { name: "module_id", type: "string" },
+                { name: "training_module_id", type: "string" },
                 { name: "scheduled_for", type: "number" },
                 { name: "completed_at", type: "number", isOptional: true },
                 { name: "location", type: "string", isOptional: true },
@@ -22,7 +22,7 @@ export default appSchema({
                 { name: "created_at", type: "number" },
                 { name: "updated_at", type: "number" },
                 { name: "name", type: "string" },
-                // { name: "country_code", type: "string" },
+                { name: "country_code", type: "string" },
                 { name: "topic", type: "string" },
                 { name: "start_date", type: "number" },
                 { name: "end_date", type: "number" },
@@ -104,13 +104,13 @@ export default appSchema({
         //         { name: "country_code", type: "string" },
         //     ],
         // }),
-        // tableSchema({
-        //     name: "country",
-        //     columns: [
-        //         { name: "code", type: "string" },
-        //         { name: "name", type: "string" },
-        //     ],
-        // }),
+        tableSchema({
+            name: "country",
+            columns: [
+                { name: "code", type: "string" },
+                { name: "name", type: "string" },
+            ],
+        }),
         // tableSchema({
         //     name: "trainer",
         //     columns: [
