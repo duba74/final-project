@@ -20,7 +20,7 @@ const sync = async () => {
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
 
-            const url = `${host}/api/pull/?${urlParams}`;
+            const url = `${host}/api/sync/?${urlParams}`;
 
             console.log(url);
 
@@ -45,10 +45,9 @@ const sync = async () => {
             console.log(`🍉 Changes:`);
             console.log(changes);
 
-            // const urlParams = `lastPulledAt=${lastPulledAt}`;
+            const urlParams = `lastPulledAt=${lastPulledAt}`;
 
-            const url = `${host}/api/push/`;
-            // const url = `${host}/api/push/?${urlParams}`;
+            const url = `${host}/api/sync/${urlParams}`;
 
             const payload = JSON.stringify({
                 changes,

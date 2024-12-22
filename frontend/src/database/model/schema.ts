@@ -4,28 +4,30 @@ export default appSchema({
     version: 2,
     tables: [
         tableSchema({
-            name: "training_event",
-            columns: [
-                { name: "created_by", type: "string" },
-                { name: "created_at", type: "number" },
-                { name: "updated_at", type: "number" },
-                { name: "training_module_id", type: "string" },
-                { name: "scheduled_for", type: "number" },
-                { name: "completed_at", type: "number", isOptional: true },
-                { name: "location", type: "string", isOptional: true },
-                { name: "comments", type: "string", isOptional: true },
-            ],
-        }),
-        tableSchema({
             name: "training_module",
             columns: [
                 { name: "created_at", type: "number" },
                 { name: "updated_at", type: "number" },
                 { name: "name", type: "string" },
-                // { name: "country_code", type: "string" },
+                // { name: "country", type: "string" },
                 { name: "topic", type: "string" },
                 { name: "start_date", type: "number" },
                 { name: "end_date", type: "number" },
+            ],
+        }),
+        tableSchema({
+            name: "training_event",
+            columns: [
+                { name: "created_by", type: "string" },
+                { name: "created_at", type: "number" },
+                { name: "updated_at", type: "number" },
+                { name: "training_module", type: "string" },
+                { name: "scheduled_for", type: "number" },
+                { name: "scheduled_time", type: "string" },
+                // { name: "village", type: "string" },
+                { name: "completed_at", type: "number", isOptional: true },
+                { name: "location", type: "string", isOptional: true },
+                { name: "comments", type: "string", isOptional: true },
             ],
         }),
         // tableSchema({
