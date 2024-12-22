@@ -28,13 +28,16 @@ class SyncModel(models.Model):
         if isinstance(self.updated_at, (int, float)):
             self.updated_at = convert_to_tz_aware_datetime(self.updated_at)
 
-        if self.deleted_at and isinstance(self.deleted_at, (int, float)):
-            self.deleted_at = convert_to_tz_aware_datetime(self.deleted_at)
+        if self.server_deleted_at and isinstance(self.server_deleted_at, (int, float)):
+            self.server_deleted_at = convert_to_tz_aware_datetime(
+                self.server_deleted_at
+            )
 
         super().save(*args, **kwargs)
 
 
 class TrainingModule(SyncModel):
+    code = models.CharField(max_length=15, unique=True, null=False, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False)
     topic = models.CharField(max_length=255, null=False, blank=False)
     start_date = models.DateField(null=False, blank=False)

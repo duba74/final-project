@@ -1,3 +1,13 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import TrainingModule, TrainingEvent
+
+
+@admin.register(TrainingModule)
+class TrainingModuleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(TrainingEvent)
+class TrainingEventAdmin(admin.ModelAdmin):
+    pass
