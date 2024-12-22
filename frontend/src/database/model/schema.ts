@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 export default appSchema({
-    version: 2,
+    version: 1,
     tables: [
         tableSchema({
             name: "training_module",
@@ -106,13 +106,13 @@ export default appSchema({
         //         { name: "country_code", type: "string" },
         //     ],
         // }),
-        tableSchema({
-            name: "country",
-            columns: [
-                { name: "code", type: "string" },
-                { name: "name", type: "string" },
-            ],
-        }),
+        // tableSchema({
+        //     name: "country",
+        //     columns: [
+        //         { name: "code", type: "string" },
+        //         { name: "name", type: "string" },
+        //     ],
+        // }),
         // tableSchema({
         //     name: "trainer",
         //     columns: [

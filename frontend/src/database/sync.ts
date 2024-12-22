@@ -19,13 +19,10 @@ const sync = async () => {
 
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
-
             const url = `${host}/api/sync/?${urlParams}`;
-
             console.log(url);
 
             const response = await fetch(url);
-
             if (!response.ok) {
                 throw new Error(await response.text());
             }
@@ -46,13 +43,12 @@ const sync = async () => {
             console.log(changes);
 
             const urlParams = `lastPulledAt=${lastPulledAt}`;
-
             const url = `${host}/api/sync/${urlParams}`;
-
             const payload = JSON.stringify({
                 changes,
                 lastPulledAt,
             });
+
             console.log("payload");
             console.log(payload);
 
@@ -63,7 +59,6 @@ const sync = async () => {
                 },
                 body: payload,
             });
-
             if (!response.ok) {
                 throw new Error(await response.text());
             }
