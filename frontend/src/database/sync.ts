@@ -6,7 +6,7 @@ const sync = async () => {
     const host =
         Platform.OS === "web"
             ? "http://127.0.0.1:8000"
-            : "https://f7f7-41-216-54-176.ngrok-free.app";
+            : "https://90bc-41-216-53-252.ngrok-free.app";
 
     await synchronize({
         database,
