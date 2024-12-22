@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 export default appSchema({
-    version: 1,
+    version: 2,
     tables: [
         tableSchema({
             name: "training_event",
@@ -22,7 +22,7 @@ export default appSchema({
                 { name: "created_at", type: "number" },
                 { name: "updated_at", type: "number" },
                 { name: "name", type: "string" },
-                { name: "country_code", type: "string" },
+                // { name: "country_code", type: "string" },
                 { name: "topic", type: "string" },
                 { name: "start_date", type: "number" },
                 { name: "end_date", type: "number" },

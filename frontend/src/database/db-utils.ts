@@ -1,7 +1,7 @@
 import database, {
     trainingEventCollection,
     trainingModuleCollection,
-} from "../database";
+} from "./database";
 
 export const logRecords = async (collection: string) => {
     let data;

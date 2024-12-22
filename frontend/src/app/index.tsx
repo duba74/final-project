@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native";
-import { addTrainingModule, logRecords } from "../database/model/db-utils";
+import { addTrainingModule, logRecords } from "../database/db-utils";
 import database, {
     trainingEventCollection,
     trainingModuleCollection,
