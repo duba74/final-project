@@ -1,6 +1,7 @@
 import database, {
     trainingEventCollection,
     trainingModuleCollection,
+    villageCollection,
 } from "./database";
 
 export const logRecords = async (collection: string) => {
@@ -14,6 +15,9 @@ export const logRecords = async (collection: string) => {
         case "trainingEvent":
             data = await trainingEventCollection.query().fetch();
             break;
+
+        case "village":
+            data = await villageCollection.query().fetch();
 
         default:
             break;

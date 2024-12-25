@@ -3,10 +3,10 @@ import database from "./database";
 import { Platform } from "react-native";
 
 const sync = async () => {
-    const host =
+    const host = //"https://d2e1-197-234-221-131.ngrok-free.app";
         Platform.OS === "web"
             ? "http://127.0.0.1:8000"
-            : "https://90bc-41-216-53-252.ngrok-free.app";
+            : "https://d2e1-197-234-221-131.ngrok-free.app";
 
     await synchronize({
         database,
@@ -27,6 +27,7 @@ const sync = async () => {
                 throw new Error(await response.text());
             }
 
+            console.log(await response.text());
             const { changes, timestamp } = await response.json();
 
             console.log(`🍉 Pull succeeded at timestamp = ${timestamp}`);

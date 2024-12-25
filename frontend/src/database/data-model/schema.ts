@@ -9,7 +9,7 @@ export default appSchema({
                 { name: "created_at", type: "number" },
                 { name: "updated_at", type: "number" },
                 { name: "name", type: "string" },
-                // { name: "country", type: "string" },
+                { name: "country", type: "string" },
                 { name: "topic", type: "string" },
                 { name: "start_date", type: "number" },
                 { name: "end_date", type: "number" },
@@ -24,7 +24,7 @@ export default appSchema({
                 { name: "training_module", type: "string" },
                 { name: "scheduled_for", type: "number" },
                 { name: "scheduled_time", type: "string" },
-                // { name: "village", type: "string" },
+                { name: "village", type: "string" },
                 { name: "completed_at", type: "number", isOptional: true },
                 { name: "location", type: "string", isOptional: true },
                 { name: "comments", type: "string", isOptional: true },
@@ -79,40 +79,40 @@ export default appSchema({
         //         { name: "is_leader", type: "boolean", isOptional: true },
         //     ],
         // }),
-        // tableSchema({
-        //     name: "village",
-        //     columns: [
-        //         { name: "code", type: "string" },
-        //         { name: "name", type: "string" },
-        //         { name: "zone_code", type: "string" },
-        //         { name: "district_code", type: "string" },
-        //         { name: "country_code", type: "string" },
-        //     ],
-        // }),
-        // tableSchema({
-        //     name: "zone",
-        //     columns: [
-        //         { name: "code", type: "string" },
-        //         { name: "name", type: "string" },
-        //         { name: "district_code", type: "string" },
-        //         { name: "country_code", type: "string" },
-        //     ],
-        // }),
-        // tableSchema({
-        //     name: "district",
-        //     columns: [
-        //         { name: "code", type: "string" },
-        //         { name: "name", type: "string" },
-        //         { name: "country_code", type: "string" },
-        //     ],
-        // }),
-        // tableSchema({
-        //     name: "country",
-        //     columns: [
-        //         { name: "code", type: "string" },
-        //         { name: "name", type: "string" },
-        //     ],
-        // }),
+        tableSchema({
+            name: "village",
+            columns: [
+                { name: "code", type: "string" },
+                { name: "name", type: "string" },
+                { name: "zone", type: "string" },
+                { name: "district", type: "string" },
+                { name: "country", type: "string" },
+            ],
+        }),
+        tableSchema({
+            name: "zone",
+            columns: [
+                { name: "code", type: "string" },
+                { name: "name", type: "string" },
+                { name: "district", type: "string" },
+                { name: "country", type: "string" },
+            ],
+        }),
+        tableSchema({
+            name: "district",
+            columns: [
+                { name: "code", type: "string" },
+                { name: "name", type: "string" },
+                { name: "country", type: "string" },
+            ],
+        }),
+        tableSchema({
+            name: "country",
+            columns: [
+                { name: "code", type: "string" },
+                { name: "name", type: "string" },
+            ],
+        }),
         // tableSchema({
         //     name: "trainer",
         //     columns: [

@@ -1,12 +1,14 @@
-import { Model, Query } from "@nozbe/watermelondb";
+import { Model, Query, Relation } from "@nozbe/watermelondb";
 import {
     text,
     date,
     readonly,
     children,
     writer,
+    immutableRelation,
 } from "@nozbe/watermelondb/decorators";
-import TrainingEvent from "./TrainingEvent";
+import TrainingEvent from "./models/TrainingEvent";
+import Country from "./models/Country";
 
 export default class TrainingModule extends Model {
     static table = "training_module";
@@ -21,8 +23,11 @@ export default class TrainingModule extends Model {
     @readonly @date("updated_at") updatedAt!: number;
     @text("name") name!: string;
     @text("topic") topic!: string;
-    /*@readonly*/ @date("start_date") startDate!: number;
-    /*@readonly*/ @date("end_date") endDate!: number;
+    @readonly @date("start_date") startDate!: number;
+    @readonly @date("end_date") endDate!: number;
+
+    @immutableRelation("country", "country") country!: Relation<Country>;
+
     @children("training_event") trainingEvents!: Query<TrainingEvent>;
 
     @writer async addTrainingEvent(scheduledFor: string | Date = "2024-12-01") {
