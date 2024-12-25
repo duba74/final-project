@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils import timezone
 from .utils import convert_to_tz_aware_datetime
@@ -7,7 +9,7 @@ class SyncModel(models.Model):
     class Meta:
         abstract = True
 
-    id = models.UUIDField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     created_at = models.DateTimeField(null=False, blank=False)
     updated_at = models.DateTimeField(null=False, blank=False)
     # server_created_at = models.DateTimeField(default=timezone.now)
@@ -64,6 +66,10 @@ class TrainingEvent(SyncModel):
         choices=(("AM", "AM"), ("PM", "PM")),
         default="AM",
     )
+    village = models.ForeignKey(
+        "Village", on_delete=models.CASCADE, null=False, blank=False
+    )  # TEMPORARY, SINCE THIS FIELD ISN'T MANAGED ON THE APP DB
+    # village = models.CharField(max_length=7, null=False, blank=False)
     completed_at = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
@@ -86,4 +92,40 @@ class TrainingEvent(SyncModel):
     )
 
     def __str__(self):
-        return f"{self.scheduled_for}, {self.scheduled_time}"
+        return f"{self.village} - {self.scheduled_for}, {self.scheduled_time}"
+
+
+class Country(models.Model):
+    code = models.CharField(primary_key=True, max_length=2, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False)
+
+
+class District(models.Model):
+    code = models.CharField(primary_key=True, max_length=7, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False)
+    country = models.ForeignKey(
+        Country, on_delete=models.CASCADE, null=False, blank=False
+    )
+
+
+class Zone(models.Model):
+    code = models.CharField(primary_key=True, max_length=7, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False)
+    district = models.ForeignKey(
+        District, on_delete=models.CASCADE, null=False, blank=False
+    )
+    country = models.ForeignKey(
+        Country, on_delete=models.CASCADE, null=False, blank=False
+    )
+
+
+class Village(models.Model):
+    code = models.CharField(primary_key=True, max_length=7, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False)
+    zone = models.ForeignKey(Zone, on_delete=models.CASCADE, null=False, blank=False)
+    district = models.ForeignKey(
+        District, on_delete=models.CASCADE, null=False, blank=False
+    )
+    country = models.ForeignKey(
+        Country, on_delete=models.CASCADE, null=False, blank=False
+    )
