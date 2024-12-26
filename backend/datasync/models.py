@@ -95,21 +95,36 @@ class TrainingEvent(SyncModel):
         return f"{self.village} - {self.scheduled_for}, {self.scheduled_time}"
 
 
-class Country(models.Model):
-    code = models.CharField(primary_key=True, max_length=2, null=False, blank=False)
+class Country(SyncModel):
+    code = models.CharField(unique=True, max_length=2, null=False, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False)
 
+    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
+        [
+            "code",
+            "name",
+        ]
+    )
 
-class District(models.Model):
-    code = models.CharField(primary_key=True, max_length=7, null=False, blank=False)
+
+class District(SyncModel):
+    code = models.CharField(unique=True, max_length=7, null=False, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False)
     country = models.ForeignKey(
         Country, on_delete=models.CASCADE, null=False, blank=False
     )
 
+    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
+        [
+            "code",
+            "name",
+            "country",
+        ]
+    )
 
-class Zone(models.Model):
-    code = models.CharField(primary_key=True, max_length=7, null=False, blank=False)
+
+class Zone(SyncModel):
+    code = models.CharField(unique=True, max_length=7, null=False, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False)
     district = models.ForeignKey(
         District, on_delete=models.CASCADE, null=False, blank=False
@@ -118,9 +133,18 @@ class Zone(models.Model):
         Country, on_delete=models.CASCADE, null=False, blank=False
     )
 
+    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
+        [
+            "code",
+            "name",
+            "district",
+            "country",
+        ]
+    )
 
-class Village(models.Model):
-    code = models.CharField(primary_key=True, max_length=7, null=False, blank=False)
+
+class Village(SyncModel):
+    code = models.CharField(unique=True, max_length=7, null=False, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False)
     zone = models.ForeignKey(Zone, on_delete=models.CASCADE, null=False, blank=False)
     district = models.ForeignKey(
@@ -128,4 +152,14 @@ class Village(models.Model):
     )
     country = models.ForeignKey(
         Country, on_delete=models.CASCADE, null=False, blank=False
+    )
+
+    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
+        [
+            "code",
+            "name",
+            "zone",
+            "district",
+            "country",
+        ]
     )
