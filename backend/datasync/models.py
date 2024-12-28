@@ -1,7 +1,5 @@
 import uuid
-
 from django.db import models
-from django.utils import timezone
 from .utils import convert_to_tz_aware_datetime
 
 
@@ -42,6 +40,7 @@ class TrainingModule(SyncModel):
     code = models.CharField(max_length=15, unique=True, null=False, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False)
     topic = models.CharField(max_length=255, null=False, blank=False)
+    country = models.CharField(max_length=2, null=False, blank=False)
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=False, blank=False)
 
@@ -49,6 +48,7 @@ class TrainingModule(SyncModel):
         [
             "name",
             "topic",
+            "country",
             "start_date",
             "end_date",
         ]
@@ -66,10 +66,7 @@ class TrainingEvent(SyncModel):
         choices=(("AM", "AM"), ("PM", "PM")),
         default="AM",
     )
-    village = models.ForeignKey(
-        "Village", on_delete=models.CASCADE, null=False, blank=False
-    )  # TEMPORARY, SINCE THIS FIELD ISN'T MANAGED ON THE APP DB
-    # village = models.CharField(max_length=7, null=False, blank=False)
+    village = models.CharField(max_length=7, null=False, blank=False)
     completed_at = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
@@ -84,6 +81,7 @@ class TrainingEvent(SyncModel):
         [
             "scheduled_for",
             "scheduled_time",
+            "village",
             "completed_at",
             "location",
             "comments",
@@ -93,73 +91,3 @@ class TrainingEvent(SyncModel):
 
     def __str__(self):
         return f"{self.village} - {self.scheduled_for}, {self.scheduled_time}"
-
-
-class Country(SyncModel):
-    code = models.CharField(unique=True, max_length=2, null=False, blank=False)
-    name = models.CharField(max_length=255, null=False, blank=False)
-
-    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
-        [
-            "code",
-            "name",
-        ]
-    )
-
-
-class District(SyncModel):
-    code = models.CharField(unique=True, max_length=7, null=False, blank=False)
-    name = models.CharField(max_length=255, null=False, blank=False)
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=False, blank=False
-    )
-
-    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
-        [
-            "code",
-            "name",
-            "country",
-        ]
-    )
-
-
-class Zone(SyncModel):
-    code = models.CharField(unique=True, max_length=7, null=False, blank=False)
-    name = models.CharField(max_length=255, null=False, blank=False)
-    district = models.ForeignKey(
-        District, on_delete=models.CASCADE, null=False, blank=False
-    )
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=False, blank=False
-    )
-
-    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
-        [
-            "code",
-            "name",
-            "district",
-            "country",
-        ]
-    )
-
-
-class Village(SyncModel):
-    code = models.CharField(unique=True, max_length=7, null=False, blank=False)
-    name = models.CharField(max_length=255, null=False, blank=False)
-    zone = models.ForeignKey(Zone, on_delete=models.CASCADE, null=False, blank=False)
-    district = models.ForeignKey(
-        District, on_delete=models.CASCADE, null=False, blank=False
-    )
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=False, blank=False
-    )
-
-    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
-        [
-            "code",
-            "name",
-            "zone",
-            "district",
-            "country",
-        ]
-    )

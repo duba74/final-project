@@ -3,7 +3,7 @@ import database from "./database";
 import { Platform } from "react-native";
 
 const sync = async () => {
-    const host = //"https://d2e1-197-234-221-131.ngrok-free.app";
+    const host =
         Platform.OS === "web"
             ? "http://127.0.0.1:8000"
             : "https://d2e1-197-234-221-131.ngrok-free.app";

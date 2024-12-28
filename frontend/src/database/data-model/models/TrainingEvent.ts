@@ -7,7 +7,7 @@ import {
     readonly,
     immutableRelation,
 } from "@nozbe/watermelondb/decorators";
-import TrainingModule from "../TrainingModule";
+import TrainingModule from "./TrainingModule";
 import Village from "./Village";
 
 export default class TrainingEvent extends Model {

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TrainingModule, TrainingEvent, Village, Zone, District, Country
+from .models import TrainingModule, TrainingEvent
 
 
 class UNIXTimestampField(serializers.Field):
@@ -23,27 +23,3 @@ class TrainingEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrainingEvent
         exclude = ["server_deleted_at"]
-
-
-class VillageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Village
-        fields = "__all__"
-
-
-class ZoneSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Zone
-        fields = "__all__"
-
-
-class DistrictSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = District
-        fields = "__all__"
-
-
-class CountrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Country
-        fields = "__all__"

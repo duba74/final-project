@@ -15,8 +15,9 @@ export default class TrainingModule extends Model {
     static associations = {
         training_event: {
             type: <const>"has_many",
-            foreignKey: "training_module_id",
+            foreignKey: "training_module",
         },
+        country: { type: <const>"belongs_to", key: "country" },
     };
 
     @readonly @date("created_at") createdAt!: number;

@@ -6,14 +6,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import TrainingModule, TrainingEvent, Village, Zone, District, Country
+from .models import TrainingModule, TrainingEvent
 from .serializers import (
     TrainingModuleSerializer,
     TrainingEventSerializer,
-    VillageSerializer,
-    ZoneSerializer,
-    DistrictSerializer,
-    CountrySerializer,
 )
 from .utils import convert_to_tz_aware_datetime, get_min_time, get_syncable_fields
 
@@ -40,12 +36,6 @@ class Sync(APIView):
                 "training_event": self.get_changes(
                     TrainingEvent, TrainingEventSerializer, last_pulled_at
                 ),
-                "village": self.get_changes(Village, VillageSerializer, last_pulled_at),
-                "zone": self.get_changes(Zone, ZoneSerializer, last_pulled_at),
-                "district": self.get_changes(
-                    District, DistrictSerializer, last_pulled_at
-                ),
-                "country": self.get_changes(Country, CountrySerializer, last_pulled_at),
             },
             "timestamp": self.get_unique_monotonic_timestamp(),
         }

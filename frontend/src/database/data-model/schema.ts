@@ -82,7 +82,6 @@ export default appSchema({
         tableSchema({
             name: "village",
             columns: [
-                { name: "code", type: "string" },
                 { name: "name", type: "string" },
                 { name: "zone", type: "string" },
                 { name: "district", type: "string" },
@@ -92,7 +91,6 @@ export default appSchema({
         tableSchema({
             name: "zone",
             columns: [
-                { name: "code", type: "string" },
                 { name: "name", type: "string" },
                 { name: "district", type: "string" },
                 { name: "country", type: "string" },
@@ -101,7 +99,6 @@ export default appSchema({
         tableSchema({
             name: "district",
             columns: [
-                { name: "code", type: "string" },
                 { name: "name", type: "string" },
                 { name: "country", type: "string" },
             ],
@@ -109,7 +106,6 @@ export default appSchema({
         tableSchema({
             name: "country",
             columns: [
-                { name: "code", type: "string" },
                 { name: "name", type: "string" },
             ],
         }),

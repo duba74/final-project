@@ -17,7 +17,6 @@ export default class District extends Model {
         country: { type: <const>"belongs_to", key: "country" },
     };
 
-    @readonly @field("code") code!: string;
     @readonly @field("name") name!: string;
 
     @children("village") villages!: Query<Village>;

@@ -22,7 +22,6 @@ export default class Country extends Model {
         district: { type: <const>"has_many", foreignKey: "country" },
     };
 
-    @readonly @field("code") code!: string;
     @readonly @field("name") name!: string;
 
     @children("training_module") trainingModules!: Query<TrainingModule>;
