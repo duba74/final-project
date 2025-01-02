@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import TrainingModule, TrainingEvent, Country, District, Zone, Village
+from .models import TrainingModule, TrainingEvent
 
 
 @admin.register(TrainingModule)
@@ -10,24 +10,4 @@ class TrainingModuleAdmin(admin.ModelAdmin):
 
 @admin.register(TrainingEvent)
 class TrainingEventAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Village)
-class VillageAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Zone)
-class VillageAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(District)
-class VillageAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Country)
-class VillageAdmin(admin.ModelAdmin):
     pass

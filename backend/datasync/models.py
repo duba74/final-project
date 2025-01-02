@@ -39,9 +39,7 @@ class SyncModel(models.Model):
 class TrainingModule(SyncModel):
     name = models.CharField(max_length=255, null=False, blank=False)
     topic = models.CharField(max_length=255, null=False, blank=False)
-    country = models.ForeignKey(
-        "Country", null=False, blank=False, on_delete=models.CASCADE
-    )
+    country = models.CharField(max_length=7, null=False, blank=False)
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=False, blank=False)
 
@@ -67,9 +65,7 @@ class TrainingEvent(SyncModel):
         choices=(("AM", "AM"), ("PM", "PM")),
         default="AM",
     )
-    village = models.ForeignKey(
-        "Village", null=False, blank=False, on_delete=models.CASCADE
-    )
+    village = models.CharField(max_length=7, null=False, blank=False)
     completed_at = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
@@ -94,54 +90,3 @@ class TrainingEvent(SyncModel):
 
     def __str__(self):
         return f"{self.village} - {self.scheduled_for}, {self.scheduled_time}"
-
-
-class Country(SyncModel):
-    name = models.CharField(max_length=80, unique=True, null=False, blank=False)
-
-    def __str__(self):
-        return f"{self.id} - {self.name}"
-
-
-class District(models.Model):
-    name = models.CharField(max_length=255, null=False, blank=False)
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=False, blank=False
-    )
-
-    def __str__(self):
-        return f"{self.id} - {self.name}"
-
-
-class Zone(models.Model):
-    name = models.CharField(max_length=255, null=False, blank=False)
-    district = models.ForeignKey(
-        District, on_delete=models.CASCADE, null=False, blank=False
-    )
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=False, blank=False
-    )
-
-    def __str__(self):
-        return f"{self.id} - {self.name}"
-
-
-class Village(models.Model):
-    name = models.CharField(max_length=255, null=False, blank=False)
-    is_active = models.BooleanField(null=False, blank=False, default=False)
-    latitude = models.DecimalField(
-        max_digits=9, decimal_places=6, null=True, blank=True
-    )
-    latitude = models.DecimalField(
-        max_digits=9, decimal_places=6, null=True, blank=True
-    )
-    zone = models.ForeignKey(Zone, on_delete=models.CASCADE, null=False, blank=False)
-    district = models.ForeignKey(
-        District, on_delete=models.CASCADE, null=False, blank=False
-    )
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=False, blank=False
-    )
-
-    def __str__(self):
-        return f"{self.id} - {self.name}"

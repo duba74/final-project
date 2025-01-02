@@ -4,7 +4,7 @@ import database, {
     trainingEventCollection,
     trainingModuleCollection,
 } from "../database/database";
-import sync from "../database/sync";
+import sync from "../database/main-sync";
 
 export default function Index() {
     const createTrainingEvent = async (date: string | Date = new Date()) => {

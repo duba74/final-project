@@ -1,3 +1,5 @@
+import requests
+
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import Max
@@ -14,7 +16,7 @@ from .serializers import (
 from .utils import convert_to_tz_aware_datetime, get_min_time, get_syncable_fields
 
 
-class Sync(APIView):
+class MainSync(APIView):
     def get(self, request, *args, **kwargs):
         last_pulled_at = request.query_params.get("lastPulledAt")
 
@@ -168,3 +170,32 @@ class Sync(APIView):
             if obj:
                 obj.server_deleted_at = timezone.now()
                 obj.save()
+
+
+class SecondarySync(APIView):
+    def get(self, request, *args, **kwargs):
+        last_pulled_at = request.query_params.get("lastPulledAt")
+
+        # Call the core services API to get
+        # Assignments
+        # Villages (based on assignments)
+        # Clients (based on assignments)
+
+        # Return the stuff received from CS API
+        respose_data = {
+            "changes": {
+                "village": {
+                    "created": [],
+                    "updated": self.get_village(),  # All the data in this one,
+                    "deleted": [],
+                }
+            },
+            "timestamp": last_pulled_at,  # Just return the time that came with request
+        }
+
+    def get_villages(self):
+        url = "http://127.0.0.1:8000/coreservices/api/villages/"
+
+        r = requests.get(url)
+
+        print(r.data)

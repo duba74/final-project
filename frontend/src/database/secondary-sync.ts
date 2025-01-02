@@ -2,7 +2,7 @@ import { synchronize } from "@nozbe/watermelondb/sync";
 import database from "./database";
 import { Platform } from "react-native";
 
-const sync = async () => {
+const secondarySync = async () => {
     const host =
         Platform.OS === "web"
             ? "http://127.0.0.1:8000"
@@ -14,12 +14,12 @@ const sync = async () => {
             lastPulledAt /*, schemaVersion, migration*/,
         }) => {
             console.log(
-                `🍉 Attempting pull with lastPulledAt = ${lastPulledAt}`
+                `🍉 Secondary sync - Attempting pull with lastPulledAt = ${lastPulledAt}`
             );
 
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
-            const url = `${host}/api/sync/?${urlParams}`;
+            const url = `${host}/api/secondary-sync/?${urlParams}`;
             console.log(url);
 
             const response = await fetch(url);
@@ -36,37 +36,8 @@ const sync = async () => {
 
             return { changes, timestamp };
         },
-        pushChanges: async ({ changes, lastPulledAt }) => {
-            console.log(
-                `🍉 Attempting push with lastPulledAt = ${lastPulledAt}`
-            );
-            console.log(`🍉 Changes:`);
-            console.log(changes);
-
-            const urlParams = `lastPulledAt=${lastPulledAt}`;
-            const url = `${host}/api/sync/${urlParams}`;
-            const payload = JSON.stringify({
-                changes,
-                lastPulledAt,
-            });
-
-            console.log("payload");
-            console.log(payload);
-
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: payload,
-            });
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-
-            console.log(`🍉 Push successful`);
-        },
+        sendCreatedAsUpdated: true,
     });
 };
 
-export default sync;
+export default secondarySync;

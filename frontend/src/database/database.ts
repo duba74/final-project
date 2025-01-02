@@ -21,9 +21,9 @@ const database = new Database({
         TrainingModule,
         TrainingEvent,
         Village,
-        Zone,
-        District,
-        Country,
+        // Zone,
+        // District,
+        // Country,
     ],
 });
 
@@ -34,6 +34,6 @@ export const trainingModuleCollection =
 export const trainingEventCollection =
     database.get<TrainingEvent>("training_event");
 export const villageCollection = database.get<Village>("village");
-export const zoneCollection = database.get<Zone>("zone");
-export const districtCollection = database.get<District>("district");
-export const countryCollection = database.get<Country>("country");
+// export const zoneCollection = database.get<Zone>("zone");
+// export const districtCollection = database.get<District>("district");
+// export const countryCollection = database.get<Country>("country");

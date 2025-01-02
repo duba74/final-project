@@ -83,47 +83,25 @@ export default appSchema({
             name: "village",
             columns: [
                 { name: "name", type: "string" },
-                { name: "zone", type: "string" },
-                { name: "district", type: "string" },
-                { name: "country", type: "string" },
+                { name: "is_active", type: "boolean" },
+                { name: "zone_code", type: "string" },
+                { name: "zone_name", type: "string" },
+                { name: "district_code", type: "string" },
+                { name: "district_name", type: "string" },
+                { name: "country_code", type: "string" },
+                { name: "country_name", type: "string" },
+                { name: "latitude", type: "number" },
+                { name: "longitude", type: "number" },
             ],
         }),
         tableSchema({
-            name: "zone",
+            name: "assignment",
             columns: [
-                { name: "name", type: "string" },
-                { name: "district", type: "string" },
-                { name: "country", type: "string" },
+                { name: "trainer", type: "string" },
+                { name: "village", type: "string" },
+                { name: "start_date", type: "number" },
+                { name: "end_date", type: "number", isOptional: true },
             ],
         }),
-        tableSchema({
-            name: "district",
-            columns: [
-                { name: "name", type: "string" },
-                { name: "country", type: "string" },
-            ],
-        }),
-        tableSchema({
-            name: "country",
-            columns: [
-                { name: "name", type: "string" },
-            ],
-        }),
-        // tableSchema({
-        //     name: "trainer",
-        //     columns: [
-        //         { name: "first_name", type: "string" },
-        //         { name: "last_name", type: "string" },
-        //     ],
-        // }),
-        // tableSchema({
-        //     name: "assignment",
-        //     columns: [
-        //         { name: "trainer_id", type: "string" },
-        //         { name: "village_code", type: "string" },
-        //         { name: "start_date", type: "number" },
-        //         { name: "end_date", type: "number", isOptional: true },
-        //     ],
-        // }),
     ],
 });
