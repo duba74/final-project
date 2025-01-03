@@ -27,12 +27,12 @@ const secondarySync = async () => {
                 throw new Error(await response.text());
             }
 
-            console.log(await response.text());
+            // console.log(await response.text());
             const { changes, timestamp } = await response.json();
 
             console.log(`🍉 Pull succeeded at timestamp = ${timestamp}`);
             console.log(`🍉 Pull succeeded with changes:`);
-            console.log(changes);
+            // console.log(changes);
 
             return { changes, timestamp };
         },

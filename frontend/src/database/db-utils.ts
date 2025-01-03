@@ -23,10 +23,13 @@ export const logRecords = async (collection: string) => {
             break;
     }
 
-    if (data)
+    if (data) {
+        if (data.length < 1) console.log("No records");
+
         data.forEach((e) => {
             console.log(JSON.stringify(e._raw, null, 4));
         });
+    }
 };
 
 export const addTrainingModule = async (

@@ -94,14 +94,14 @@ export default appSchema({
                 { name: "longitude", type: "number" },
             ],
         }),
-        tableSchema({
-            name: "assignment",
-            columns: [
-                { name: "trainer", type: "string" },
-                { name: "village", type: "string" },
-                { name: "start_date", type: "number" },
-                { name: "end_date", type: "number", isOptional: true },
-            ],
-        }),
+        // tableSchema({
+        //     name: "assignment",
+        //     columns: [
+        //         { name: "trainer", type: "string" },
+        //         { name: "village", type: "string" },
+        //         { name: "start_date", type: "number" },
+        //         { name: "end_date", type: "number", isOptional: true },
+        //     ],
+        // }),
     ],
 });

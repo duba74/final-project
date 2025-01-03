@@ -27,7 +27,7 @@ const mainSync = async () => {
                 throw new Error(await response.text());
             }
 
-            console.log(await response.text());
+            // console.log(await response.text());
             const { changes, timestamp } = await response.json();
 
             console.log(`🍉 Pull succeeded at timestamp = ${timestamp}`);

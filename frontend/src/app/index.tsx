@@ -4,7 +4,8 @@ import database, {
     trainingEventCollection,
     trainingModuleCollection,
 } from "../database/database";
-import sync from "../database/main-sync";
+import mainSync from "../database/main-sync";
+import secondarySync from "../database/secondary-sync";
 
 export default function Index() {
     const createTrainingEvent = async (date: string | Date = new Date()) => {
@@ -26,11 +27,24 @@ export default function Index() {
                 alignItems: "center",
             }}
         >
-            <Button title="Sync" onPress={sync} />
+            <Button title="Main sync" onPress={mainSync} />
+            <Button title="Secondary sync" onPress={secondarySync} />
             <Button
-                title="Show stuff"
+                title="Show villages"
                 onPress={() => {
                     logRecords("village");
+                }}
+            />
+            <Button
+                title="Show modules"
+                onPress={() => {
+                    logRecords("trainingModule");
+                }}
+            />
+            <Button
+                title="Show events"
+                onPress={() => {
+                    logRecords("trainingEvent");
                 }}
             />
         </View>
