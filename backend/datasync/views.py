@@ -1,4 +1,5 @@
 import requests
+import logging
 
 from django.utils import timezone
 from django.db import transaction
@@ -176,26 +177,44 @@ class SecondarySync(APIView):
     def get(self, request, *args, **kwargs):
         last_pulled_at = request.query_params.get("lastPulledAt")
 
+        if last_pulled_at == "null":
+            last_pulled_at = int(timezone.now().timestamp() * 1000)
+
         # Call the core services API to get
         # Assignments
         # Villages (based on assignments)
         # Clients (based on assignments)
 
         # Return the stuff received from CS API
-        respose_data = {
+        response_data = {
             "changes": {
                 "village": {
                     "created": [],
-                    "updated": self.get_village(),  # All the data in this one,
+                    "updated": self.get_data("villages"),  # All the data in this one,
                     "deleted": [],
                 }
             },
             "timestamp": last_pulled_at,  # Just return the time that came with request
         }
 
-    def get_villages(self):
-        url = "http://127.0.0.1:8000/coreservices/api/villages/"
+        return Response(response_data, status=status.HTTP_200_OK)
 
-        r = requests.get(url)
+    def get_data(self, data="villages"):
+        url = f"http://127.0.0.1:8000/coreservices/api/{data}/"
 
-        print(r.data)
+        try:
+            r = requests.get(url, timeout=10)
+            r.raise_for_status()
+
+            return r.json()
+
+        except requests.exceptions.HTTPError as e:
+            logging.error(f"HTTP error: {e}")
+        except requests.exceptions.ConnectionError as e:
+            logging.error(f"Connection error: {e}")
+        except requests.exceptions.Timeout as e:
+            logging.error(f"Timeout error: {e}")
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Error: {e}")
+
+        return None

@@ -12,4 +12,4 @@ class VillageView(APIView):
 
         response_data = VillageSerializer(queryset, many=True)
 
-        return Response(response_data, status=status.HTTP_200_OK)
+        return Response(response_data.data, status=status.HTTP_200_OK)
