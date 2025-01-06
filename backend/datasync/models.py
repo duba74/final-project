@@ -8,6 +8,7 @@ class SyncModel(models.Model):
         abstract = True
 
     id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4)
+    created_by = models.CharField(max_length=63, null=True, blank=True)
     created_at = models.DateTimeField(null=False, blank=False)
     updated_at = models.DateTimeField(null=False, blank=False)
     # server_created_at = models.DateTimeField(default=timezone.now)
