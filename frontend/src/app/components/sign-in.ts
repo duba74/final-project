@@ -4,6 +4,7 @@ import {
     isSuccessResponse,
     isErrorWithCode,
 } from "@react-native-google-signin/google-signin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const signIn = async () => {
     try {
@@ -12,7 +13,9 @@ export const signIn = async () => {
         if (isSuccessResponse(response)) {
             console.log("Sign in successful");
             // setState({ userInfo: response.data });
-            console.log(response.data);
+            const user = response.data.user;
+            await AsyncStorage.setItem("@user", JSON.stringify(user));
+            console.log(user);
         } else {
             console.log("Sign in cancelled");
         }

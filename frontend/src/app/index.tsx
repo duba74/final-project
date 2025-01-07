@@ -30,7 +30,7 @@ GoogleSignin.configure({
 export default function Index() {
     const [userInfo, setUserInfo] = useState(null);
     const [request, response, promptAsync] = Google.useAuthRequest({
-        // androidClientId: googleAndroidClientKey,
+        androidClientId: googleAndroidClientKey,
         webClientId: googleWebClientKey,
     });
 
@@ -42,22 +42,6 @@ export default function Index() {
                 date
             );
             console.log(newTrainingEvent);
-        }
-    };
-
-    useEffect(() => {
-        handleSignInWithGoogle();
-    }, [response]);
-
-    const handleSignInWithGoogle = async () => {
-        const user = await AsyncStorage.getItem("@user");
-
-        if (!user) {
-            if (response?.type === "success") {
-                await getUserInfo(response.authentication?.accessToken);
-            }
-        } else {
-            setUserInfo(JSON.parse(user));
         }
     };
 
@@ -78,6 +62,22 @@ export default function Index() {
         }
     };
 
+    const handleSignInWithGoogle = async () => {
+        const user = await AsyncStorage.getItem("@user");
+
+        if (!user) {
+            if (response?.type === "success") {
+                await getUserInfo(response.authentication?.accessToken);
+            }
+        } else {
+            setUserInfo(JSON.parse(user));
+        }
+    };
+
+    useEffect(() => {
+        handleSignInWithGoogle();
+    }, [response]);
+
     return (
         <View
             style={{
@@ -86,7 +86,9 @@ export default function Index() {
                 alignItems: "center",
             }}
         >
-            <Text>{JSON.stringify(userInfo)}</Text>
+            <Text style={{ width: "60%" }}>
+                {JSON.stringify(userInfo, null, 2)}
+            </Text>
             {Platform.OS === "web" ? (
                 <Button
                     title="Sign in with Google"
