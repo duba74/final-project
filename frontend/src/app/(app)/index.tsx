@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { Button, Platform, Text, View } from "react-native";
-import { addTrainingModule, logRecords } from "../database/db-utils";
+import { addTrainingModule, logRecords } from "../../database/db-utils";
 import database, {
     trainingEventCollection,
     trainingModuleCollection,
-} from "../database/database";
-import mainSync from "../database/main-sync";
-import secondarySync from "../database/secondary-sync";
+} from "../../database/database";
+import mainSync from "../../database/main-sync";
+import secondarySync from "../../database/secondary-sync";
 import {
     GoogleSignin,
     GoogleSigninButton,
     statusCodes,
 } from "@react-native-google-signin/google-signin";
 import { googleAndroidClientKey, googleWebClientKey } from "@/keys";
-import { signIn } from "./components/sign-in";
+import { signIn } from "../../components/sign-in";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";

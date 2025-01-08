@@ -1,9 +1,14 @@
 import { Stack } from "expo-router";
+import { SessionProvider } from "../hooks/ctx";
 
-export default function RootLayout() {
-  return (
-    <Stack>
-      <Stack.Screen name="index" />
-    </Stack>
-  );
-}
+const StackLayout = () => {
+    return <Stack></Stack>;
+};
+
+const Root = () => {
+    <SessionProvider>
+        <StackLayout />
+    </SessionProvider>;
+};
+
+export default Root;

@@ -61,7 +61,9 @@ export const SessionProvider = ({ children }: PropsWithChildren) => {
             // await AsyncStorage.setItem("@user", JSON.stringify(user));
             // setUserInfo(user);
         } catch (error) {
-            console.log("Something went wrong while getting the user");
+            console.log(
+                "Web Google Auth: Something went wrong while getting the user"
+            );
         }
     };
 

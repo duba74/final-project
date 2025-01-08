@@ -4,6 +4,8 @@ import logging
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import Max
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,10 +13,41 @@ from rest_framework import status
 
 from .models import TrainingModule, TrainingEvent
 from .serializers import (
+    LoginSerializer,
     TrainingModuleSerializer,
     TrainingEventSerializer,
 )
 from .utils import convert_to_tz_aware_datetime, get_min_time, get_syncable_fields
+
+
+class LoginView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = LoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            username = serializer.data["username"]
+            password = serializer.data["password"]
+
+            user = authenticate(request, username=username, password=password)
+
+            if user:
+                token, created = Token.objects.get_or_create(user=user)
+
+                return Response(
+                    {
+                        "token": token.key,
+                        "name": f"{user.first_name} {user.last_name}",
+                        "email": user.email,
+                        "role": user.profile.role,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
+                )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MainSync(APIView):

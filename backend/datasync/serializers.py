@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import TrainingModule, TrainingEvent
 
 
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+
 class UNIXTimestampField(serializers.Field):
     def to_representation(self, value):
         return round(value.timestamp() * 1000)

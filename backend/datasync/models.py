@@ -1,6 +1,23 @@
 import uuid
 from django.db import models
+from django.contrib.auth.models import User
 from .utils import convert_to_tz_aware_datetime
+
+
+class Role(models.Model):
+    id = models.CharField(primary_key=True, max_length=15)
+    name = models.CharField(max_length=63)
+
+    def __str__(self):
+        return self.name
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 class SyncModel(models.Model):
