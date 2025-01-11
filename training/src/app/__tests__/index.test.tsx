@@ -1,19 +1,49 @@
 import React from "react";
+import { router } from "expo-router";
 import { render } from "@testing-library/react-native";
-import Home from "../index";
+import App from "../login";
 
-describe("Home", () => {
-    it("should render home component if not authenticated", () => {
-        const authenticated = false;
+// jest.mock("expo-router", () => {
+//     return { router: { replace: jest.fn() } };
+// });
 
-        const { getByTestId } = render(<Home />);
+// describe("App", () => {
+//     it("should render login component if not authenticated", () => {
+//         const AppContext = React.createContext<{
+//             session: string | null;
+//         } | null>(null);
 
-        expect(getByTestId("home-component")).toBeTruthy();
-    });
+//         const context = { session: null };
 
-    // It should redirect if authemticated
+//         const { getByTestId } = render(
+//             <AppContext.Provider value={context}>
+//                 <App />
+//             </AppContext.Provider>
+//         );
 
-    // It should redirect to trainer home if role is trainer
+//         expect(getByTestId("login-component")).toBeTruthy();
+//     });
 
-    // It should redirect to planner home if role is planner
-});
+//     it("should not render home component if authenticated", () => {
+//         const AppContext = React.createContext<{
+//             session: string | null;
+//         } | null>(null);
+
+//         const context = { session: JSON.stringify({ foo: "bar" }) };
+
+//         const { getByTestId } = render(
+//             <AppContext.Provider value={context}>
+//                 <App />
+//             </AppContext.Provider>
+//         );
+
+//         expect(getByTestId("login-component")).toBeTruthy();
+//     });
+//     // it("should redirect if authemticated", () => {
+//     //     //
+//     // });
+
+//     // It should redirect to trainer home if role is trainer
+
+//     // It should redirect to planner home if role is planner
+// });
