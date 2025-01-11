@@ -1,4 +1,4 @@
-import SessionProvider from "@/contexts/AuthContext";
+import SessionProvider from "@/context/AuthContext";
 import { Slot } from "expo-router";
 
 export default function Root() {

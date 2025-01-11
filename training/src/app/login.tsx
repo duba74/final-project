@@ -2,7 +2,7 @@ import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
 import { Text, View } from "react-native";
 
-const Auth = () => {
+const Login = () => {
     const { login } = useSession();
     const router = useRouter();
 
@@ -23,3 +23,5 @@ const Auth = () => {
         </View>
     );
 };
+
+export default Login;

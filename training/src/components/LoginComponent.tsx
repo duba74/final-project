@@ -1,7 +1,7 @@
 import { View, Text, Button } from "react-native";
 import React from "react";
 
-const Login = () => {
+const LoginComponent = () => {
     return (
         <View>
             <Button title="Login" />
@@ -9,4 +9,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginComponent;
