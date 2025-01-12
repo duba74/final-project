@@ -1,7 +1,20 @@
 import React from "react";
-import { router } from "expo-router";
+import Auth from "../auth";
+// import { render } from "@/utils/test-utils";
 import { render } from "@testing-library/react-native";
-import App from "../login";
+
+jest.mock("react-i18next", () => ({
+    useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+describe("Auth", () => {
+    it("should render login component", () => {
+        const { getByTestId } = render(<Auth />);
+
+        expect(getByTestId("login-component")).toBeTruthy();
+    });
+    //
+});
 
 // jest.mock("expo-router", () => {
 //     return { router: { replace: jest.fn() } };

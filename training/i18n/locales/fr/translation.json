@@ -1,0 +1,7 @@
+{
+    "login": {
+        "title": "Se connecter",
+        "usernamePlaceholder": "Nom d'utilisateur",
+        "passwordPlaceholder": "Mot de passe"
+    }
+}
