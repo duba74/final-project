@@ -9,8 +9,11 @@ const tintColorDark = "#fff";
 export const Colors = {
     light: {
         text: "#11181c",
+        buttonText: "#ecedee",
         placeholderText: "#2a3c46",
         background: "#fff",
+        buttonBackground: "#151718",
+        pressedButtonBackground: "#373c3f",
         border: "#11181c",
         tint: tintColorLight,
         icon: "#687076",
@@ -19,8 +22,11 @@ export const Colors = {
     },
     dark: {
         text: "#ecedee",
+        buttonText: "#11181c",
         placeholderText: "#93999f",
         background: "#151718",
+        buttonBackground: "#fff",
+        pressedButtonBackground: "#c7c7c7",
         border: "#ecedee",
         tint: tintColorDark,
         icon: "#9ba1a6",

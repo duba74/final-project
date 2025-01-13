@@ -4,11 +4,17 @@ import { useTranslation } from "react-i18next";
 import ThemedView from "../themed/ThemedView";
 import ThemedText from "../themed/ThemedText";
 import ThemedTextInput from "../themed/ThemedTextInput";
+import ThemedButton from "../themed/ThemedButton";
+import { ScreenStackHeaderConfig } from "react-native-screens";
 
 const Login = () => {
     const { t } = useTranslation();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+
+    const handlePress = () => {
+        alert("Button pressed!");
+    };
 
     return (
         <ThemedView style={styles.container} testID="login-component">
@@ -29,8 +35,12 @@ const Login = () => {
                 onChangeText={setPassword}
                 testID="password-input"
             />
-
-            {/* <Button title="Login" /> */}
+            <ThemedButton
+                title={"Login"}
+                style={styles.button}
+                onPress={handlePress}
+                testID="login-button"
+            />
         </ThemedView>
     );
 };
@@ -49,5 +59,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 6,
         marginBottom: 12,
+    },
+    button: {
+        width: 100,
     },
 });
