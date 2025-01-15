@@ -8,20 +8,21 @@ jest.mock("react-i18next", () => ({
 }));
 
 describe("Login", () => {
+    beforeEach;
     it("should render username input element", () => {
-        const { getByTestId } = render(<Login />);
+        const { getByTestId } = render(<Login onLogin={() => {}} />);
 
         expect(getByTestId("username-input")).toBeTruthy();
     });
 
     it("should render password input element", () => {
-        const { getByTestId } = render(<Login />);
+        const { getByTestId } = render(<Login onLogin={() => {}} />);
 
         expect(getByTestId("password-input")).toBeTruthy();
     });
 
     it("username input captures user input", () => {
-        const { getByTestId } = render(<Login />);
+        const { getByTestId } = render(<Login onLogin={() => {}} />);
         const inputComponent = getByTestId("username-input");
         const userInput = "foo";
 
@@ -31,7 +32,7 @@ describe("Login", () => {
     });
 
     it("password input captures user input", () => {
-        const { getByTestId } = render(<Login />);
+        const { getByTestId } = render(<Login onLogin={() => {}} />);
         const inputComponent = getByTestId("password-input");
         const userInput = "foo";
 
@@ -41,8 +42,26 @@ describe("Login", () => {
     });
 
     it("should render login button", () => {
-        const { getByTestId } = render(<Login />);
+        const { getByTestId } = render(<Login onLogin={() => {}} />);
 
         expect(getByTestId("login-button")).toBeTruthy();
+    });
+
+    it("calls the onLogin function with the right arguments", () => {
+        const mockOnLogin = jest.fn();
+
+        const { getByTestId } = render(<Login onLogin={mockOnLogin} />);
+
+        const usernameComponent = getByTestId("username-input");
+        const passwordComponent = getByTestId("password-input");
+        const loginButton = getByTestId("login-button");
+        const usernameInput = "foo";
+        const passwordInput = "bar";
+
+        fireEvent.changeText(usernameComponent, usernameInput);
+        fireEvent.changeText(passwordComponent, passwordInput);
+        fireEvent.press(loginButton);
+
+        expect(mockOnLogin).toHaveBeenCalledWith(usernameInput, passwordInput);
     });
 });

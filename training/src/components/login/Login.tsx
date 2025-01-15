@@ -5,16 +5,15 @@ import ThemedView from "../themed/ThemedView";
 import ThemedText from "../themed/ThemedText";
 import ThemedTextInput from "../themed/ThemedTextInput";
 import ThemedButton from "../themed/ThemedButton";
-import { ScreenStackHeaderConfig } from "react-native-screens";
 
-const Login = () => {
+type LoginProps = {
+    onLogin: (username: string, password: string) => void;
+};
+
+const Login = ({ onLogin }: LoginProps) => {
     const { t } = useTranslation();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-
-    const handlePress = () => {
-        alert("Button pressed!");
-    };
 
     return (
         <ThemedView style={styles.container} testID="login-component">
@@ -38,7 +37,7 @@ const Login = () => {
             <ThemedButton
                 title={"Login"}
                 style={styles.button}
-                onPress={handlePress}
+                onPress={() => onLogin(username, password)}
                 testID="login-button"
             />
         </ThemedView>

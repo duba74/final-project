@@ -1,13 +1,14 @@
 import { useStorageState } from "@/hooks/useStorageState";
 import { createContext, type PropsWithChildren } from "react";
+import * as AuthService from "@/services/AuthService";
 
 export const AuthContext = createContext<{
-    login: () => void;
+    login: (username: string, password: string) => Promise<boolean>;
     logout: () => void;
     session?: string | null;
     isLoading: boolean;
 }>({
-    login: () => null,
+    login: async () => false,
     logout: () => null,
     session: null,
     isLoading: false,
@@ -16,16 +17,27 @@ export const AuthContext = createContext<{
 const SessionProvider = ({ children }: PropsWithChildren) => {
     const [[isLoading, session], setSession] = useStorageState("session");
 
+    const login = async (
+        username: string,
+        password: string
+    ): Promise<boolean> => {
+        try {
+            const result = await AuthService.login(username, password);
+            setSession(JSON.stringify(result));
+
+            return true;
+        } catch (error) {
+            console.log(`Login failed: ${error}`);
+
+            return false;
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
-                login: () => {
-                    // Perform sign-in logic here
-                    setSession("xxx");
-                },
-                logout: () => {
-                    setSession(null);
-                },
+                login,
+                logout: () => setSession(null),
                 session,
                 isLoading,
             }}
