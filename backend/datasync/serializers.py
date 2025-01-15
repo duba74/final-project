@@ -4,7 +4,7 @@ from .models import TrainingModule, TrainingEvent
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField()
 
 
 class UNIXTimestampField(serializers.Field):

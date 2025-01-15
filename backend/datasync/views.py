@@ -25,6 +25,7 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
 
         if serializer.is_valid():
+            print(serializer.data)
             username = serializer.data["username"]
             password = serializer.data["password"]
 
@@ -38,7 +39,7 @@ class LoginView(APIView):
                         "token": token.key,
                         "name": f"{user.first_name} {user.last_name}",
                         "email": user.email,
-                        "role": user.profile.role,
+                        "role": user.profile.role.id,
                     },
                     status=status.HTTP_200_OK,
                 )
