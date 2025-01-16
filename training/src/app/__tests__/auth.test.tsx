@@ -1,7 +1,6 @@
 import React from "react";
 import Auth from "../auth";
-// import { render } from "@/utils/test-utils";
-import { fireEvent, render } from "@testing-library/react-native";
+import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
 
@@ -30,6 +29,9 @@ const realUseRouter = useRouter();
 });
 
 describe("Auth", () => {
+    beforeEach(() => {
+        mockRouterReplace.mockClear();
+    });
     it("render login component", () => {
         const { getByTestId } = render(<Auth />);
 
@@ -54,93 +56,33 @@ describe("Auth", () => {
         expect(mockLogin).toHaveBeenCalledWith(usernameInput, passwordInput);
     });
 
-    it("redirects to index route on successful login", async () => {
-        mockLogin.mockResolvedValue(true);
+    it("redirects to index route when session is not null", async () => {
+        const session = JSON.stringify({ name: "foo" });
 
-        const { getByTestId } = render(<Auth />);
+        (useSession as MockedUseSession).mockReturnValue({
+            ...realUseSession,
+            session: session,
+        });
 
-        const usernameComponent = getByTestId("username-input");
-        const passwordComponent = getByTestId("password-input");
-        const loginButton = getByTestId("login-button");
-        const usernameInput = "foo";
-        const passwordInput = "bar";
+        render(<Auth />);
 
-        fireEvent.changeText(usernameComponent, usernameInput);
-        fireEvent.changeText(passwordComponent, passwordInput);
-        fireEvent.press(loginButton);
-
-        expect(mockLogin).toHaveBeenCalledWith(usernameInput, passwordInput);
-
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        expect(mockRouterReplace).toHaveBeenCalledWith("/");
+        await waitFor(() => {
+            expect(mockRouterReplace).toHaveBeenCalledWith("/");
+        });
     });
 
-    // it("doesn't redirect on unsuccessful login", async () => {
-    //     mockLogin.mockResolvedValue(true);
-    //     mockLogin.mockReturnValue(false);
+    it("doesn't redirects to index route when session is null", async () => {
+        const session = null;
 
-    //     const { getByTestId } = render(<Auth />);
+        (useSession as MockedUseSession).mockReturnValue({
+            ...realUseSession,
+            session: session,
+        });
 
-    //     const usernameComponent = getByTestId("username-input");
-    //     const passwordComponent = getByTestId("password-input");
-    //     const loginButton = getByTestId("login-button");
-    //     const usernameInput = "foo";
-    //     const passwordInput = "bar";
+        render(<Auth />);
 
-    //     fireEvent.changeText(usernameComponent, usernameInput);
-    //     fireEvent.changeText(passwordComponent, passwordInput);
-    //     fireEvent.press(loginButton);
-
-    //     expect(mockLogin).toHaveBeenCalledWith(usernameInput, passwordInput);
-
-    //     await new Promise((resolve) => setTimeout(resolve, 0));
-
-    //     expect(mockRouterReplace).not.toHaveBeenCalled();
-    // });
+        await waitFor(() => {
+            expect(mockRouterReplace).not.toHaveBeenCalled();
+        });
+    });
 });
-
-// jest.mock("expo-router", () => {
-//     return { router: { replace: jest.fn() } };
-// });
-
-// describe("App", () => {
-//     it("should render login component if not authenticated", () => {
-//         const AppContext = React.createContext<{
-//             session: string | null;
-//         } | null>(null);
-
-//         const context = { session: null };
-
-//         const { getByTestId } = render(
-//             <AppContext.Provider value={context}>
-//                 <App />
-//             </AppContext.Provider>
-//         );
-
-//         expect(getByTestId("login-component")).toBeTruthy();
-//     });
-
-//     it("should not render home component if authenticated", () => {
-//         const AppContext = React.createContext<{
-//             session: string | null;
-//         } | null>(null);
-
-//         const context = { session: JSON.stringify({ foo: "bar" }) };
-
-//         const { getByTestId } = render(
-//             <AppContext.Provider value={context}>
-//                 <App />
-//             </AppContext.Provider>
-//         );
-
-//         expect(getByTestId("login-component")).toBeTruthy();
-//     });
-//     // it("should redirect if authemticated", () => {
-//     //     //
-//     // });
-
-//     // It should redirect to trainer home if role is trainer
-
-//     // It should redirect to planner home if role is planner
-// });

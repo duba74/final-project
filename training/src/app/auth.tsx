@@ -16,16 +16,8 @@ const Auth = () => {
 
     useEffect(() => {
         if (session) {
-            console.log(`session:`);
-            console.log(session);
             const user = JSON.parse(session);
-            console.log(`user:`);
             console.log(user);
-            const { token, name, email, role } = user;
-            console.log(token);
-            console.log(name);
-            console.log(email);
-            console.log(role);
 
             router.replace("/");
         }
