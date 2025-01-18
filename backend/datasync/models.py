@@ -13,14 +13,11 @@ class Role(models.Model):
 
 
 class Profile(models.Model):
-    pass
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
 
-
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
-
-#     def __str__(self):
-#         return self.user.username
+    def __str__(self):
+        return self.user.username
 
 
 class SyncModel(models.Model):
