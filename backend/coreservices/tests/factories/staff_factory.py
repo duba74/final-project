@@ -1,15 +1,15 @@
 import factory
 from faker import Faker
-from datasync.models import Profile
+from coreservices.models import Staff
 from .user_factory import UserFactory
 from .role_factory import RoleFactory
 
 fake = Faker()
 
 
-class ProfileFactory(factory.django.DjangoModelFactory):
+class StaffFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Profile
+        model = Staff
 
     user = factory.SubFactory(UserFactory)
     role = factory.SubFactory(RoleFactory)

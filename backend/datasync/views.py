@@ -11,12 +11,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import TrainingModule, TrainingEvent
-from .serializers import (
-    LoginSerializer,
-    TrainingModuleSerializer,
-    TrainingEventSerializer,
-)
+from .models import TrainingEvent
+from .serializers import LoginSerializer, TrainingEventSerializer
 from .utils import convert_to_tz_aware_datetime, get_min_time, get_syncable_fields
 
 
@@ -29,6 +25,7 @@ class LoginView(APIView):
             username = serializer.data["username"]
             password = serializer.data["password"]
 
+            # TODO: Change this authentication to call the coreservices API (also make that API), moving the token stuff over there too to be handled by coreservices, which responds if the user is authenticated or not
             user = authenticate(request, username=username, password=password)
 
             if user:
@@ -67,9 +64,6 @@ class MainSync(APIView):
 
         response_data = {
             "changes": {
-                "training_module": self.get_changes(
-                    TrainingModule, TrainingModuleSerializer, last_pulled_at
-                ),
                 "training_event": self.get_changes(
                     TrainingEvent, TrainingEventSerializer, last_pulled_at
                 ),
@@ -93,9 +87,6 @@ class MainSync(APIView):
         print("Device is pushing...\nChanges sent from device:\n", changes)
 
         try:
-            self.apply_changes(
-                TrainingModule, changes.get("training_module", {}), last_pulled_at
-            )
             self.apply_changes(
                 TrainingEvent, changes.get("training_event", {}), last_pulled_at
             )
@@ -138,10 +129,6 @@ class MainSync(APIView):
     # WatermelonDB recommends using a procedure to verify that the timestamp sent back to the client is "unique" and "monotonic", meaning it should be greater than any updated_at field in any of the tables, so this function makes sure of that
     def get_unique_monotonic_timestamp(self):
         max_updated_at = max(
-            TrainingModule.objects.all().aggregate(max_updated_at=Max("updated_at"))[
-                "max_updated_at"
-            ]
-            or get_min_time(),  # In case there's no records
             TrainingEvent.objects.all().aggregate(max_updated_at=Max("updated_at"))[
                 "max_updated_at"
             ]

@@ -7,7 +7,7 @@ sys.path.append(os.getcwd().replace("/scripts/python", ""))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "training.settings")
 django.setup()
 
-from coreservices.models import *
+from coreservices.models import Village
 
 
 def get_villages_from_dw():
