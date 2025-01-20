@@ -50,10 +50,10 @@ class Assignment(models.Model):
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=True, blank=True)
 
-    # def __str__(self):
-    #     return f"{self.trainer} - {self.village} - {self.start_date}" + (
-    #         f" - {self.end_date}" if self.end_date else ""
-    #     )
+    def __str__(self):
+        return f"{self.staff} - {self.village} - {self.start_date}" + (
+            f" - {self.end_date}" if self.end_date else ""
+        )
 
 
 class TrainingModule(models.Model):

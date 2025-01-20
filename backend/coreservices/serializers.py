@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import Village, TrainingModule
 
 
+class AuthSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+
 class VillageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Village

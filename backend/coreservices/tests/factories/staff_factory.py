@@ -13,3 +13,4 @@ class StaffFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     role = factory.SubFactory(RoleFactory)
+    country = fake.country_code()

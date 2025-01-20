@@ -14,7 +14,7 @@ def test_assignment_str_has_end_date():
 
     assert str(
         assignment
-    ) == f"{assignment.trainer} - {assignment.village} - {assignment.start_date}" + end_date_str(
+    ) == f"{assignment.staff} - {assignment.village} - {assignment.start_date}" + end_date_str(
         assignment
     )
 

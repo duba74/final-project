@@ -4,12 +4,13 @@ import logging
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import Max
-from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+from integrations.coreservices.user_authentication import authenticate_user
 
 from .models import TrainingEvent
 from .serializers import LoginSerializer, TrainingEventSerializer
@@ -20,32 +21,42 @@ class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = LoginSerializer(data=request.data)
 
-        if serializer.is_valid():
-            print(serializer.data)
-            username = serializer.data["username"]
-            password = serializer.data["password"]
+        if not serializer.is_valid():
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
-            # TODO: Change this authentication to call the coreservices API (also make that API), moving the token stuff over there too to be handled by coreservices, which responds if the user is authenticated or not
-            user = authenticate(request, username=username, password=password)
+        username = serializer.data["username"]
+        password = serializer.data["password"]
 
-            if user:
-                token, created = Token.objects.get_or_create(user=user)
+        try:
+            response = authenticate_user(username, password)
 
+            if response.status_code == 200:
+                data = response.json()
                 return Response(
                     {
-                        "token": token.key,
-                        "name": f"{user.first_name} {user.last_name}",
-                        "email": user.email,
-                        "role": user.profile.role.id,
+                        "status": data["status"],
+                        "token": data["token"],
+                        "user": data["user"],
                     },
                     status=status.HTTP_200_OK,
                 )
             else:
-                return Response(
-                    {"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
-                )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(response.json(), status=response.status_code)
+        except requests.exceptions.ConnectionError:
+            return Response(
+                {"status": "error", "message": "Network error"},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        except requests.exceptions.Timeout:
+            return Response(
+                {"status": "error", "message": "Timeout error"},
+                status=status.HTTP_504_GATEWAY_TIMEOUT,
+            )
+        except requests.exceptions.RequestException:
+            return Response(
+                {"status": "error", "message": "Server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 class MainSync(APIView):

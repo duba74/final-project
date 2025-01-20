@@ -1,6 +1,6 @@
 import factory
 from faker import Faker
-from datasync.models import Role
+from coreservices.models import Role
 
 fake = Faker()
 
