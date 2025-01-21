@@ -1,3 +1,5 @@
+from django.utils import timezone
+from django.db.models import Q
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -5,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .utils import extract_token
-from .models import Village
+from .models import Assignment, Village
 from .serializers import AuthSerializer, VillageSerializer
 
 
@@ -71,10 +73,52 @@ class ValidateTokenView(APIView):
             )
 
 
-class VillageView(APIView):
+class AuthenticatedAPIView(APIView):
+    def dispatch(self, request, *args, **kwargs):
+        auth_header = request.headers.get("Authorization")
+        token_key = extract_token(auth_header)
+
+        if not token_key:
+            return Response(
+                {
+                    "status": "error",
+                    "valid": False,
+                    "message": "Malformed or missing token",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            token = Token.objects.get(key=token_key)
+        except Token.DoesNotExist:
+            return Response(
+                {
+                    "status": "error",
+                    "valid": False,
+                    "message": "Invalid token",
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        self.user = token.user
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class VillageView(AuthenticatedAPIView):
     def get(self, request, *args, **kwargs):
-        queryset = Village.objects.all()
+        today = timezone.now().date()
 
-        response_data = VillageSerializer(queryset, many=True)
+        assignments = Assignment.objects.filter(
+            Q(staff=self.user.staff)
+            & Q(start_date__lte=today)
+            & (Q(end_date__gte=today) | Q(end_date__isnull=True))
+        )
 
-        return Response(response_data.data, status=status.HTTP_200_OK)
+        assigned_village_ids = assignments.values_list("village_id", flat=True)
+
+        villages = Village.objects.filter(id__in=assigned_village_ids, is_active=True)
+
+        data = VillageSerializer(villages, many=True).data
+
+        return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)

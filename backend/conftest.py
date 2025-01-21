@@ -1,6 +1,7 @@
 import pytest
 from faker import Faker
 from rest_framework.test import APIClient
+from django.test import RequestFactory
 from rest_framework.authtoken.models import Token
 from coreservices.tests.factories.user_factory import UserFactory
 from coreservices.tests.factories.staff_factory import StaffFactory
@@ -13,6 +14,11 @@ fake = Faker()
 @pytest.fixture
 def api_client():
     return APIClient()
+
+
+@pytest.fixture
+def request_factory():
+    return RequestFactory()
 
 
 @pytest.fixture

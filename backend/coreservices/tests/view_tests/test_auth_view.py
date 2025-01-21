@@ -1,12 +1,6 @@
 import pytest
-from faker import Faker
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
-from rest_framework.authtoken.models import Token
-from coreservices.tests.factories.user_factory import UserFactory
-from coreservices.tests.factories.staff_factory import StaffFactory
-from coreservices.tests.factories.role_factory import RoleFactory
 
 
 @pytest.mark.parametrize(
