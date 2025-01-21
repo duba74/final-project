@@ -3,12 +3,11 @@ import os
 from dotenv import load_dotenv
 
 
+load_dotenv()
+
+
 def authenticate_user(username, password):
-    load_dotenv()
-
     url = f"{os.getenv("CORE_SERVICES_HOST")}/coreservices/api/auth/"
-
-    print(url)
 
     return requests.post(
         url,
@@ -17,3 +16,11 @@ def authenticate_user(username, password):
             "password": password,
         },
     )
+
+
+def validate_token(auth_token):
+    url = f"{os.getenv("CORE_SERVICES_HOST")}/coreservices/api/validatetoken/"
+    headers = {"Authorization": auth_token}
+    response = requests.get(url, headers=headers)
+
+    return response.json()
