@@ -19,7 +19,7 @@ const mainSync = async () => {
 
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
-            const url = `${host}/api/main-sync/?${urlParams}`;
+            const url = `${host}/api/mainsync/?${urlParams}`;
             console.log(url);
 
             const response = await fetch(url);

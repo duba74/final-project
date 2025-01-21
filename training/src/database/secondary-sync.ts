@@ -19,7 +19,7 @@ const secondarySync = async () => {
 
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
-            const url = `${host}/api/secondary-sync/?${urlParams}`;
+            const url = `${host}/api/secondarysync/?${urlParams}`;
             console.log(url);
 
             const response = await fetch(url);
