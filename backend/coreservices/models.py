@@ -63,6 +63,31 @@ class TrainingModule(models.Model):
     country = models.CharField(max_length=7, null=False, blank=False)
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=False, blank=False)
+    is_active = models.BooleanField(null=False, blank=False, default=True)
 
     def __str__(self):
         return self.name
+
+
+class Client(models.Model):
+    id = models.CharField(primary_key=True, max_length=15)
+    first_name = models.CharField(max_length=255, null=False, blank=False)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    sex = models.CharField(
+        max_length=1, null=True, blank=True, choices=(("M", "Male"), ("F", "Female"))
+    )
+    age_group = models.CharField(
+        max_length=7,
+        null=True,
+        blank=True,
+        choices=(("lt_30", "Less than 30"), ("gte_30", "30 or greater")),
+    )
+    phone_1 = models.CharField(max_length=10, null=True, blank=True)
+    phone_2 = models.CharField(max_length=10, null=True, blank=True)
+    is_leader = models.BooleanField(null=False, blank=False, default=False)
+    village = models.ForeignKey(
+        Village, on_delete=models.RESTRICT, null=False, blank=False
+    )
+
+    def __str__(self):
+        return self.id

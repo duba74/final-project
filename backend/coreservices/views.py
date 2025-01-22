@@ -7,8 +7,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .utils import extract_token
-from .models import Assignment, Village
-from .serializers import AuthSerializer, VillageSerializer
+from .models import Assignment, Village, Client, TrainingModule
+from .serializers import (
+    AuthSerializer,
+    VillageSerializer,
+    ClientSerializer,
+    TrainingModuleSerializer,
+)
 
 
 class AuthView(APIView):
@@ -120,5 +125,38 @@ class VillageView(AuthenticatedAPIView):
         villages = Village.objects.filter(id__in=assigned_village_ids, is_active=True)
 
         data = VillageSerializer(villages, many=True).data
+
+        return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)
+
+
+class ClientView(AuthenticatedAPIView):
+    def get(self, request, *args, **kwargs):
+        today = timezone.now().date()
+
+        assignments = Assignment.objects.filter(
+            Q(staff=self.user.staff)
+            & Q(start_date__lte=today)
+            & (Q(end_date__gte=today) | Q(end_date__isnull=True))
+        )
+
+        assigned_village_ids = assignments.values_list("village_id", flat=True)
+
+        clients = Client.objects.filter(
+            village__in=assigned_village_ids, village__is_active=True
+        )
+
+        data = ClientSerializer(clients, many=True).data
+
+        return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)
+
+
+class TrainingModuleView(AuthenticatedAPIView):
+    def get(self, request, *args, **kwargs):
+        training_modules = TrainingModule.objects.filter(
+            country=self.user.staff.country,
+            is_active=True,
+        )
+
+        data = TrainingModuleSerializer(training_modules, many=True).data
 
         return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)

@@ -6,6 +6,7 @@ MODULE_LIST = [
         "country": "ML",
         "start_date": "2025-01-01",
         "end_date": "2025-01-31",
+        "is_active": True,
     },
     {
         "id": "m2_ml",
@@ -14,6 +15,7 @@ MODULE_LIST = [
         "country": "ML",
         "start_date": "2025-02-01",
         "end_date": "2025-02-28",
+        "is_active": True,
     },
     {
         "id": "m1_sn",
@@ -22,6 +24,7 @@ MODULE_LIST = [
         "country": "SN",
         "start_date": "2025-01-05",
         "end_date": "2025-02-04",
+        "is_active": True,
     },
     {
         "id": "m2_sn",
@@ -30,6 +33,7 @@ MODULE_LIST = [
         "country": "SN",
         "start_date": "2025-02-05",
         "end_date": "2025-03-04",
+        "is_active": True,
     },
     {
         "id": "m1_ci",
@@ -38,6 +42,7 @@ MODULE_LIST = [
         "country": "CI",
         "start_date": "2025-01-10",
         "end_date": "2025-02-09",
+        "is_active": True,
     },
     {
         "id": "m2_ci",
@@ -46,5 +51,6 @@ MODULE_LIST = [
         "country": "CI",
         "start_date": "2025-02-10",
         "end_date": "2025-03-09",
+        "is_active": True,
     },
 ]
