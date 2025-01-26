@@ -1,7 +1,8 @@
 import database, {
-    trainingEventCollection,
+    // trainingEventCollection,
     trainingModuleCollection,
     villageCollection,
+    clientCollection,
 } from "./database";
 
 export const logRecords = async (collection: string) => {
@@ -12,12 +13,17 @@ export const logRecords = async (collection: string) => {
             data = await trainingModuleCollection.query().fetch();
             break;
 
-        case "trainingEvent":
-            data = await trainingEventCollection.query().fetch();
-            break;
+        // case "trainingEvent":
+        // data = await trainingEventCollection.query().fetch();
+        // break;
 
         case "village":
             data = await villageCollection.query().fetch();
+            break;
+
+        case "client":
+            data = await clientCollection.query().fetch();
+            break;
 
         default:
             break;
@@ -46,4 +52,20 @@ export const addTrainingModule = async (
             m.endDate = endDate;
         });
     });
+};
+
+export const deleteAllRecordsFromTable = async (tableName: string) => {
+    const collection = database.collections.get(tableName);
+
+    const allRecords = await collection.query().fetch();
+
+    const deleteOperations = allRecords.map((r) =>
+        r.prepareDestroyPermanently()
+    );
+
+    await database.write(async () => {
+        await database.batch(deleteOperations);
+    });
+
+    console.log(`All records have been deleted from the ${tableName}" table.`);
 };

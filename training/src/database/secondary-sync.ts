@@ -1,8 +1,9 @@
 import { synchronize } from "@nozbe/watermelondb/sync";
 import database from "./database";
 import { Platform } from "react-native";
+import { deleteAllRecordsFromTable } from "./db-utils";
 
-const secondarySync = async () => {
+const secondarySync = async (authToken: string) => {
     const host =
         Platform.OS === "web"
             ? "http://127.0.0.1:8000"
@@ -22,7 +23,11 @@ const secondarySync = async () => {
             const url = `${host}/api/secondarysync/?${urlParams}`;
             console.log(url);
 
-            const response = await fetch(url);
+            const headers = { Authorization: `Bearer ${authToken}` };
+            const options = { method: "GET", headers: headers };
+
+            const response = await fetch(url, options);
+
             if (!response.ok) {
                 throw new Error(await response.text());
             }
@@ -30,7 +35,12 @@ const secondarySync = async () => {
             // console.log(await response.text());
             const { changes, timestamp } = await response.json();
 
+            await deleteAllRecordsFromTable("village");
+            await deleteAllRecordsFromTable("client");
+            await deleteAllRecordsFromTable("training_module");
+
             console.log(`🍉 Pull succeeded at timestamp = ${timestamp}`);
+            console.log(typeof timestamp);
             console.log(`🍉 Pull succeeded with changes:`);
             // console.log(changes);
 

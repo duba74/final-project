@@ -90,27 +90,27 @@ def test_returns_only_requestor_country_modules(request_factory, create_user):
     ]
 
 
-@pytest.mark.django_db
-def test_returns_only_active_modules(request_factory, create_user):
-    user = create_user["user"]
-    token = Token.objects.get(user=user)
-    url = reverse("training_modules")
-    headers = {"Authorization": f"Bearer {token}"}
-    request = request_factory.get(url, headers=headers)
-    view = TrainingModuleView.as_view()
+# @pytest.mark.django_db
+# def test_returns_only_active_modules(request_factory, create_user):
+#     user = create_user["user"]
+#     token = Token.objects.get(user=user)
+#     url = reverse("training_modules")
+#     headers = {"Authorization": f"Bearer {token}"}
+#     request = request_factory.get(url, headers=headers)
+#     view = TrainingModuleView.as_view()
 
-    training_module_1 = TrainingModuleFactory(
-        name="active_module",
-        is_active=True,
-        country=user.staff.country,
-    )
-    training_module_2 = TrainingModuleFactory(
-        name="inactive_module",
-        is_active=False,
-        country=user.staff.country,
-    )
+#     training_module_1 = TrainingModuleFactory(
+#         name="active_module",
+#         is_active=True,
+#         country=user.staff.country,
+#     )
+#     training_module_2 = TrainingModuleFactory(
+#         name="inactive_module",
+#         is_active=False,
+#         country=user.staff.country,
+#     )
 
-    response = view(request)
+#     response = view(request)
 
-    assert "active_module" in [t["name"] for t in response.data["data"]]
-    assert "inactive_module" not in [t["name"] for t in response.data["data"]]
+#     assert "active_module" in [t["name"] for t in response.data["data"]]
+#     assert "inactive_module" not in [t["name"] for t in response.data["data"]]

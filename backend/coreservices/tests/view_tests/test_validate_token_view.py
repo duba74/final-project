@@ -30,7 +30,7 @@ def test_no_token_provided(api_client, create_user):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.data["status"] == "error"
     assert response.data["valid"] == False
-    assert response.data["message"] == "Token is required"
+    assert response.data["message"] == "Malformed or missing token"
 
 
 @pytest.mark.django_db

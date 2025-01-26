@@ -1,5 +1,6 @@
 import requests
 import logging
+import json
 
 from django.utils import timezone
 from django.db import transaction
@@ -207,46 +208,84 @@ class MainSync(APIView):
 
 class SecondarySync(APIView):
     def get(self, request, *args, **kwargs):
+        headers = {"Authorization": request.headers.get("Authorization")}
         last_pulled_at = request.query_params.get("lastPulledAt")
 
         if last_pulled_at == "null":
             last_pulled_at = int(timezone.now().timestamp() * 1000)
 
         # Call the core services API to get
-        # Assignments
-        # Villages (based on assignments)
-        # Clients (based on assignments)
+        # Villages (based on assignments associated with user token)
+        # Clients (based on assignments associated with user token)
+        # Training modules (based on country associated with user token)
 
         # Return the stuff received from CS API
-        response_data = {
-            "changes": {
-                "village": {
-                    "created": [],
-                    "updated": self.get_data("villages"),  # All the data in this one,
-                    "deleted": [],
-                }
-            },
-            "timestamp": last_pulled_at,  # Just return the time that came with request
-        }
-
-        return Response(response_data, status=status.HTTP_200_OK)
-
-    def get_data(self, data="villages"):
-        url = f"http://127.0.0.1:8000/coreservices/api/{data}/"
-
         try:
-            r = requests.get(url, timeout=10)
-            r.raise_for_status()
+            response_data = {
+                "changes": {
+                    "village": {
+                        "created": [],
+                        "updated": self.get_data(headers, "villages"),
+                        "deleted": [],
+                    },
+                    "client": {
+                        "created": [],
+                        "updated": self.get_data(headers, "clients"),
+                        "deleted": [],
+                    },
+                    "training_module": {
+                        "created": [],
+                        "updated": self.get_data(headers, "trainingmodules"),
+                        "deleted": [],
+                    },
+                },
+                "timestamp": int(
+                    last_pulled_at
+                ),  # Just return the time that came with request
+            }
 
-            return r.json()
+            return Response(response_data, status=status.HTTP_200_OK)
 
         except requests.exceptions.HTTPError as e:
             logging.error(f"HTTP error: {e}")
+            return Response(
+                {"status": "error", "message": "Invalid token or authorization failed"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
         except requests.exceptions.ConnectionError as e:
             logging.error(f"Connection error: {e}")
+            return Response(
+                {"status": "error", "message": "Failed to connect to core services"},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
         except requests.exceptions.Timeout as e:
             logging.error(f"Timeout error: {e}")
+            return Response(
+                {"status": "error", "message": "Request to core services timed out"},
+                status=status.HTTP_504_GATEWAY_TIMEOUT,
+            )
         except requests.exceptions.RequestException as e:
             logging.error(f"Error: {e}")
+            return Response(
+                {"status": "error", "message": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-        return None
+    def get_data(self, headers, data):
+        url = f"http://127.0.0.1:8000/coreservices/api/{data}/"
+
+        try:
+            r = requests.get(url, headers=headers, timeout=10)
+            r.raise_for_status()
+
+            records = r.json()
+
+            if data != "clients":
+                print(records)
+                print("status:", type(records["status"]), records["status"])
+                print("data:", type(records["data"]), records["data"])
+
+            return records["data"]
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Error: {e}")
+            raise
