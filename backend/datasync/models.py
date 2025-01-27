@@ -45,6 +45,7 @@ class TrainingEvent(SyncModel):
         choices=(("AM", "AM"), ("PM", "PM")),
         default="AM",
     )
+    is_canceled = models.BooleanField(default=False, null=False, blank=False)
     village = models.CharField(max_length=7, null=False, blank=False)
     completed_at = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
@@ -55,6 +56,7 @@ class TrainingEvent(SyncModel):
         [
             "scheduled_for",
             "scheduled_time",
+            "is_canceled",
             "village",
             "completed_at",
             "location",

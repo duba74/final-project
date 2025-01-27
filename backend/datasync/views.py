@@ -277,13 +277,7 @@ class SecondarySync(APIView):
         try:
             r = requests.get(url, headers=headers, timeout=10)
             r.raise_for_status()
-
             records = r.json()
-
-            if data != "clients":
-                print(records)
-                print("status:", type(records["status"]), records["status"])
-                print("data:", type(records["data"]), records["data"])
 
             return records["data"]
         except requests.exceptions.RequestException as e:

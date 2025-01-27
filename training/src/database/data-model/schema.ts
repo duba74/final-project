@@ -4,6 +4,22 @@ export default appSchema({
     version: 1,
     tables: [
         tableSchema({
+            name: "training_event",
+            columns: [
+                { name: "created_at", type: "number" },
+                { name: "updated_at", type: "number" },
+                { name: "created_by", type: "string" },
+                { name: "scheduled_for", type: "number" },
+                { name: "scheduled_time", type: "string" },
+                { name: "is_canceled", type: "boolean" },
+                { name: "village", type: "string" },
+                { name: "completed_at", type: "number" },
+                { name: "location", type: "string" },
+                { name: "comments", type: "string" },
+                { name: "training_module", type: "string" },
+            ],
+        }),
+        tableSchema({
             name: "village",
             columns: [
                 { name: "name", type: "string" },

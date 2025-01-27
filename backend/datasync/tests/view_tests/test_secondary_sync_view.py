@@ -14,13 +14,16 @@ def test_secondary_sync_valid_token(api_client, mocker):
     mock_get = mocker.patch("requests.get")
     mock_get.side_effect = [
         mocker.Mock(
-            status_code=200, json=lambda: [{"id": "AB123", "name": "Village 1"}]
+            status_code=200,
+            json=lambda: {"data": [{"id": "AB123", "name": "Village 1"}]},
         ),
         mocker.Mock(
-            status_code=200, json=lambda: [{"id": "012345", "name": "Client 1"}]
+            status_code=200,
+            json=lambda: {"data": [{"id": "012345", "name": "Client 1"}]},
         ),
         mocker.Mock(
-            status_code=200, json=lambda: [{"id": "m1_ml", "name": "Training Module 1"}]
+            status_code=200,
+            json=lambda: {"data": [{"id": "m1_ml", "name": "Training Module 1"}]},
         ),
     ]
 
