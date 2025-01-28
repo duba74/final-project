@@ -67,3 +67,31 @@ class TrainingEvent(SyncModel):
 
     def __str__(self):
         return f"{self.village} - {self.scheduled_for}, {self.scheduled_time}"
+
+
+class Participant(SyncModel):
+    training_event = models.ForeignKey(
+        TrainingEvent, on_delete=models.CASCADE, null=False, blank=False
+    )
+    village = models.CharField(max_length=7, null=False, blank=False)
+    first_name = models.CharField(max_length=255, null=False, blank=False)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    sex = models.CharField(
+        max_length=1, null=True, blank=True, choices=(("M", "Male"), ("F", "Female"))
+    )
+    age_group = models.CharField(
+        max_length=7,
+        null=True,
+        blank=True,
+        choices=(("lt_30", "Less than 30"), ("gte_30", "30 or greater")),
+    )
+    phone_1 = models.CharField(max_length=10, null=True, blank=True)
+    phone_2 = models.CharField(max_length=10, null=True, blank=True)
+    client = models.CharField(max_length=15, null=True, blank=True)
+    is_leader = models.BooleanField(default=False, null=False, blank=False)
+    tombola_tickets = models.IntegerField(null=True, blank=True)
+    pics_purchased = models.IntegerField(null=True, blank=True)
+    pics_received = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.id

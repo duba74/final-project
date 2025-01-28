@@ -1,21 +1,20 @@
-import { Model, Query, Relation } from "@nozbe/watermelondb";
+import { Model, Query } from "@nozbe/watermelondb";
 import {
     text,
     date,
     readonly,
     children,
     writer,
-    immutableRelation,
 } from "@nozbe/watermelondb/decorators";
-// import TrainingEvent from "./TrainingEvent";
+import TrainingEvent from "./TrainingEvent";
 
 export default class TrainingModule extends Model {
     static table = "training_module";
     static associations = {
-        // training_event: {
-        //     type: <const>"has_many",
-        //     foreignKey: "training_module",
-        // },
+        training_event: {
+            type: <const>"has_many",
+            foreignKey: "training_module",
+        },
     };
 
     @readonly @text("name") name!: string;
@@ -25,7 +24,7 @@ export default class TrainingModule extends Model {
     @readonly @date("end_date") endDate!: number;
     @readonly @date("is_active") isActive!: boolean;
 
-    // @children("training_event") trainingEvents!: Query<TrainingEvent>;
+    @children("training_event") trainingEvents!: Query<TrainingEvent>;
 
     // @writer async addTrainingEvent(scheduledFor: string | Date = "2024-12-01") {
     //     const newTrainingEvent = await this.collections

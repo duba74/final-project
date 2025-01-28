@@ -1,23 +1,19 @@
 import { Model, Query, Relation } from "@nozbe/watermelondb";
 import {
     field,
-    date,
     readonly,
     children,
     writer,
     immutableRelation,
 } from "@nozbe/watermelondb/decorators";
 import Village from "./Village";
-// import Participant from "./Participant ";
+import Participant from "./Participant";
 
 export default class Client extends Model {
     static table = "client";
     static associations = {
         village: { type: <const>"belongs_to", key: "village" },
-        // participant: {
-        //     type: <const>"has_many",
-        //     foreignKey: "training_module",
-        // },
+        participant: { type: <const>"has_many", foreignKey: "client" },
     };
 
     @readonly @field("first_name") firstName!: string;
@@ -30,8 +26,9 @@ export default class Client extends Model {
 
     @immutableRelation("village", "village") village!: Relation<Village>;
 
-    // @children("training_event") trainingEvents!: Query<TrainingEvent>;
+    @children("participant") participants!: Query<Participant>;
 
+    // Writer for Participant?
     // @writer async addTrainingEvent(scheduledFor: string | Date = "2024-12-01") {
     //     const newTrainingEvent = await this.collections
     //         .get<TrainingEvent>("training_event")

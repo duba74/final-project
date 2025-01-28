@@ -1,16 +1,15 @@
-import { Model, Query, Relation } from "@nozbe/watermelondb";
-import {
-    field,
-    readonly,
-    immutableRelation,
-    children,
-} from "@nozbe/watermelondb/decorators";
-// import TrainingEvent from "./TrainingEvent";
+import { Model, Query } from "@nozbe/watermelondb";
+import { field, readonly, children } from "@nozbe/watermelondb/decorators";
+import TrainingEvent from "./TrainingEvent";
+import Participant from "./Participant";
+import Client from "./Client";
 
 export default class Village extends Model {
     static table = "village";
     static associations = {
-        // training_event: { type: <const>"has_many", foreignKey: "village" },
+        training_event: { type: <const>"has_many", foreignKey: "village" },
+        client: { type: <const>"has_many", foreignKey: "village" },
+        participant: { type: <const>"has_many", foreignKey: "village" },
     };
 
     @readonly @field("name") name!: string;
@@ -24,5 +23,22 @@ export default class Village extends Model {
     @readonly @field("latitude") latitude!: number;
     @readonly @field("longitude") longitude!: number;
 
-    // @children("training_event") trainingEvents!: Query<TrainingEvent>;
+    @children("training_event") trainingEvents!: Query<TrainingEvent>;
+    @children("client") clients!: Query<Client>;
+    @children("participant") participants!: Query<Participant>;
+
+    // TrainingEvent writer, starting from village, passing the TrainingModule as argument
+    // @writer async addTrainingEvent(trainingModule: string, scheduledFor: string | Date = "2024-12-01") {
+    //     const newTrainingEvent = await this.collections
+    //         .get<TrainingEvent>("training_event")
+    //         .create((trainingEvent) => {
+    //             trainingEvent.trainingModule.set(this);
+    //             trainingEvent.scheduledFor =
+    //                 scheduledFor instanceof Date
+    //                     ? scheduledFor.getTime()
+    //                     : new Date(scheduledFor).getTime();
+    //         });
+
+    //     return newTrainingEvent;
+    // }
 }
