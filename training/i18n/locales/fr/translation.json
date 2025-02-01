@@ -3,5 +3,9 @@
         "title": "Se connecter",
         "usernamePlaceholder": "Nom d'utilisateur",
         "passwordPlaceholder": "Mot de passe"
+    },
+    "noRoleHome": {
+        "message": "Vous n'avez pas de rôle d'utilisateur défini pour cette application",
+        "instructions": "Vérifiez auprès de votre administrateur"
     }
 }

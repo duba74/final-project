@@ -3,5 +3,9 @@
         "title": "Login",
         "usernamePlaceholder": "Username",
         "passwordPlaceholder": "Password"
+    },
+    "noRoleHome": {
+        "message": "You don't have a user role set for this app",
+        "instructions": "Check with your administrator"
     }
 }

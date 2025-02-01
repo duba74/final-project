@@ -8,6 +8,13 @@ STAFF_LIST = [
         "role": "admin",
     },
     {
+        "username": "noroleuser",
+        "email": "noroleuser@test.com",
+        "password": "qqqq",
+        "first_name": "No Role User",
+        "last_name": "Test",
+    },
+    {
         "username": "mltrainer1",
         "email": "mltrainer1@test.com",
         "password": "qqqq",

@@ -41,7 +41,11 @@ class AuthView(APIView):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "full_name": f"{user.first_name} {user.last_name}",
-            "role": user.staff.role.id,
+            "role": (
+                user.staff.role.id
+                if hasattr(user.staff, "role") and user.staff.role
+                else None
+            ),
             "country": user.staff.country,
         }
 

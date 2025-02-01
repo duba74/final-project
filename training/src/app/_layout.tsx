@@ -15,7 +15,7 @@ import i18n from "i18n";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function Root() {
+const Root = () => {
     const colorScheme = useColorScheme();
     const [loaded, error] = useFonts({
         SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
@@ -42,4 +42,6 @@ export default function Root() {
             </SessionProvider>
         </ThemeProvider>
     );
-}
+};
+
+export default Root;

@@ -56,8 +56,8 @@ describe("Auth", () => {
         expect(mockLogin).toHaveBeenCalledWith(usernameInput, passwordInput);
     });
 
-    it("redirects to index route when session is not null", async () => {
-        const session = JSON.stringify({ name: "foo" });
+    it("redirects when session is not null", async () => {
+        const session = JSON.stringify({ user: "foo" });
 
         (useSession as MockedUseSession).mockReturnValue({
             ...realUseSession,
@@ -67,11 +67,11 @@ describe("Auth", () => {
         render(<Auth />);
 
         await waitFor(() => {
-            expect(mockRouterReplace).toHaveBeenCalledWith("/");
+            expect(mockRouterReplace).toHaveBeenCalledTimes(1);
         });
     });
 
-    it("doesn't redirects to index route when session is null", async () => {
+    it("doesn't redirect route when session is null", async () => {
         const session = null;
 
         (useSession as MockedUseSession).mockReturnValue({
@@ -83,6 +83,70 @@ describe("Auth", () => {
 
         await waitFor(() => {
             expect(mockRouterReplace).not.toHaveBeenCalled();
+        });
+    });
+
+    it("redirects to trainer home when role is trainer", async () => {
+        const session = JSON.stringify({ user: { role: "trainer" } });
+
+        (useSession as MockedUseSession).mockReturnValue({
+            ...realUseSession,
+            session: session,
+        });
+
+        render(<Auth />);
+
+        await waitFor(() => {
+            expect(mockRouterReplace).toHaveBeenCalledWith(
+                "/(app)/trainer/home"
+            );
+        });
+    });
+
+    it("redirects to planner home when role is planner", async () => {
+        const session = JSON.stringify({ user: { role: "planner" } });
+
+        (useSession as MockedUseSession).mockReturnValue({
+            ...realUseSession,
+            session: session,
+        });
+
+        render(<Auth />);
+
+        await waitFor(() => {
+            expect(mockRouterReplace).toHaveBeenCalledWith(
+                "/(app)/planner/home"
+            );
+        });
+    });
+
+    it("redirects to admin home when role is admin", async () => {
+        const session = JSON.stringify({ user: { role: "admin" } });
+
+        (useSession as MockedUseSession).mockReturnValue({
+            ...realUseSession,
+            session: session,
+        });
+
+        render(<Auth />);
+
+        await waitFor(() => {
+            expect(mockRouterReplace).toHaveBeenCalledWith("/(app)/admin/home");
+        });
+    });
+
+    it("redirects to index when user has no role", async () => {
+        const session = JSON.stringify({ user: "foo" });
+
+        (useSession as MockedUseSession).mockReturnValue({
+            ...realUseSession,
+            session: session,
+        });
+
+        render(<Auth />);
+
+        await waitFor(() => {
+            expect(mockRouterReplace).toHaveBeenCalledWith("/");
         });
     });
 });

@@ -16,10 +16,22 @@ const Auth = () => {
 
     useEffect(() => {
         if (session) {
-            const user = JSON.parse(session);
-            console.log(user);
+            try {
+                const user = JSON.parse(session).user;
+                console.log(user);
 
-            router.replace("/");
+                if (user.role === "trainer") {
+                    router.replace("/(app)/trainer/home");
+                } else if (user.role === "planner") {
+                    router.replace("/(app)/planner/home");
+                } else if (user.role === "admin") {
+                    router.replace("/(app)/admin/home");
+                } else {
+                    router.replace("/");
+                }
+            } catch (error) {
+                console.error(`Failed to parse session: ${error}`);
+            }
         }
     }, [session, router]);
 

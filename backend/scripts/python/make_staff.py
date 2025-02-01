@@ -49,7 +49,10 @@ def create_or_update_staff(staff_list):
         else:
             print(f"Updated user: {user}")
 
-        role = Role.objects.get(id=s["role"])
+        if s.get("role", None):
+            role = Role.objects.get(id=s["role"])
+        else:
+            role = None
 
         staff, created = Staff.objects.update_or_create(
             user=user,
