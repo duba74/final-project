@@ -24,6 +24,7 @@ const PlannerHome = () => {
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            testID="planner-home"
         >
             <Button title="Logout" onPress={logout} />
             <Button title="Secondary Sync" onPress={handleSecondarySync} />

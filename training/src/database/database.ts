@@ -7,22 +7,22 @@ import { createAdapter } from "./adapter";
 import { setGenerator } from "@nozbe/watermelondb/utils/common/randomId";
 
 import TrainingModule from "./data-model/models/TrainingModule";
-// import TrainingEvent from "./data-model/models/TrainingEvent";
+import TrainingEvent from "./data-model/models/TrainingEvent";
 import Village from "./data-model/models/Village";
 import Client from "./data-model/models/Client";
 
-setGenerator(() => randomUUID());
+setGenerator(() => randomUUID().toString());
 
 const database = new Database({
     adapter: createAdapter({ schema /*, migrations*/ }),
-    modelClasses: [TrainingModule, Village, Client],
+    modelClasses: [TrainingModule, TrainingEvent, Village, Client],
 });
 
 export default database;
 
 export const trainingModuleCollection =
     database.get<TrainingModule>("training_module");
-// export const trainingEventCollection =
-//     database.get<TrainingEvent>("training_event");
+export const trainingEventCollection =
+    database.get<TrainingEvent>("training_event");
 export const villageCollection = database.get<Village>("village");
 export const clientCollection = database.get<Client>("client");
