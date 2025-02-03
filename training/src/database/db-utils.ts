@@ -3,6 +3,8 @@ import database, {
     trainingModuleCollection,
     villageCollection,
     clientCollection,
+    staffCollection,
+    assignmentCollection,
 } from "./database";
 
 export const logRecords = async (collection: string) => {
@@ -25,6 +27,14 @@ export const logRecords = async (collection: string) => {
             data = await clientCollection.query().fetch();
             break;
 
+        case "staff":
+            data = await staffCollection.query().fetch();
+            break;
+
+        case "assignment":
+            data = await assignmentCollection.query().fetch();
+            break;
+
         default:
             break;
     }
@@ -36,22 +46,6 @@ export const logRecords = async (collection: string) => {
             console.log(JSON.stringify(e._raw, null, 4));
         });
     }
-};
-
-export const addTrainingModule = async (
-    name = "m1",
-    topic = "Composting",
-    startDate = new Date("2012-02-10T13:19:11+0000").getTime(),
-    endDate = new Date("2012-04-10T13:19:11+0000").getTime()
-) => {
-    await database.write(async () => {
-        await trainingModuleCollection.create((m) => {
-            m.name = name;
-            m.topic = topic;
-            m.startDate = startDate;
-            m.endDate = endDate;
-        });
-    });
 };
 
 export const deleteAllRecordsFromTable = async (tableName: string) => {

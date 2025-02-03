@@ -35,9 +35,18 @@ const secondarySync = async (authToken: string) => {
             // console.log(await response.text());
             const { changes, timestamp } = await response.json();
 
-            await deleteAllRecordsFromTable("village");
-            await deleteAllRecordsFromTable("client");
-            await deleteAllRecordsFromTable("training_module");
+            const tables = [
+                "village",
+                "client",
+                "training_module",
+                "assignment",
+                "staff",
+            ];
+
+            tables.forEach(async (table) => {
+                await deleteAllRecordsFromTable(table);
+                console.log(`deleted ${table}`);
+            });
 
             console.log(`🍉 Pull succeeded at timestamp = ${timestamp}`);
             console.log(typeof timestamp);

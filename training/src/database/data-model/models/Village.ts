@@ -3,6 +3,7 @@ import { field, readonly, children } from "@nozbe/watermelondb/decorators";
 import TrainingEvent from "./TrainingEvent";
 import Participant from "./Participant";
 import Client from "./Client";
+import Assignment from "./Assignment";
 
 export default class Village extends Model {
     static table = "village";
@@ -10,6 +11,7 @@ export default class Village extends Model {
         training_event: { type: <const>"has_many", foreignKey: "village" },
         client: { type: <const>"has_many", foreignKey: "village" },
         participant: { type: <const>"has_many", foreignKey: "village" },
+        assignment: { type: <const>"has_many", foreignKey: "village" },
     };
 
     @readonly @field("name") name!: string;
@@ -26,6 +28,7 @@ export default class Village extends Model {
     @children("training_event") trainingEvents!: Query<TrainingEvent>;
     @children("client") clients!: Query<Client>;
     @children("participant") participants!: Query<Participant>;
+    @children("assignment") assignments!: Query<Assignment>;
 
     // TrainingEvent writer, starting from village, passing the TrainingModule as argument
     // @writer async addTrainingEvent(trainingModule: string, scheduledFor: string | Date = "2024-12-01") {

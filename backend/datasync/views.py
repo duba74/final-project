@@ -238,6 +238,16 @@ class SecondarySync(APIView):
                         "updated": self.get_data(headers, "trainingmodules"),
                         "deleted": [],
                     },
+                    "staff": {
+                        "created": [],
+                        "updated": self.get_data(headers, "staff"),
+                        "deleted": [],
+                    },
+                    "assignment": {
+                        "created": [],
+                        "updated": self.get_data(headers, "assignments"),
+                        "deleted": [],
+                    },
                 },
                 "timestamp": int(
                     last_pulled_at

@@ -55,6 +55,7 @@ def create_or_update_staff(staff_list):
             role = None
 
         staff, created = Staff.objects.update_or_create(
+            id=user.username,
             user=user,
             defaults={
                 "role": role,

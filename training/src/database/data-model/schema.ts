@@ -79,5 +79,24 @@ export default appSchema({
                 { name: "is_active", type: "boolean" },
             ],
         }),
+        tableSchema({
+            name: "assignment",
+            columns: [
+                { name: "staff", type: "number" },
+                { name: "village", type: "string" },
+                { name: "start_date", type: "number" },
+                { name: "end_date", type: "number" },
+            ],
+        }),
+        tableSchema({
+            name: "staff",
+            columns: [
+                { name: "country", type: "string" },
+                { name: "role_id", type: "string" },
+                { name: "role_name", type: "string" },
+                { name: "first_name", type: "string" },
+                { name: "last_name", type: "string" },
+            ],
+        }),
     ],
 });

@@ -12,6 +12,7 @@ class Role(models.Model):
 
 
 class Staff(models.Model):
+    id = models.CharField(primary_key=True, max_length=31)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
     country = models.CharField(max_length=7, null=True, blank=True)

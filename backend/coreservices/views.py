@@ -7,12 +7,14 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .utils import extract_token, validate_token
-from .models import Assignment, Village, Client, TrainingModule
+from .models import Assignment, Village, Client, TrainingModule, Staff
 from .serializers import (
     AuthSerializer,
     VillageSerializer,
     ClientSerializer,
     TrainingModuleSerializer,
+    StaffSerializer,
+    AssignmentSerializer,
 )
 
 
@@ -126,5 +128,35 @@ class TrainingModuleView(AuthenticatedAPIView):
         )
 
         data = TrainingModuleSerializer(training_modules, many=True).data
+
+        return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)
+
+
+class StaffView(AuthenticatedAPIView):
+    def get(self, request, *args, **kwargs):
+        staff = Staff.objects.filter(
+            country=self.user.staff.country,
+        )
+
+        data = StaffSerializer(staff, many=True).data
+
+        return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)
+
+
+class AssignmentView(AuthenticatedAPIView):
+    def get(self, request, *args, **kwargs):
+        today = timezone.now().date()
+
+        assignments = Assignment.objects.filter(
+            Q(staff=self.user.staff)
+            & Q(start_date__lte=today)
+            & (Q(end_date__gte=today) | Q(end_date__isnull=True))
+        )
+
+        assigned_village_ids = assignments.values_list("village_id", flat=True)
+
+        assignments = Assignment.objects.filter(village__in=assigned_village_ids)
+
+        data = AssignmentSerializer(assignments, many=True).data
 
         return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)

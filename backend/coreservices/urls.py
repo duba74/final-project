@@ -5,6 +5,8 @@ from .views import (
     VillageView,
     ClientView,
     TrainingModuleView,
+    StaffView,
+    AssignmentView,
 )
 
 
@@ -22,4 +24,6 @@ urlpatterns = [
         TrainingModuleView.as_view(),
         name="training_modules",
     ),
+    path("coreservices/api/staff/", StaffView.as_view(), name="staff"),
+    path("coreservices/api/assignments/", AssignmentView.as_view(), name="assignments"),
 ]

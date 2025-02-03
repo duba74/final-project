@@ -1,3 +1,4 @@
+import VillageList from "@/components/village-list/VillageList";
 import { logRecords } from "@/database/db-utils";
 import secondarySync from "@/database/secondary-sync";
 import { useSession } from "@/hooks/useSession";
@@ -37,6 +38,8 @@ const PlannerHome = () => {
                 onPress={() => logRecords("trainingModule")}
             />
             <Button title="Log Clients" onPress={() => logRecords("client")} />
+
+            <VillageList />
         </View>
     );
 };

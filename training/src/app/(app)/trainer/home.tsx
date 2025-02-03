@@ -37,6 +37,11 @@ const TrainerHome = () => {
                 onPress={() => logRecords("trainingModule")}
             />
             <Button title="Log Clients" onPress={() => logRecords("client")} />
+            <Button title="Log Staff" onPress={() => logRecords("staff")} />
+            <Button
+                title="Log Assignments"
+                onPress={() => logRecords("assignment")}
+            />
         </View>
     );
 };
