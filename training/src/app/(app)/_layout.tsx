@@ -5,21 +5,109 @@ import { useSession } from "@/hooks/useSession";
 const AppLayout = () => {
     const { session, isLoading } = useSession();
 
-    // You can keep the splash screen open, or render a loading screen like we do here.
     if (isLoading) {
         return <Text>Loading...</Text>;
     }
 
-    // Only require authentication within the (app) group's layout as users
-    // need to be able to access the (auth) group and sign in again.
     if (!session) {
-        // On web, static rendering will stop here as the user is not authenticated
-        // in the headless Node process that the pages are rendered in.
         return <Redirect href="/auth" />;
     }
 
-    // This layout can be deferred because it's not the root layout.
     return <Stack />;
 };
 
 export default AppLayout;
+
+// import { Text } from "react-native";
+// import { Href, Redirect, Stack } from "expo-router";
+// import { useSession } from "@/hooks/useSession";
+// import { useEffect, useState, useMemo } from "react";
+
+// const AppLayout = () => {
+//     const { session, isLoading } = useSession();
+
+//     const redirectPath = useMemo(() => {
+//         if (isLoading) {
+//             return null;
+//         }
+
+//         if (!session) {
+//             return "/auth";
+//         }
+
+//         try {
+//             const user = JSON.parse(session).user;
+//             if (user.role === "planner") {
+//                 return "/(app)/planner/home";
+//             } else if (user.role === "trainer") {
+//                 return "/(app)/trainer/home";
+//             } else if (user.role === "admin") {
+//                 return "/(app)/admin/home";
+//             } else {
+//                 return "/";
+//             }
+//         } catch (error) {
+//             console.error(`Failed to parse session: ${error}`);
+//             return "/auth";
+//         }
+//     }, [isLoading, session]);
+
+//     useEffect(() => {
+//         // Logging for debugging purposes
+//         console.log("Session:", session);
+//         console.log("Is Loading:", isLoading);
+//         console.log("Redirect Path:", redirectPath);
+//     }, [session, isLoading, redirectPath]);
+
+//     if (isLoading) {
+//         return <Text>Loading...</Text>;
+//     }
+
+//     if (redirectPath) {
+//         return <Redirect href={redirectPath} />;
+//     }
+//     // const [redirectPath, setRedirectPath] = useState<Href | null>(null);
+
+//     // const handleRedirect = () => {
+//     //     if (!isLoading) {
+//     //         if (!session) {
+//     //             return "/auth";
+//     //         } else {
+//     //             try {
+//     //                 const user = JSON.parse(session).user;
+//     //                 if (user.role === "planner") {
+//     //                     return "/(app)/planner/home";
+//     //                 } else if (user.role === "trainer") {
+//     //                     return "/(app)/trainer/home";
+//     //                 } else if (user.role === "admin") {
+//     //                     return "/(app)/admin/home";
+//     //                 } else {
+//     //                     return "/";
+//     //                 }
+//     //             } catch (error) {
+//     //                 console.error(`Failed to parse session: ${error}`);
+//     //                 return "/auth";
+//     //             }
+//     //         }
+//     //     }
+//     // };
+
+//     // useEffect(() => {
+//     //     if (!isLoading) {
+//     //         const path = handleRedirect() as Href;
+//     //         setRedirectPath(path);
+//     //     }
+//     // }, [isLoading, session, redirectPath]);
+
+//     // if (isLoading) {
+//     //     return <Text>Loading...</Text>;
+//     // }
+
+//     // if (redirectPath) {
+//     //     return <Redirect href={redirectPath} />;
+//     // }
+
+//     return <Stack />;
+// };
+
+// export default AppLayout;

@@ -1,36 +1,56 @@
 import secondarySync from "@/database/secondary-sync";
 import { useSession } from "@/hooks/useSession";
+import { Href, Redirect, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Text, View } from "react-native";
 
 const Index = () => {
-    const { t } = useTranslation();
-    const { logout, session } = useSession();
+    const { session, isLoading } = useSession();
+    const [redirectPath, setRedirectPath] = useState<Href | null>(null);
 
-    const handleSecondarySync = () => {
-        if (session) {
-            try {
-                const parsedSession = JSON.parse(session);
-                const token = parsedSession.token;
-
-                secondarySync(token);
-            } catch (error) {
-                console.error("Failed to parse session:", error);
+    useEffect(() => {
+        if (!isLoading && !redirectPath) {
+            if (!session) {
+                setRedirectPath("/auth" as Href);
+            } else {
+                try {
+                    const user = JSON.parse(session).user;
+                    if (user.role === "planner") {
+                        setRedirectPath("/(app)/planner/home" as Href);
+                    } else if (user.role === "trainer") {
+                        setRedirectPath("/(app)/trainer/home" as Href);
+                    } else if (user.role === "admin") {
+                        setRedirectPath("/(app)/admin/home" as Href);
+                    } else {
+                        setRedirectPath("/(app)/norole/home" as Href);
+                    }
+                } catch (error) {
+                    console.error(`Failed to parse session: ${error}`);
+                    setRedirectPath("/auth" as Href);
+                }
             }
-        } else {
-            console.error("No session available");
         }
-    };
+    }, [isLoading, session, redirectPath]);
 
-    return (
-        <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-            <Text>{t("noRoleHome.message")}</Text>
-            <Text>{t("noRoleHome.instructions")}</Text>
-            <Button title="Logout" onPress={logout} />
-        </View>
-    );
+    // Logging to help diagnose issues
+    console.log("Session:", session);
+    console.log("Is Loading:", isLoading);
+    console.log("Redirect Path:", redirectPath);
+
+    if (isLoading) {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
+    if (redirectPath) {
+        return <Redirect href={redirectPath} />;
+    }
+
+    return null;
 };
 
 export default Index;

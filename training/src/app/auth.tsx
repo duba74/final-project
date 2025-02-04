@@ -27,7 +27,7 @@ const Auth = () => {
                 } else if (user.role === "admin") {
                     router.replace("/(app)/admin/home");
                 } else {
-                    router.replace("/");
+                    router.replace("/(app)/norole/home");
                 }
             } catch (error) {
                 console.error(`Failed to parse session: ${error}`);

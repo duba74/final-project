@@ -146,7 +146,9 @@ describe("Auth", () => {
         render(<Auth />);
 
         await waitFor(() => {
-            expect(mockRouterReplace).toHaveBeenCalledWith("/");
+            expect(mockRouterReplace).toHaveBeenCalledWith(
+                "/(app)/norole/home"
+            );
         });
     });
 });

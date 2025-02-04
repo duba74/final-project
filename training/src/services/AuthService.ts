@@ -19,7 +19,7 @@ export const login = async (username: string, password: string) => {
     const host =
         Platform.OS === "web"
             ? "http://127.0.0.1:8000"
-            : "https://fa04-41-216-53-63.ngrok-free.app";
+            : "https://0758-41-79-219-28.ngrok-free.app";
     const endpoint = "/api/login/";
     const url = host + endpoint;
 

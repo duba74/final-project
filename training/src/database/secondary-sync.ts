@@ -7,7 +7,7 @@ const secondarySync = async (authToken: string) => {
     const host =
         Platform.OS === "web"
             ? "http://127.0.0.1:8000"
-            : "https://d2e1-197-234-221-131.ngrok-free.app";
+            : "https://0758-41-79-219-28.ngrok-free.app";
 
     await synchronize({
         database,

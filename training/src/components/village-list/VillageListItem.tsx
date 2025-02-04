@@ -2,6 +2,7 @@ import Village from "@/database/data-model/models/Village";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
+import ThemedText from "../themed/ThemedText";
 
 type trainingEvent = {
     id: string;
@@ -23,13 +24,13 @@ const VillageListItem = ({ village, trainingEvents }: VillageListItemProps) => {
 
     return (
         <View>
-            <Text>{village.name}</Text>
+            <ThemedText>{village.name}</ThemedText>
             <Pressable onPress={toggleExpanded}>
-                <Text>{isExpanded ? "▲" : "▼"}</Text>
+                <ThemedText>{isExpanded ? "▲" : "▼"}</ThemedText>
             </Pressable>
             {isExpanded && (
                 <View>
-                    <Text>Training Events show here...</Text>
+                    <ThemedText>Training Events show here...</ThemedText>
                     {/* {trainingEvents.length > 0 ? (
                         trainingEvents.map((event) => (
                             <View key={event.id} >
