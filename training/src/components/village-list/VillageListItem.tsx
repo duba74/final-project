@@ -3,6 +3,8 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import ThemedText from "../themed/ThemedText";
+import ThemedView from "../themed/ThemedView";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 type trainingEvent = {
     id: string;
@@ -16,20 +18,28 @@ type VillageListItemProps = {
 };
 
 const VillageListItem = ({ village, trainingEvents }: VillageListItemProps) => {
+    const router = useRouter();
     const [isExpanded, setExpanded] = useState<boolean>(false);
 
     const toggleExpanded = () => {
         setExpanded(!isExpanded);
     };
 
+    const handleAddEvent = () => {
+        router.navigate({
+            pathname: "./planner-event-modal",
+            params: { village: village.id },
+        });
+    };
+
     return (
-        <View>
+        <ThemedView>
             <ThemedText>{village.name}</ThemedText>
             <Pressable onPress={toggleExpanded}>
                 <ThemedText>{isExpanded ? "▲" : "▼"}</ThemedText>
             </Pressable>
             {isExpanded && (
-                <View>
+                <ThemedView>
                     <ThemedText>Training Events show here...</ThemedText>
                     {/* {trainingEvents.length > 0 ? (
                         trainingEvents.map((event) => (
@@ -42,9 +52,12 @@ const VillageListItem = ({ village, trainingEvents }: VillageListItemProps) => {
                     ) : (
                         <Text>No training events available</Text>
                     )} */}
-                </View>
+                    <Pressable onPress={handleAddEvent}>
+                        <ThemedText>Add Event</ThemedText>
+                    </Pressable>
+                </ThemedView>
             )}
-        </View>
+        </ThemedView>
     );
 };
 
