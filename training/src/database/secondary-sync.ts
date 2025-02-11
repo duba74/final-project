@@ -2,12 +2,11 @@ import { synchronize } from "@nozbe/watermelondb/sync";
 import database from "./database";
 import { Platform } from "react-native";
 import { deleteAllRecordsFromTable } from "./db-utils";
+import URLS from "@/constants/Urls";
 
 const secondarySync = async (authToken: string) => {
     const host =
-        Platform.OS === "web"
-            ? "http://127.0.0.1:8000"
-            : "https://f4c5-41-85-163-74.ngrok-free.app";
+        Platform.OS === "web" ? URLS.backend.web : URLS.backend.android;
 
     await synchronize({
         database,

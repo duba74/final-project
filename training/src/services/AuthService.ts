@@ -6,6 +6,7 @@ import {
     AuthenticationError,
     ServerError,
 } from "@/errors/errors";
+import URLS from "@/constants/Urls";
 
 export const login = async (username: string, password: string) => {
     const credentials = {
@@ -17,9 +18,7 @@ export const login = async (username: string, password: string) => {
     console.log(JSON.stringify(credentials));
 
     const host =
-        Platform.OS === "web"
-            ? "http://127.0.0.1:8000"
-            : "https://f4c5-41-85-163-74.ngrok-free.app";
+        Platform.OS === "web" ? URLS.backend.web : URLS.backend.android;
     const endpoint = "/api/login/";
     const url = host + endpoint;
 

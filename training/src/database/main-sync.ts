@@ -1,12 +1,11 @@
 import { synchronize } from "@nozbe/watermelondb/sync";
 import database from "./database";
 import { Platform } from "react-native";
+import URLS from "@/constants/Urls";
 
 const mainSync = async () => {
     const host =
-        Platform.OS === "web"
-            ? "http://127.0.0.1:8000"
-            : "https://0758-41-79-219-28.ngrok-free.app";
+        Platform.OS === "web" ? URLS.backend.web : URLS.backend.android;
 
     await synchronize({
         database,
