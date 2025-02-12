@@ -1,9 +1,15 @@
 import { Model, Query } from "@nozbe/watermelondb";
-import { field, readonly, children } from "@nozbe/watermelondb/decorators";
+import {
+    field,
+    readonly,
+    children,
+    writer,
+} from "@nozbe/watermelondb/decorators";
 import TrainingEvent from "./TrainingEvent";
 import Participant from "./Participant";
 import Client from "./Client";
 import Assignment from "./Assignment";
+import { trainingModuleCollection } from "@/database/database";
 
 export default class Village extends Model {
     static table = "village";
@@ -31,17 +37,28 @@ export default class Village extends Model {
     @children("assignment") assignments!: Query<Assignment>;
 
     // TrainingEvent writer, starting from village, passing the TrainingModule as argument
-    // @writer async addTrainingEvent(trainingModule: string, scheduledFor: string | Date = "2024-12-01") {
-    //     const newTrainingEvent = await this.collections
-    //         .get<TrainingEvent>("training_event")
-    //         .create((trainingEvent) => {
-    //             trainingEvent.trainingModule.set(this);
-    //             trainingEvent.scheduledFor =
-    //                 scheduledFor instanceof Date
-    //                     ? scheduledFor.getTime()
-    //                     : new Date(scheduledFor).getTime();
-    //         });
+    @writer async addTrainingEvent(
+        trainingModule: string,
+        scheduledFor: string | Date,
+        scheduledTimeOfDay: string,
+        createdBy: string
+    ) {
+        const currentTrainingModule = await trainingModuleCollection.find(
+            trainingModule
+        );
+        const newTrainingEvent = await this.collections
+            .get<TrainingEvent>("training_event")
+            .create((trainingEvent) => {
+                trainingEvent.village.set(this);
+                trainingEvent.trainingModule.set(currentTrainingModule);
+                trainingEvent.scheduledFor =
+                    scheduledFor instanceof Date
+                        ? scheduledFor.getTime()
+                        : new Date(scheduledFor).getTime();
+                trainingEvent.scheduledTime = scheduledTimeOfDay;
+                trainingEvent.createdBy = createdBy;
+            });
 
-    //     return newTrainingEvent;
-    // }
+        return newTrainingEvent;
+    }
 }

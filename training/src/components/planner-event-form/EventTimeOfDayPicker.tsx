@@ -1,23 +1,47 @@
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { text } from "@nozbe/watermelondb/decorators";
 import { Picker } from "@react-native-picker/picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type EventTimeOfDayPickerProps = {
+    lightColor?: string;
+    darkColor?: string;
+    defaultTimeOfDay: string;
     setEventTimeOfDay: (timeOfDay: string) => void;
 };
 
 const EventTimeOfDayPicker = ({
+    lightColor,
+    darkColor,
+    defaultTimeOfDay,
     setEventTimeOfDay,
 }: EventTimeOfDayPickerProps) => {
-    const [timeOfDay, setTimeOfDay] = useState<string>("AM");
+    const textColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "text"
+    );
+    const backgroundColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "background"
+    );
+    const [timeOfDay, setTimeOfDay] = useState<string>(defaultTimeOfDay);
+
+    useEffect(() => {
+        setTimeOfDay(defaultTimeOfDay);
+        setEventTimeOfDay(defaultTimeOfDay);
+    }, [defaultTimeOfDay]);
+
+    const handleValueChange = (itemValue: string, itemIndex: number) => {
+        setTimeOfDay(itemValue);
+        setEventTimeOfDay(itemValue);
+    };
 
     return (
         <Picker
-            style={{ color: "#fff" }}
+            style={{ color: textColor, backgroundColor: backgroundColor }}
+            dropdownIconColor={textColor}
             selectedValue={timeOfDay}
-            onValueChange={(itemValue, itemIndex) => {
-                setTimeOfDay(itemValue);
-                setEventTimeOfDay(itemValue);
-            }}
+            onValueChange={handleValueChange}
         >
             <Picker.Item label="AM" value="AM" />
             <Picker.Item label="PM" value="PM" />

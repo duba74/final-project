@@ -3,20 +3,44 @@ import {
     DateTimePickerAndroid,
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { createElement, useState } from "react";
-import { Platform, Pressable, Text } from "react-native";
+import { createElement, useEffect, useState } from "react";
+import { Platform, Pressable, Text /*useColorScheme*/ } from "react-native";
 import ThemedText from "../themed/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { format } from "date-fns";
 
 type EventDatePickerProps = {
-    setEventDate: (date: Date | undefined) => void;
+    lightColor?: string;
+    darkColor?: string;
+    defaultDate: Date | undefined;
+    setEventDate: (date: Date) => void;
 };
 
-const EventDatePicker = ({ setEventDate }: EventDatePickerProps) => {
-    const [date, setDate] = useState<Date>();
+const EventDatePicker = ({
+    lightColor,
+    darkColor,
+    defaultDate,
+    setEventDate,
+}: EventDatePickerProps) => {
+    // const webTheme = useColorScheme() ?? "light";
+    const textColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "text"
+    );
+    const backgroundColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "background"
+    );
+    const [date, setDate] = useState<Date | undefined>(defaultDate);
+
+    // useEffect(() => {
+    //     setDate(defaultDate);
+    //     // setEventDate(defaultDate);
+    // }, [defaultDate]);
 
     const onChange = (event: DateTimePickerEvent, date?: Date) => {
         setDate(date);
-        setEventDate(date);
+        if (date) setEventDate(date);
     };
 
     if (Platform.OS === "android") {
@@ -44,11 +68,6 @@ const EventDatePicker = ({ setEventDate }: EventDatePickerProps) => {
             </Pressable>
         );
     } else if (Platform.OS === "web") {
-        return createElement("input", {
-            type: "date",
-            value: date,
-            onInput: onChange,
-        });
     } else {
         return (
             <DateTimePicker
