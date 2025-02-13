@@ -11,15 +11,21 @@ import ThemedButton from "../themed/ThemedButton";
 import { villageCollection } from "@/database/database";
 import { format } from "date-fns";
 import { useSession } from "@/hooks/useSession";
+import { useRouter } from "expo-router";
 
 const defaultDate = addDays(new Date(), 1);
 const defaultTimeOfDay = "AM";
 
 type PlannerEventFormProps = {
     village: string;
+    currentModule: string;
 };
 
-const PlannerEventForm = ({ village }: PlannerEventFormProps) => {
+const PlannerEventForm = ({
+    village,
+    currentModule,
+}: PlannerEventFormProps) => {
+    const router = useRouter();
     const { session } = useSession();
     const [eventDate, setEventDate] = useState<Date>(defaultDate);
     const [eventTimeOfDay, setEventTimeOfDay] =
@@ -31,6 +37,7 @@ const PlannerEventForm = ({ village }: PlannerEventFormProps) => {
     // Get the user ID from the session for created_by
 
     const handleSubmit = async () => {
+        console.log(`Current module: ${currentModule}`);
         console.log(`Event village: ${village}`);
         console.log(`Event date: ${eventDate}`);
         console.log(`Event time of day: ${eventTimeOfDay}`);
@@ -46,13 +53,15 @@ const PlannerEventForm = ({ village }: PlannerEventFormProps) => {
 
             const villageRecord = await villageCollection.find(village);
             const newTrainingEvent = await villageRecord.addTrainingEvent(
-                "m1_ml",
+                currentModule,
                 format(eventDate, "yyyy-MM-dd"),
                 eventTimeOfDay,
                 user.username
             );
 
             console.log(newTrainingEvent);
+
+            router.back();
         } catch (error) {
             console.error(`Failed to create event ${error}`);
         }

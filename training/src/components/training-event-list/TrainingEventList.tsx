@@ -5,16 +5,22 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { ObservableifyProps } from "@nozbe/watermelondb/react/withObservables";
 import { FlatList, StyleSheet } from "react-native";
 import TrainingEventListItem from "./TrainingEventListItem";
+import { useCurrentModule } from "@/hooks/useCurrentModule";
+import { Q } from "@nozbe/watermelondb";
 
 type TrainingEventListProps = {
     village: Village;
+    currentModule: string;
     trainingEvents: TrainingEvent[];
 };
 
 const TrainingEventList = ({
     village,
+    currentModule,
     trainingEvents,
 }: TrainingEventListProps) => {
+    console.log(`currentModule: ${currentModule}`);
+
     return (
         <FlatList
             data={trainingEvents}
@@ -26,11 +32,15 @@ const TrainingEventList = ({
     );
 };
 
-type InputProps = ObservableifyProps<TrainingEventListProps, "village">;
-const enhance = withObservables(["village"], ({ village }: InputProps) => ({
-    village,
-    trainingEvents: village.trainingEvents,
-}));
+const enhance = withObservables(
+    ["village", "currentModule"],
+    ({ village, currentModule }: TrainingEventListProps) => ({
+        village,
+        trainingEvents: village.trainingEvents.extend(
+            Q.where("training_module", currentModule)
+        ),
+    })
+);
 
 export default enhance(TrainingEventList);
 

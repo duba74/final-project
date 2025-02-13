@@ -1,11 +1,14 @@
+import TrainingModulePicker from "@/components/planner-event-form/TrainingModulePicker";
 import VillageList from "@/components/village-list/VillageList";
 import { logRecords } from "@/database/db-utils";
 import secondarySync from "@/database/secondary-sync";
+import { useCurrentModule } from "@/hooks/useCurrentModule";
 import { useSession } from "@/hooks/useSession";
 import { Button, View } from "react-native";
 
 const PlannerHome = () => {
     const { logout, session } = useSession();
+    const { currentModule } = useCurrentModule();
 
     const handleSecondarySync = () => {
         if (session) {
@@ -24,7 +27,12 @@ const PlannerHome = () => {
 
     return (
         <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                // width: "100%",
+            }}
             testID="planner-home"
         >
             <Button title="Logout" onPress={logout} />
@@ -38,8 +46,8 @@ const PlannerHome = () => {
                 onPress={() => logRecords("trainingModule")}
             />
             <Button title="Log Clients" onPress={() => logRecords("client")} />
-
-            <VillageList />
+            <TrainingModulePicker currentModule={currentModule} />
+            <VillageList currentModule={currentModule} />
         </View>
     );
 };

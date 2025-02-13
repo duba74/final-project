@@ -1,5 +1,4 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { text } from "@nozbe/watermelondb/decorators";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 

@@ -12,6 +12,7 @@ import {
 } from "@react-navigation/native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import i18n from "i18n";
+import TrainingModuleProvider from "@/context/TrainingModuleContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,7 +38,9 @@ const Root = () => {
         >
             <SessionProvider>
                 <I18nextProvider i18n={i18n}>
-                    <Slot />
+                    <TrainingModuleProvider>
+                        <Slot />
+                    </TrainingModuleProvider>
                 </I18nextProvider>
             </SessionProvider>
         </ThemeProvider>
