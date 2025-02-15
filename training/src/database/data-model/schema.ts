@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 export default appSchema({
-    version: 1,
+    version: 2,
     tables: [
         tableSchema({
             name: "training_event",
@@ -14,7 +14,7 @@ export default appSchema({
                 { name: "is_canceled", type: "boolean", isOptional: true },
                 { name: "village", type: "string" },
                 { name: "completed_at", type: "number", isOptional: true },
-                { name: "location", type: "string" },
+                { name: "location", type: "string", isOptional: true },
                 { name: "comments", type: "string", isOptional: true },
                 { name: "training_module", type: "string" },
             ],

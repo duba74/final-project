@@ -31,17 +31,17 @@ const VillageListItem = ({ village, currentModule }: VillageListItemProps) => {
     return (
         <ThemedView>
             <ThemedView style={{ marginBottom: 5 }}>
-                <ThemedView
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <ThemedText>{village.name}</ThemedText>
-                    <Pressable onPress={toggleExpanded}>
+                <Pressable onPress={toggleExpanded}>
+                    <ThemedView
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <ThemedText type="subtitle">{village.name}</ThemedText>
                         <ThemedText>{isExpanded ? "▲" : "▼"}</ThemedText>
-                    </Pressable>
-                </ThemedView>
+                    </ThemedView>
+                </Pressable>
                 {isExpanded && (
                     <ThemedView>
                         <TrainingEventList
