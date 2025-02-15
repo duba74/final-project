@@ -8,7 +8,10 @@ import { useState } from "react";
 import { addDays } from "date-fns";
 import WebEventDatePicker from "./WebEventDatePicker";
 import ThemedButton from "../themed/ThemedButton";
-import { villageCollection } from "@/database/database";
+import {
+    trainingModuleCollection,
+    villageCollection,
+} from "@/database/database";
 import { format } from "date-fns";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
@@ -52,8 +55,11 @@ const PlannerEventForm = ({
             console.log(user);
 
             const villageRecord = await villageCollection.find(village);
+            const trainingModuleRecord = await trainingModuleCollection.find(
+                currentModule
+            );
             const newTrainingEvent = await villageRecord.addTrainingEvent(
-                currentModule,
+                trainingModuleRecord,
                 format(eventDate, "yyyy-MM-dd"),
                 eventTimeOfDay,
                 user.username

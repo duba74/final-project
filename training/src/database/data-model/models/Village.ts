@@ -9,7 +9,7 @@ import TrainingEvent from "./TrainingEvent";
 import Participant from "./Participant";
 import Client from "./Client";
 import Assignment from "./Assignment";
-import { trainingModuleCollection } from "@/database/database";
+import TrainingModule from "./TrainingModule";
 
 export default class Village extends Model {
     static table = "village";
@@ -38,19 +38,16 @@ export default class Village extends Model {
 
     // TrainingEvent writer, starting from village, passing the TrainingModule as argument
     @writer async addTrainingEvent(
-        trainingModule: string,
+        trainingModule: TrainingModule,
         scheduledFor: string | Date,
         scheduledTimeOfDay: string,
         createdBy: string
     ) {
-        const currentTrainingModule = await trainingModuleCollection.find(
-            trainingModule
-        );
         const newTrainingEvent = await this.collections
             .get<TrainingEvent>("training_event")
             .create((trainingEvent) => {
                 trainingEvent.village.set(this);
-                trainingEvent.trainingModule.set(currentTrainingModule);
+                trainingEvent.trainingModule.set(trainingModule);
                 trainingEvent.scheduledFor =
                     scheduledFor instanceof Date
                         ? scheduledFor.getTime()

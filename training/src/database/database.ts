@@ -37,5 +37,6 @@ export const trainingEventCollection =
     database.get<TrainingEvent>("training_event");
 export const villageCollection = database.get<Village>("village");
 export const clientCollection = database.get<Client>("client");
-export const staffCollection = database.get<Staff>("staff");
 export const assignmentCollection = database.get<Assignment>("assignment");
+export const participantCollection = database.get<Participant>("participant");
+export const staffCollection = database.get<Staff>("staff");

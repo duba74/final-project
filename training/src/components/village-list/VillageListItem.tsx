@@ -7,15 +7,59 @@ import ThemedView from "../themed/ThemedView";
 import { useRouter } from "expo-router";
 import TrainingEventList from "../training-event-list/TrainingEventList";
 import ThemedButton from "../themed/ThemedButton";
+import { Q } from "@nozbe/watermelondb";
+import TrainingEvent from "@/database/data-model/models/TrainingEvent";
+import { format, startOfToday } from "date-fns";
+
+const getNextEventDate = (trainingEvents: TrainingEvent[]) => {
+    const today = startOfToday().getTime();
+
+    const futureEvents = trainingEvents.filter(
+        (e) => e.scheduledFor >= today && !e.isCanceled
+    );
+    const pastEvents = trainingEvents.filter(
+        (e) => e.scheduledFor < today && !e.isCanceled
+    );
+
+    const nextEventTime = Math.min(...futureEvents.map((e) => e.scheduledFor));
+    const mostRecentEventTime = Math.max(
+        ...pastEvents.map((e) => e.scheduledFor)
+    );
+
+    const nextEventDate = isFinite(nextEventTime)
+        ? new Date(nextEventTime)
+        : null;
+    const mostRecentEventDate = isFinite(mostRecentEventTime)
+        ? new Date(mostRecentEventTime)
+        : null;
+
+    console.log(`nextEventDate: ${nextEventDate}`);
+    console.log(`mostRecentEventDate: ${mostRecentEventDate}`);
+
+    return nextEventDate || mostRecentEventDate;
+};
 
 type VillageListItemProps = {
     village: Village;
+    trainingEvents: TrainingEvent[];
     currentModule: string;
+    activeTrainingEventCount: number;
+    canceledTrainingEventCount: number;
+    completedTrainingEventCount: number;
 };
 
-const VillageListItem = ({ village, currentModule }: VillageListItemProps) => {
+const VillageListItem = ({
+    village,
+    currentModule,
+    trainingEvents,
+    activeTrainingEventCount,
+    canceledTrainingEventCount,
+    completedTrainingEventCount,
+}: VillageListItemProps) => {
     const router = useRouter();
     const [isExpanded, setExpanded] = useState<boolean>(false);
+
+    const nextEventDate = getNextEventDate(trainingEvents);
 
     const toggleExpanded = () => {
         setExpanded(!isExpanded);
@@ -38,7 +82,29 @@ const VillageListItem = ({ village, currentModule }: VillageListItemProps) => {
                             justifyContent: "space-between",
                         }}
                     >
-                        <ThemedText type="subtitle">{village.name}</ThemedText>
+                        <View>
+                            <ThemedText type="subtitle">
+                                {village.name}
+                            </ThemedText>
+                            <View style={{ flexDirection: "row", gap: 15 }}>
+                                <ThemedText>
+                                    Active: {activeTrainingEventCount}
+                                </ThemedText>
+                                <ThemedText>
+                                    Canceled: {canceledTrainingEventCount}
+                                </ThemedText>
+                                <ThemedText>
+                                    Completed: {completedTrainingEventCount}
+                                </ThemedText>
+                            </View>
+
+                            {nextEventDate && nextEventDate !== new Date(0) && (
+                                <ThemedText>
+                                    Next event date:{" "}
+                                    {format(nextEventDate, "PPPP")}
+                                </ThemedText>
+                            )}
+                        </View>
                         <ThemedText>{isExpanded ? "▲" : "▼"}</ThemedText>
                     </ThemedView>
                 </Pressable>
@@ -65,9 +131,30 @@ const VillageListItem = ({ village, currentModule }: VillageListItemProps) => {
 };
 
 const enhance = withObservables(
-    ["village"],
-    ({ village }: VillageListItemProps) => ({
+    ["village", "currentModule"],
+    ({ village, currentModule }: VillageListItemProps) => ({
         village,
+        trainingEvents: village.trainingEvents
+            .extend(Q.where("training_module", currentModule))
+            .observe(),
+        activeTrainingEventCount: village.trainingEvents
+            .extend(
+                Q.where("training_module", currentModule),
+                Q.where("is_canceled", Q.notEq(true))
+            )
+            .observeCount(),
+        canceledTrainingEventCount: village.trainingEvents
+            .extend(
+                Q.where("training_module", currentModule),
+                Q.where("is_canceled", true)
+            )
+            .observeCount(),
+        completedTrainingEventCount: village.trainingEvents
+            .extend(
+                Q.where("training_module", currentModule),
+                Q.where("completed_at", Q.notEq(null))
+            )
+            .observeCount(),
     })
 );
 

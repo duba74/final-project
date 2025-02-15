@@ -27,8 +27,11 @@ export default class TrainingEvent extends Model {
     @date("scheduled_for") scheduledFor!: number;
     @field("scheduled_time") scheduledTime!: string;
     @field("is_canceled") isCanceled!: boolean | null;
+
+    // Allow change for development
     // @nochange @date("completed_at") completedAt!: number | null;
     @date("completed_at") completedAt!: number | null;
+
     @nochange @field("location") location!: string;
     @text("comments") comments!: string | null;
 
@@ -38,12 +41,15 @@ export default class TrainingEvent extends Model {
 
     @children("participant") participants!: Query<Participant>;
 
+    // Should probably be irreversible, not toggle-able
     @writer async toggleCancelEvent() {
         await this.update((trainingEvent) => {
             trainingEvent.isCanceled = !trainingEvent.isCanceled ? true : false;
         });
     }
 
+    // Not a real method, just for development, use a different method for actual event completion
+    // For real method, don't allow cancel if already completed
     @writer async toggleCompleteEvent() {
         await this.update((trainingEvent) => {
             trainingEvent.completedAt = !trainingEvent.completedAt
