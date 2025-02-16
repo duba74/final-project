@@ -1,32 +1,32 @@
-import { View, Text, Platform } from "react-native";
+import { View, Platform } from "react-native";
 import EventDatePicker from "./EventDatePicker";
 import ThemedView from "../themed/ThemedView";
 import ThemedText from "../themed/ThemedText";
-import ThemedTextInput from "../themed/ThemedTextInput";
 import EventTimeOfDayPicker from "./EventTimeOfDayPicker";
 import { useState } from "react";
 import { addDays } from "date-fns";
 import WebEventDatePicker from "./WebEventDatePicker";
 import ThemedButton from "../themed/ThemedButton";
-import {
-    trainingModuleCollection,
-    villageCollection,
-} from "@/database/database";
 import { format } from "date-fns";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
+import TrainingEvent from "@/database/data-model/models/TrainingEvent";
+import Village from "@/database/data-model/models/Village";
+import TrainingModule from "@/database/data-model/models/TrainingModule";
 
 const defaultDate = addDays(new Date(), 1);
 const defaultTimeOfDay = "AM";
 
 type PlannerEventFormProps = {
-    village: string;
-    currentModule: string;
+    village?: Village | null;
+    trainingModule?: TrainingModule | null;
+    trainingEvent?: TrainingEvent | null;
 };
 
 const PlannerEventForm = ({
     village,
-    currentModule,
+    trainingModule,
+    trainingEvent,
 }: PlannerEventFormProps) => {
     const router = useRouter();
     const { session } = useSession();
@@ -39,11 +39,13 @@ const PlannerEventForm = ({
     // Get the module from context provider (still need to make this)
     // Get the user ID from the session for created_by
 
-    const handleSubmit = async () => {
-        console.log(`Current module: ${currentModule}`);
-        console.log(`Event village: ${village}`);
+    const handleCreateEvent = async () => {
+        console.log(`Training module: ${trainingModule?.name}`);
+        console.log(`Event village: ${village?.name}`);
         console.log(`Event date: ${eventDate}`);
         console.log(`Event time of day: ${eventTimeOfDay}`);
+
+        if (!village || !trainingModule) return;
 
         if (!session) {
             console.log("No session");
@@ -54,12 +56,8 @@ const PlannerEventForm = ({
             const user = JSON.parse(session).user;
             console.log(user);
 
-            const villageRecord = await villageCollection.find(village);
-            const trainingModuleRecord = await trainingModuleCollection.find(
-                currentModule
-            );
-            const newTrainingEvent = await villageRecord.addTrainingEvent(
-                trainingModuleRecord,
+            const newTrainingEvent = await village.addTrainingEvent(
+                trainingModule,
                 format(eventDate, "yyyy-MM-dd"),
                 eventTimeOfDay,
                 user.username
@@ -73,26 +71,86 @@ const PlannerEventForm = ({
         }
     };
 
+    const handleCancelEvent = async () => {
+        await trainingEvent?.toggleCancelEvent();
+        router.back();
+    };
+
+    const handleDeleteEvent = async () => {
+        await trainingEvent?.deleteEvent();
+        router.back();
+    };
+
+    const handleToggleCompletion = async () => {
+        await trainingEvent?.toggleCompleteEvent();
+        router.back();
+    };
+
+    const handleGoBack = () => {
+        router.back();
+    };
+
     return (
         <ThemedView>
             <ThemedText>Event Form For Planner</ThemedText>
-            <ThemedText>Village: {village}</ThemedText>
-            {Platform.OS === "web" ? (
-                <WebEventDatePicker
-                    defaultDate={defaultDate}
-                    setEventDate={setEventDate}
-                />
-            ) : (
-                <EventDatePicker
-                    defaultDate={defaultDate}
-                    setEventDate={setEventDate}
-                />
+            <ThemedText>Training Module: {trainingModule?.name}</ThemedText>
+            <ThemedText>Village: {village?.name}</ThemedText>
+            {!trainingEvent &&
+                (Platform.OS === "web" ? (
+                    <>
+                        <WebEventDatePicker
+                            defaultDate={defaultDate}
+                            setEventDate={setEventDate}
+                        />
+                        <EventTimeOfDayPicker
+                            defaultTimeOfDay={defaultTimeOfDay}
+                            setEventTimeOfDay={setEventTimeOfDay}
+                        />
+                        <ThemedButton
+                            title="Create Event"
+                            onPress={handleCreateEvent}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <EventDatePicker
+                            defaultDate={defaultDate}
+                            setEventDate={setEventDate}
+                        />
+                        <EventTimeOfDayPicker
+                            defaultTimeOfDay={defaultTimeOfDay}
+                            setEventTimeOfDay={setEventTimeOfDay}
+                        />
+                        <ThemedButton
+                            title="Create Event"
+                            onPress={handleCreateEvent}
+                        />
+                    </>
+                ))}
+            {trainingEvent && (
+                <>
+                    <ThemedText>
+                        Scheduled date:{" "}
+                        {format(trainingEvent.scheduledFor, "PPPP")}
+                    </ThemedText>
+                    <ThemedText>
+                        Scheduled time of day: {trainingEvent.scheduledTime}
+                    </ThemedText>
+                    <ThemedButton
+                        title="Cancel Event"
+                        onPress={handleCancelEvent}
+                    />
+                    <ThemedButton
+                        title="Delete Event"
+                        onPress={handleDeleteEvent}
+                    />
+                    <ThemedButton
+                        title="Toggle Completion"
+                        onPress={handleToggleCompletion}
+                    />
+                </>
             )}
-            <EventTimeOfDayPicker
-                defaultTimeOfDay={defaultTimeOfDay}
-                setEventTimeOfDay={setEventTimeOfDay}
-            />
-            <ThemedButton title="Submit" onPress={handleSubmit} />
+            <ThemedButton title="Go Back" onPress={handleGoBack} />
         </ThemedView>
     );
 };

@@ -8,6 +8,7 @@ import {
     children,
     immutableRelation,
     writer,
+    lazy,
 } from "@nozbe/watermelondb/decorators";
 import TrainingModule from "./TrainingModule";
 import Village from "./Village";
@@ -41,6 +42,15 @@ export default class TrainingEvent extends Model {
 
     @children("participant") participants!: Query<Participant>;
 
+    // @lazy trainer = some query that gets the village -> assignment -> staff
+    // where the assignment dates contain the event date
+    // Example nested join from watermelondb docs (https://watermelondb.dev/docs/Query#deep-qons)
+    // this queries tasks that are inside projects that are inside teams where team.foo == 'bar'
+    // tasksCollection.query(
+    //   Q.experimentalNestedJoin('projects', 'teams'),
+    //   Q.on('projects', Q.on('teams', 'foo', 'bar')),
+    // )
+
     // Should probably be irreversible, not toggle-able
     @writer async toggleCancelEvent() {
         await this.update((trainingEvent) => {
@@ -56,6 +66,10 @@ export default class TrainingEvent extends Model {
                 ? new Date().getTime()
                 : null;
         });
+    }
+
+    @writer async deleteEvent() {
+        await this.markAsDeleted();
     }
 
     //   @writer async markAsSpam() {

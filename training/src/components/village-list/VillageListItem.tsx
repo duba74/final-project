@@ -1,7 +1,7 @@
 import Village from "@/database/data-model/models/Village";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import ThemedText from "../themed/ThemedText";
 import ThemedView from "../themed/ThemedView";
 import { useRouter } from "expo-router";
@@ -32,9 +32,6 @@ const getNextEventDate = (trainingEvents: TrainingEvent[]) => {
     const mostRecentEventDate = isFinite(mostRecentEventTime)
         ? new Date(mostRecentEventTime)
         : null;
-
-    console.log(`nextEventDate: ${nextEventDate}`);
-    console.log(`mostRecentEventDate: ${mostRecentEventDate}`);
 
     return nextEventDate || mostRecentEventDate;
 };
@@ -68,7 +65,7 @@ const VillageListItem = ({
     const handleAddEvent = () => {
         router.navigate({
             pathname: "./planner-event-modal",
-            params: { village: village.id, currentModule: currentModule },
+            params: { villageId: village.id, currentModuleId: currentModule },
         });
     };
 
@@ -110,6 +107,7 @@ const VillageListItem = ({
                 </Pressable>
                 {isExpanded && (
                     <ThemedView>
+                        <View style={styles.separator} />
                         <TrainingEventList
                             village={village}
                             currentModule={currentModule}
@@ -126,6 +124,7 @@ const VillageListItem = ({
                     </ThemedView>
                 )}
             </ThemedView>
+            <View style={styles.separator} />
         </ThemedView>
     );
 };
@@ -160,4 +159,10 @@ const enhance = withObservables(
 
 export default enhance(VillageListItem);
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    separator: {
+        height: 1,
+        backgroundColor: "#aaa",
+        marginVertical: 10,
+    },
+});

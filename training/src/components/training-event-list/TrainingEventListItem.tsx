@@ -14,44 +14,43 @@ type TrainingEventListItemProps = {
 const TrainingEventListItem = ({
     trainingEvent,
 }: TrainingEventListItemProps) => {
-    const toggleCancelEvent = async () => {
-        await trainingEvent.toggleCancelEvent();
-    };
+    const router = useRouter();
 
-    const toggleCompleteEvent = async () => {
-        await trainingEvent.toggleCompleteEvent();
+    const handleModifyEvent = async () => {
+        router.navigate({
+            pathname: "./planner-event-modal",
+            params: { trainingEventId: trainingEvent.id },
+        });
     };
 
     return (
         <ThemedView>
-            <ThemedView
-                style={{
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    gap: 15,
-                    marginVertical: 10,
-                }}
-            >
-                <ThemedText>
-                    {format(trainingEvent.scheduledFor, "PPPP")}
-                </ThemedText>
-                <ThemedText>{trainingEvent.scheduledTime}</ThemedText>
-                <ThemedText>{trainingEvent.createdBy}</ThemedText>
-                {trainingEvent.isCanceled && <ThemedText>Canceled!</ThemedText>}
-                {trainingEvent.completedAt && (
+            <Pressable onPress={handleModifyEvent}>
+                <ThemedView
+                    style={{
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: 15,
+                        marginVertical: 10,
+                    }}
+                >
                     <ThemedText>
-                        Completed on{" "}
-                        {format(trainingEvent.completedAt, "PPPPp")}
+                        {format(trainingEvent.scheduledFor, "PPPP")}
                     </ThemedText>
-                )}
-            </ThemedView>
-            <Pressable onPress={toggleCancelEvent}>
-                <ThemedText>Cancel event</ThemedText>
+                    <ThemedText>{trainingEvent.scheduledTime}</ThemedText>
+                    <ThemedText>{trainingEvent.createdBy}</ThemedText>
+                    {trainingEvent.isCanceled && (
+                        <ThemedText>Canceled!</ThemedText>
+                    )}
+                    {trainingEvent.completedAt && (
+                        <ThemedText>
+                            Completed on{" "}
+                            {format(trainingEvent.completedAt, "PPPPp")}
+                        </ThemedText>
+                    )}
+                </ThemedView>
+                <View style={styles.separator} />
             </Pressable>
-            <Pressable onPress={toggleCompleteEvent}>
-                <ThemedText>Toggle completion</ThemedText>
-            </Pressable>
-            <View style={styles.separator} />
         </ThemedView>
     );
 };
