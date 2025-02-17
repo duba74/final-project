@@ -50,8 +50,8 @@ export default class Village extends Model {
                 trainingEvent.trainingModule.set(trainingModule);
                 trainingEvent.scheduledFor =
                     scheduledFor instanceof Date
-                        ? scheduledFor.getTime()
-                        : new Date(scheduledFor).getTime();
+                        ? scheduledFor
+                        : new Date(scheduledFor);
                 trainingEvent.scheduledTime = scheduledTimeOfDay;
                 trainingEvent.createdBy = createdBy;
             });

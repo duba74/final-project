@@ -54,6 +54,10 @@ const PlannerHome = () => {
                 title="Log Training Events"
                 onPress={() => logRecords("trainingEvent")}
             />
+            <Button
+                title="Log Assignments"
+                onPress={() => logRecords("assignment")}
+            />
             <TrainingModulePicker currentModule={currentModule} />
             <VillageList currentModule={currentModule} />
         </View>

@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 export default appSchema({
-    version: 1,
+    version: 2,
     tables: [
         tableSchema({
             name: "training_event",
@@ -82,10 +82,10 @@ export default appSchema({
         tableSchema({
             name: "assignment",
             columns: [
-                { name: "staff", type: "number" },
+                { name: "staff", type: "string" },
                 { name: "village", type: "string" },
                 { name: "start_date", type: "number" },
-                { name: "end_date", type: "number" },
+                { name: "end_date", type: "number", isOptional: true },
             ],
         }),
         tableSchema({

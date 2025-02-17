@@ -1,4 +1,4 @@
-import { Model, Query, Relation } from "@nozbe/watermelondb";
+import { Model, Q, Query, Relation } from "@nozbe/watermelondb";
 import {
     field,
     text,
@@ -13,6 +13,8 @@ import {
 import TrainingModule from "./TrainingModule";
 import Village from "./Village";
 import Participant from "./Participant";
+import Assignment from "./Assignment";
+import { map } from "@nozbe/watermelondb/utils/rx";
 
 export default class TrainingEvent extends Model {
     static table = "training_event";
@@ -25,7 +27,7 @@ export default class TrainingEvent extends Model {
     @nochange @field("created_by") createdBy!: string;
     @readonly @date("created_at") createdAt!: number;
     @readonly @date("updated_at") updatedAt!: number;
-    @date("scheduled_for") scheduledFor!: number;
+    @date("scheduled_for") scheduledFor!: Date;
     @field("scheduled_time") scheduledTime!: string;
     @field("is_canceled") isCanceled!: boolean | null;
 
@@ -42,7 +44,26 @@ export default class TrainingEvent extends Model {
 
     @children("participant") participants!: Query<Participant>;
 
-    // @lazy trainer = some query that gets the village -> assignment -> staff
+    // TO DO:
+    // Filter out non-trainers
+    // Get the actual staff record, not assignment
+    // Get just the first record? Maybe not necessary
+    @lazy trainers = this.collections
+        .get<Assignment>("assignment")
+        .query(
+            Q.where("village", this.village.id),
+            Q.where("start_date", Q.lte(this.scheduledFor.getTime())),
+            Q.or(
+                Q.where("end_date", Q.eq(null)),
+                Q.where("end_date", Q.gte(this.scheduledFor.getTime()))
+            )
+        );
+    // .observe()
+    // .pipe(
+    //     map((assignments) =>
+    //         assignments.length > 0 ? assignments[0].staff : null
+    //     )
+    // );
     // where the assignment dates contain the event date
     // Example nested join from watermelondb docs (https://watermelondb.dev/docs/Query#deep-qons)
     // this queries tasks that are inside projects that are inside teams where team.foo == 'bar'

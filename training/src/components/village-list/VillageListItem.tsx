@@ -12,7 +12,7 @@ import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import { format, startOfToday } from "date-fns";
 
 const getNextEventDate = (trainingEvents: TrainingEvent[]) => {
-    const today = startOfToday().getTime();
+    const today = startOfToday(); //.getTime();
 
     const futureEvents = trainingEvents.filter(
         (e) => e.scheduledFor >= today && !e.isCanceled
@@ -21,9 +21,11 @@ const getNextEventDate = (trainingEvents: TrainingEvent[]) => {
         (e) => e.scheduledFor < today && !e.isCanceled
     );
 
-    const nextEventTime = Math.min(...futureEvents.map((e) => e.scheduledFor));
+    const nextEventTime = Math.min(
+        ...futureEvents.map((e) => e.scheduledFor.getTime())
+    );
     const mostRecentEventTime = Math.max(
-        ...pastEvents.map((e) => e.scheduledFor)
+        ...pastEvents.map((e) => e.scheduledFor.getTime())
     );
 
     const nextEventDate = isFinite(nextEventTime)
