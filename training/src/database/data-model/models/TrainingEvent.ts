@@ -46,7 +46,7 @@ export default class TrainingEvent extends Model {
 
     // TO DO:
     // Filter out non-trainers
-    // Get the actual staff record, not assignment
+    // Get the actual staff record, not assignment, query staff with the nested join?
     // Get just the first record? Maybe not necessary
     @lazy trainers = this.collections
         .get<Assignment>("assignment")
