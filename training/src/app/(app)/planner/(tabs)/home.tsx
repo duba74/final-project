@@ -31,33 +31,9 @@ const PlannerHome = () => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-                // width: "100%",
             }}
             testID="planner-home"
         >
-            <Button title="Logout" onPress={logout} />
-            <Button title="Secondary Sync" onPress={handleSecondarySync} />
-            <Button
-                title="Log Villages"
-                onPress={() => logRecords("village")}
-            />
-            <Button
-                title="Log Training Modules"
-                onPress={() => logRecords("trainingModule")}
-            />
-            <Button
-                title="Log Current Training Module"
-                onPress={() => console.log(currentModule)}
-            />
-            <Button title="Log Clients" onPress={() => logRecords("client")} />
-            <Button
-                title="Log Training Events"
-                onPress={() => logRecords("trainingEvent")}
-            />
-            <Button
-                title="Log Assignments"
-                onPress={() => logRecords("assignment")}
-            />
             <TrainingModulePicker currentModule={currentModule} />
             <VillageList currentModule={currentModule} />
         </View>

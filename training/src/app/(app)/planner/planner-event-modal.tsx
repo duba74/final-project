@@ -72,7 +72,6 @@ const TrainingEventFormModal = () => {
 
     return (
         <View>
-            {" "}
             {isEditing ? (
                 <PlannerEventForm
                     village={village}

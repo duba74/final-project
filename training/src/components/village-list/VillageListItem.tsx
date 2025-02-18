@@ -66,7 +66,7 @@ const VillageListItem = ({
 
     const handleAddEvent = () => {
         router.navigate({
-            pathname: "./planner-event-modal",
+            pathname: "/(app)/planner/planner-event-modal",
             params: { villageId: village.id, currentModuleId: currentModule },
         });
     };

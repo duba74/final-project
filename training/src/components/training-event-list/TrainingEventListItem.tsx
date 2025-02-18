@@ -9,11 +9,12 @@ import Village from "@/database/data-model/models/Village";
 import { Q, Query } from "@nozbe/watermelondb";
 import Assignment from "@/database/data-model/models/Assignment";
 import { assignmentCollection } from "@/database/database";
+import Staff from "@/database/data-model/models/Staff";
 
 type TrainingEventListItemProps = {
     trainingEvent: TrainingEvent;
     village: Village;
-    trainers: Assignment[];
+    trainers: Staff[];
 };
 
 const TrainingEventListItem = ({
@@ -25,7 +26,7 @@ const TrainingEventListItem = ({
 
     const handleModifyEvent = async () => {
         router.navigate({
-            pathname: "./planner-event-modal",
+            pathname: "/(app)/planner/planner-event-modal",
             params: { trainingEventId: trainingEvent.id },
         });
     };
@@ -37,26 +38,32 @@ const TrainingEventListItem = ({
             <Pressable onPress={handleModifyEvent}>
                 <ThemedView
                     style={{
-                        flexDirection: "row",
-                        flexWrap: "wrap",
                         gap: 15,
                         marginVertical: 10,
                     }}
                 >
+                    <View style={{ flexDirection: "row" }}>
+                        <ThemedText>
+                            {format(trainingEvent.scheduledFor, "PPPP")}
+                            {", "}
+                        </ThemedText>
+                        <ThemedText>{trainingEvent.scheduledTime}</ThemedText>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                        <ThemedText>Created by: </ThemedText>
+                        <ThemedText>{trainingEvent.createdBy}</ThemedText>
+                    </View>
                     <ThemedText>
-                        {format(trainingEvent.scheduledFor, "PPPP")}
+                        Trainer(s):{" "}
+                        {trainers.length < 1
+                            ? `No assigned trainer!`
+                            : trainers
+                                  .map(
+                                      (trainer) =>
+                                          `${trainer.firstName} ${trainer.lastName} - ${trainer.id}`
+                                  )
+                                  .join(", ")}
                     </ThemedText>
-                    <ThemedText>{trainingEvent.scheduledTime}</ThemedText>
-                    <ThemedText>{village.id}</ThemedText>
-                    {trainers.map((t, i) => {
-                        return (
-                            <ThemedText key={i}>{`${t.staff.id}, ${format(
-                                t.startDate,
-                                "PP"
-                            )}, ${format(t.endDate, "PP")}`}</ThemedText>
-                        );
-                    })}
-                    <ThemedText>{trainingEvent.createdBy}</ThemedText>
                     {trainingEvent.isCanceled && (
                         <ThemedText>Canceled!</ThemedText>
                     )}

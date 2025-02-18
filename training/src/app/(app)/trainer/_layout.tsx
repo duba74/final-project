@@ -25,7 +25,11 @@ const TrainerLayout = () => {
     // need to be able to access the (auth) group and sign in again.
 
     // This layout can be deferred because it's not the root layout.
-    return <Stack />;
+    return (
+        <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+    );
 };
 
 export default TrainerLayout;

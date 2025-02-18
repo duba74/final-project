@@ -14,7 +14,7 @@ import TrainingModule from "./TrainingModule";
 import Village from "./Village";
 import Participant from "./Participant";
 import Assignment from "./Assignment";
-import { map } from "@nozbe/watermelondb/utils/rx";
+import Staff from "./Staff";
 
 export default class TrainingEvent extends Model {
     static table = "training_event";
@@ -44,19 +44,18 @@ export default class TrainingEvent extends Model {
 
     @children("participant") participants!: Query<Participant>;
 
-    // TO DO:
-    // Filter out non-trainers
-    // Get the actual staff record, not assignment, query staff with the nested join?
-    // Get just the first record? Maybe not necessary
     @lazy trainers = this.collections
-        .get<Assignment>("assignment")
+        .get<Staff>("staff")
         .query(
-            Q.where("village", this.village.id),
-            Q.where("start_date", Q.lte(this.scheduledFor.getTime())),
-            Q.or(
-                Q.where("end_date", Q.eq(null)),
-                Q.where("end_date", Q.gte(this.scheduledFor.getTime()))
-            )
+            Q.where("role_id", "trainer"),
+            Q.on("assignment", [
+                Q.where("village", this.village.id),
+                Q.where("start_date", Q.lte(this.scheduledFor.getTime())),
+                Q.or(
+                    Q.where("end_date", Q.eq(null)),
+                    Q.where("end_date", Q.gte(this.scheduledFor.getTime()))
+                ),
+            ])
         );
     // .observe()
     // .pipe(

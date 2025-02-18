@@ -1,5 +1,5 @@
 import React from "react";
-import PlannerHome from "../home";
+import PlannerHome from "../(tabs)/home";
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
