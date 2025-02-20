@@ -1,6 +1,7 @@
 import TrainingModulePicker from "@/components/planner-event-form/TrainingModulePicker";
 import VillageList from "@/components/village-list/VillageList";
 import { logRecords } from "@/database/db-utils";
+import mainSync from "@/database/main-sync";
 import secondarySync from "@/database/secondary-sync";
 import { useCurrentModule } from "@/hooks/useCurrentModule";
 import { useSession } from "@/hooks/useSession";
@@ -9,6 +10,21 @@ import { Button, View } from "react-native";
 const PlannerOperations = () => {
     const { logout, session } = useSession();
     const { currentModule } = useCurrentModule();
+
+    const handleMainSync = () => {
+        if (session) {
+            try {
+                const parsedSession = JSON.parse(session);
+                const token = parsedSession.token;
+
+                mainSync(token);
+            } catch (error) {
+                console.error(`Failed to parse session: ${error}`);
+            }
+        } else {
+            console.error("No session available");
+        }
+    };
 
     const handleSecondarySync = () => {
         if (session) {
@@ -36,6 +52,7 @@ const PlannerOperations = () => {
             testID="planner-home"
         >
             <Button title="Logout" onPress={logout} />
+            <Button title="Main Sync" onPress={handleMainSync} />
             <Button title="Secondary Sync" onPress={handleSecondarySync} />
             <Button
                 title="Log Villages"

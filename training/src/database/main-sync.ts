@@ -3,7 +3,7 @@ import database from "./database";
 import { Platform } from "react-native";
 import URLS from "@/constants/Urls";
 
-const mainSync = async () => {
+const mainSync = async (authToken: string) => {
     const host =
         Platform.OS === "web" ? URLS.backend.web : URLS.backend.android;
 
@@ -19,9 +19,12 @@ const mainSync = async () => {
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
             const url = `${host}/api/mainsync/?${urlParams}`;
-            console.log(url);
 
-            const response = await fetch(url);
+            const headers = { Authorization: `Bearer ${authToken}` };
+            const options = { method: "GET", headers: headers };
+
+            const response = await fetch(url, options);
+
             if (!response.ok) {
                 throw new Error(await response.text());
             }
@@ -35,36 +38,39 @@ const mainSync = async () => {
 
             return { changes, timestamp };
         },
-        pushChanges: async ({ changes, lastPulledAt }) => {
-            console.log(
-                `🍉 Attempting push with lastPulledAt = ${lastPulledAt}`
-            );
-            console.log(`🍉 Changes:`);
-            console.log(changes);
+        //     pushChanges: async ({ changes, lastPulledAt }) => {
+        //         console.log(
+        //             `🍉 Attempting push with lastPulledAt = ${lastPulledAt}`
+        //         );
+        //         console.log(`🍉 Changes:`);
+        //         console.log(changes);
 
-            const urlParams = `lastPulledAt=${lastPulledAt}`;
-            const url = `${host}/api/main-sync/${urlParams}`;
-            const payload = JSON.stringify({
-                changes,
-                lastPulledAt,
-            });
+        //         const urlParams = `lastPulledAt=${lastPulledAt}`;
+        //         const url = `${host}/api/main-sync/${urlParams}`;
 
-            console.log("payload");
-            console.log(payload);
+        //         const payload = JSON.stringify({
+        //             changes,
+        //             lastPulledAt,
+        //         });
 
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: payload,
-            });
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
+        //         const headers = {
+        //             Authorization: `Bearer ${authToken}`,
+        //             "Content-Type": "application/json",
+        //             body: payload,
+        //         };
+        //         const options = { method: "POST", headers: headers };
 
-            console.log(`🍉 Push successful`);
-        },
+        //         // console.log("payload");
+        //         // console.log(payload);
+
+        //         const response = await fetch(url, options);
+
+        //         if (!response.ok) {
+        //             throw new Error(await response.text());
+        //         }
+
+        //         console.log(`🍉 Push successful`);
+        //     },
     });
 };
 

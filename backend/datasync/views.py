@@ -1,6 +1,8 @@
 import requests
 import logging
 import json
+import os
+from dotenv import load_dotenv
 
 from django.utils import timezone
 from django.db import transaction
@@ -11,11 +13,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from integrations.coreservices.user_authentication import authenticate_user
+from integrations.coreservices.user_authentication import (
+    authenticate_user,
+    validate_token,
+)
+from integrations.coreservices.fetch_data import get_data
 
 from .models import TrainingEvent
 from .serializers import LoginSerializer, TrainingEventSerializer
 from .utils import convert_to_tz_aware_datetime, get_min_time, get_syncable_fields
+
+load_dotenv()
 
 
 class LoginView(APIView):
@@ -62,6 +70,15 @@ class LoginView(APIView):
 
 class MainSync(APIView):
     def get(self, request, *args, **kwargs):
+        headers = {"Authorization": request.headers.get("Authorization")}
+
+        # This serves as the user authentication
+        result = get_data(headers, "assignments")
+        if isinstance(result, Response):
+            return result  # If get_data returns a Response, it is an error, like invalid token
+
+        assignments = result
+
         last_pulled_at = request.query_params.get("lastPulledAt")
 
         print(last_pulled_at)
@@ -76,8 +93,11 @@ class MainSync(APIView):
 
         response_data = {
             "changes": {
-                "training_event": self.get_changes(
-                    TrainingEvent, TrainingEventSerializer, last_pulled_at
+                "training_event": self.get_changes(  # TO DO - Make a unique function for just getting the events matching assignments
+                    TrainingEvent,
+                    TrainingEventSerializer,
+                    last_pulled_at,
+                    assignments,
                 ),
             },
             "timestamp": self.get_unique_monotonic_timestamp(),
@@ -94,7 +114,9 @@ class MainSync(APIView):
         if last_pulled_at:
             last_pulled_at = convert_to_tz_aware_datetime(last_pulled_at)
         else:
-            raise Exception("No timestamp inclded.")
+            return Response(
+                {"error": "No timestamp included."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         print("Device is pushing...\nChanges sent from device:\n", changes)
 
@@ -109,7 +131,7 @@ class MainSync(APIView):
 
         return Response({"status": "success"}, status=status.HTTP_200_OK)
 
-    def get_changes(self, model, serializer, last_pulled_at):
+    def get_changes(self, model, serializer, last_pulled_at, assignments):
         queryset = model.objects.all()
 
         created = queryset.filter(
@@ -214,38 +236,57 @@ class SecondarySync(APIView):
         if last_pulled_at == "null":
             last_pulled_at = int(timezone.now().timestamp() * 1000)
 
-        # Call the core services API to get
-        # Villages (based on assignments associated with user token)
-        # Clients (based on assignments associated with user token)
-        # Training modules (based on country associated with user token)
-
-        # Return the stuff received from CS API
         try:
+            villages = get_data(headers, "villages")
+            if isinstance(villages, Response):
+                return villages
+
+            clients = get_data(headers, "clients")
+            if isinstance(clients, Response):
+                return clients
+
+            training_modules = get_data(headers, "trainingmodules")
+            if isinstance(training_modules, Response):
+                return training_modules
+
+            staff = get_data(headers, "staff")
+            if isinstance(staff, Response):
+                return staff
+
+            assignments = get_data(headers, "assignments")
+            if isinstance(assignments, Response):
+                return assignments
+
             response_data = {
                 "changes": {
                     "village": {
                         "created": [],
-                        "updated": self.get_data(headers, "villages"),
+                        "updated": villages,
+                        # "updated": self.get_data(headers, "villages"),
                         "deleted": [],
                     },
                     "client": {
                         "created": [],
-                        "updated": self.get_data(headers, "clients"),
+                        "updated": clients,
+                        # "updated": self.get_data(headers, "clients"),
                         "deleted": [],
                     },
                     "training_module": {
                         "created": [],
-                        "updated": self.get_data(headers, "trainingmodules"),
+                        "updated": training_modules,
+                        # "updated": self.get_data(headers, "trainingmodules"),
                         "deleted": [],
                     },
                     "staff": {
                         "created": [],
-                        "updated": self.get_data(headers, "staff"),
+                        "updated": staff,
+                        # "updated": self.get_data(headers, "staff"),
                         "deleted": [],
                     },
                     "assignment": {
                         "created": [],
-                        "updated": self.get_data(headers, "assignments"),
+                        "updated": assignments,
+                        # "updated": self.get_data(headers, "assignments"),
                         "deleted": [],
                     },
                 },
@@ -256,40 +297,9 @@ class SecondarySync(APIView):
 
             return Response(response_data, status=status.HTTP_200_OK)
 
-        except requests.exceptions.HTTPError as e:
-            logging.error(f"HTTP error: {e}")
+        except Exception as e:
+            logging.error(f"Error in SecondarySync view: {e}")
             return Response(
-                {"status": "error", "message": "Invalid token or authorization failed"},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-        except requests.exceptions.ConnectionError as e:
-            logging.error(f"Connection error: {e}")
-            return Response(
-                {"status": "error", "message": "Failed to connect to core services"},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE,
-            )
-        except requests.exceptions.Timeout as e:
-            logging.error(f"Timeout error: {e}")
-            return Response(
-                {"status": "error", "message": "Request to core services timed out"},
-                status=status.HTTP_504_GATEWAY_TIMEOUT,
-            )
-        except requests.exceptions.RequestException as e:
-            logging.error(f"Error: {e}")
-            return Response(
-                {"status": "error", "message": "An unexpected error occurred"},
+                {"status": "error", "message": "Some unexpected error occurred"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-    def get_data(self, headers, data):
-        url = f"http://127.0.0.1:8000/coreservices/api/{data}/"
-
-        try:
-            r = requests.get(url, headers=headers, timeout=10)
-            r.raise_for_status()
-            records = r.json()
-
-            return records["data"]
-        except requests.exceptions.RequestException as e:
-            logging.error(f"Error: {e}")
-            raise
