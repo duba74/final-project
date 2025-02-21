@@ -19,9 +19,15 @@ from integrations.coreservices.user_authentication import (
 )
 from integrations.coreservices.fetch_data import get_data
 
-from .models import TrainingEvent
-from .serializers import LoginSerializer, TrainingEventSerializer
-from .utils import convert_to_tz_aware_datetime, get_min_time, get_syncable_fields
+from datasync.models import TrainingEvent
+from datasync.serializers import LoginSerializer, TrainingEventSerializer
+from datasync.utils import (
+    convert_to_tz_aware_datetime,
+    get_min_time,
+    get_syncable_fields,
+)
+from datasync.fetch_data import get_changed_training_events
+
 
 load_dotenv()
 
@@ -39,7 +45,7 @@ class LoginView(APIView):
         try:
             response = authenticate_user(username, password)
 
-            if response.status_code == 200:
+            if response.status_code == status.HTTP_200_OK:
                 data = response.json()
                 return Response(
                     {
@@ -72,12 +78,14 @@ class MainSync(APIView):
     def get(self, request, *args, **kwargs):
         headers = {"Authorization": request.headers.get("Authorization")}
 
-        # This serves as the user authentication
-        result = get_data(headers, "assignments")
-        if isinstance(result, Response):
-            return result  # If get_data returns a Response, it is an error, like invalid token
+        # This serves as the user authentication; core services will validate the token
+        response = get_data(headers, "assignments")
+        if not response.status_code == status.HTTP_200_OK:
+            return response
+        else:
+            assignments = response.data["data"]
 
-        assignments = result
+        print(assignments)
 
         last_pulled_at = request.query_params.get("lastPulledAt")
 
@@ -93,11 +101,8 @@ class MainSync(APIView):
 
         response_data = {
             "changes": {
-                "training_event": self.get_changes(  # TO DO - Make a unique function for just getting the events matching assignments
-                    TrainingEvent,
-                    TrainingEventSerializer,
-                    last_pulled_at,
-                    assignments,
+                "training_event": get_changed_training_events(
+                    last_pulled_at, assignments
                 ),
             },
             "timestamp": self.get_unique_monotonic_timestamp(),
@@ -160,14 +165,23 @@ class MainSync(APIView):
 
         return changes
 
-    # WatermelonDB recommends using a procedure to verify that the timestamp sent back to the client is "unique" and "monotonic", meaning it should be greater than any updated_at field in any of the tables, so this function makes sure of that
+    # WatermelonDB recommends using a procedure to verify that the timestamp
+    # sent back to the client is "unique" and "monotonic",
+    # meaning it should be greater than any updated_at field in any of the tables,
+    # so this function makes sure of that
     def get_unique_monotonic_timestamp(self):
+        # Later when there are more models to sync, add them along with TrainingEvent
         max_updated_at = max(
             TrainingEvent.objects.all().aggregate(max_updated_at=Max("updated_at"))[
                 "max_updated_at"
             ]
             or get_min_time(),
+            get_min_time(),  # DELETE THIS WHEN MORE MODELS ARE ADDED ALONGSIDE TrainingEvent
         )
+
+        # max_updated_at = TrainingEvent.objects.all().aggregate(
+        #     max_updated_at=Max("updated_at")
+        # )["max_updated_at"]
 
         current_timestamp = timezone.now()
 
@@ -237,56 +251,61 @@ class SecondarySync(APIView):
             last_pulled_at = int(timezone.now().timestamp() * 1000)
 
         try:
-            villages = get_data(headers, "villages")
-            if isinstance(villages, Response):
-                return villages
+            response = get_data(headers, "villages")
+            if not response.status_code == status.HTTP_200_OK:
+                return response
+            else:
+                villages = response.data["data"]
 
-            clients = get_data(headers, "clients")
-            if isinstance(clients, Response):
-                return clients
+            response = get_data(headers, "clients")
+            if not response.status_code == status.HTTP_200_OK:
+                return response
+            else:
+                clients = response.data["data"]
 
-            training_modules = get_data(headers, "trainingmodules")
-            if isinstance(training_modules, Response):
-                return training_modules
+            response = get_data(headers, "trainingmodules")
+            if not response.status_code == status.HTTP_200_OK:
+                return response
+            else:
+                training_modules = response.data["data"]
 
-            staff = get_data(headers, "staff")
-            if isinstance(staff, Response):
-                return staff
+            response = get_data(headers, "staff")
+            if not response.status_code == status.HTTP_200_OK:
+                return response
+            else:
+                staff = response.data["data"]
 
-            assignments = get_data(headers, "assignments")
-            if isinstance(assignments, Response):
-                return assignments
+            response = get_data(headers, "assignments")
+            if not response.status_code == status.HTTP_200_OK:
+                return response
+            else:
+                assignments = response.data["data"]
 
             response_data = {
                 "changes": {
                     "village": {
                         "created": [],
                         "updated": villages,
-                        # "updated": self.get_data(headers, "villages"),
                         "deleted": [],
                     },
                     "client": {
                         "created": [],
                         "updated": clients,
-                        # "updated": self.get_data(headers, "clients"),
                         "deleted": [],
                     },
                     "training_module": {
                         "created": [],
                         "updated": training_modules,
-                        # "updated": self.get_data(headers, "trainingmodules"),
                         "deleted": [],
                     },
                     "staff": {
                         "created": [],
                         "updated": staff,
-                        # "updated": self.get_data(headers, "staff"),
                         "deleted": [],
                     },
                     "assignment": {
                         "created": [],
                         "updated": assignments,
-                        # "updated": self.get_data(headers, "assignments"),
                         "deleted": [],
                     },
                 },

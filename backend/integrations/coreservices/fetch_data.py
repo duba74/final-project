@@ -17,7 +17,9 @@ def get_data(headers, data):
         r.raise_for_status()
         records = r.json()
 
-        return records["data"]
+        return Response(
+            {"status": "success", "data": records["data"]}, status=status.HTTP_200_OK
+        )
 
     except requests.exceptions.HTTPError as e:
         logging.error(f"HTTP error: {e}")
