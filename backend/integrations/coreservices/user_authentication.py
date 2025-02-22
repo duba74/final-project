@@ -7,7 +7,7 @@ load_dotenv()
 
 
 def authenticate_user(username, password):
-    url = f"{os.getenv("core_services_host")}/coreservices/api/auth/"
+    url = f"{os.getenv("CORE_SERVICES_HOST")}/coreservices/api/auth/"
 
     return requests.post(
         url,
@@ -18,9 +18,7 @@ def authenticate_user(username, password):
     )
 
 
-def validate_token(auth_token):
+def validate_token(headers):
     url = f"{os.getenv("CORE_SERVICES_HOST")}/coreservices/api/validatetoken/"
-    headers = {"Authorization": auth_token}
-    response = requests.get(url, headers=headers)
 
-    return response.json()
+    return requests.get(url, headers=headers)

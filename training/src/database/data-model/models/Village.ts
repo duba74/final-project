@@ -4,6 +4,7 @@ import {
     readonly,
     children,
     writer,
+    nochange,
 } from "@nozbe/watermelondb/decorators";
 import TrainingEvent from "./TrainingEvent";
 import Participant from "./Participant";
@@ -20,16 +21,16 @@ export default class Village extends Model {
         assignment: { type: <const>"has_many", foreignKey: "village" },
     };
 
-    @readonly @field("name") name!: string;
-    @readonly @field("is_active") isActive!: boolean;
-    @readonly @field("zone_name") zoneName!: string;
-    @readonly @field("zone_code") zoneCode!: string;
-    @readonly @field("district_name") districtName!: string;
-    @readonly @field("district_code") districtCode!: string;
-    @readonly @field("country_name") countryName!: string;
-    @readonly @field("country_code") countryCode!: string;
-    @readonly @field("latitude") latitude!: number;
-    @readonly @field("longitude") longitude!: number;
+    @nochange @field("name") name!: string;
+    @nochange @field("is_active") isActive!: boolean;
+    @nochange @field("zone_name") zoneName!: string;
+    @nochange @field("zone_code") zoneCode!: string;
+    @nochange @field("district_name") districtName!: string;
+    @nochange @field("district_code") districtCode!: string;
+    @nochange @field("country_name") countryName!: string;
+    @nochange @field("country_code") countryCode!: string;
+    @nochange @field("latitude") latitude!: number | null;
+    @nochange @field("longitude") longitude!: number | null;
 
     @children("training_event") trainingEvents!: Query<TrainingEvent>;
     @children("client") clients!: Query<Client>;

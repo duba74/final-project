@@ -1,9 +1,13 @@
 from django.urls import path
-from .views import LoginView, MainSync, SecondarySync
+from .views import LoginView, Sync, SecondaryDataPull
 
 
 urlpatterns = [
     path("api/login/", LoginView.as_view(), name="login"),
-    path("api/mainsync/", MainSync.as_view(), name="main_sync"),
-    path("api/secondarysync/", SecondarySync.as_view(), name="secondary_sync"),
+    path("api/sync/", Sync.as_view(), name="sync"),
+    path(
+        "api/secondarydatapull/",
+        SecondaryDataPull.as_view(),
+        name="secondary_data_pull",
+    ),
 ]

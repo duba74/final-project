@@ -1,4 +1,4 @@
-import secondarySync from "@/database/secondary-sync";
+import secondarySync from "@/database/secondary-data-pull";
 import { useSession } from "@/hooks/useSession";
 import { Href, Redirect, useRouter } from "expo-router";
 import { useEffect, useState } from "react";

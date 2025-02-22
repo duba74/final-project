@@ -123,11 +123,14 @@ class ClientView(AuthenticatedAPIView):
 
 class TrainingModuleView(AuthenticatedAPIView):
     def get(self, request, *args, **kwargs):
+        print(self.user.staff.country)
         training_modules = TrainingModule.objects.filter(
             country=self.user.staff.country,
         )
+        print(training_modules)
 
         data = TrainingModuleSerializer(training_modules, many=True).data
+        print(data)
 
         return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)
 
@@ -147,6 +150,8 @@ class AssignmentView(AuthenticatedAPIView):
     def get(self, request, *args, **kwargs):
         today = timezone.now().date()
 
+        # self.user.staff
+
         assignments = Assignment.objects.filter(
             Q(staff=self.user.staff)
             & Q(start_date__lte=today)
@@ -155,7 +160,9 @@ class AssignmentView(AuthenticatedAPIView):
 
         assigned_village_ids = assignments.values_list("village_id", flat=True)
 
-        assignments = Assignment.objects.filter(village__in=assigned_village_ids)
+        assignments = Assignment.objects.filter(
+            staff=self.user.staff, village__in=assigned_village_ids
+        )
 
         data = AssignmentSerializer(assignments, many=True).data
 

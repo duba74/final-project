@@ -3,7 +3,7 @@ import database from "./database";
 import { Platform } from "react-native";
 import URLS from "@/constants/Urls";
 
-const mainSync = async (authToken: string) => {
+const sync = async (authToken: string) => {
     const host =
         Platform.OS === "web" ? URLS.backend.web : URLS.backend.android;
 
@@ -18,7 +18,7 @@ const mainSync = async (authToken: string) => {
 
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
-            const url = `${host}/api/mainsync/?${urlParams}`;
+            const url = `${host}/api/sync/?${urlParams}`;
 
             const headers = { Authorization: `Bearer ${authToken}` };
             const options = { method: "GET", headers: headers };
@@ -38,40 +38,40 @@ const mainSync = async (authToken: string) => {
 
             return { changes, timestamp };
         },
-        //     pushChanges: async ({ changes, lastPulledAt }) => {
-        //         console.log(
-        //             `🍉 Attempting push with lastPulledAt = ${lastPulledAt}`
-        //         );
-        //         console.log(`🍉 Changes:`);
-        //         console.log(changes);
+        pushChanges: async ({ changes, lastPulledAt }) => {
+            console.log(
+                `🍉 Attempting push with lastPulledAt = ${lastPulledAt}`
+            );
+            console.log(`🍉 Changes:`);
+            console.log(changes);
 
-        //         const urlParams = `lastPulledAt=${lastPulledAt}`;
-        //         const url = `${host}/api/main-sync/${urlParams}`;
+            const urlParams = `lastPulledAt=${lastPulledAt}`;
+            const url = `${host}/api/sync/?${urlParams}`;
 
-        //         const payload = JSON.stringify({
-        //             changes,
-        //             lastPulledAt,
-        //         });
+            const payload = JSON.stringify({
+                changes,
+                lastPulledAt,
+            });
 
-        //         const headers = {
-        //             Authorization: `Bearer ${authToken}`,
-        //             "Content-Type": "application/json",
-        //             body: payload,
-        //         };
-        //         const options = { method: "POST", headers: headers };
+            const headers = {
+                Authorization: `Bearer ${authToken}`,
+                "Content-Type": "application/json",
+                body: payload,
+            };
+            const options = { method: "POST", headers: headers };
 
-        //         // console.log("payload");
-        //         // console.log(payload);
+            console.log("payload");
+            console.log(payload);
 
-        //         const response = await fetch(url, options);
+            const response = await fetch(url, options);
 
-        //         if (!response.ok) {
-        //             throw new Error(await response.text());
-        //         }
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
 
-        //         console.log(`🍉 Push successful`);
-        //     },
+            console.log(`🍉 Push successful`);
+        },
     });
 };
 
-export default mainSync;
+export default sync;

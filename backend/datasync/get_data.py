@@ -1,8 +1,9 @@
-from django.db.models import Q
+from django.utils import timezone
+from django.db.models import Q, Max
 
-from datasync.models import TrainingEvent
+from datasync.models import TrainingEvent, Participant
 from datasync.serializers import TrainingEventSerializer
-from datasync.utils import convert_to_tz_aware_datetime
+from datasync.utils import convert_to_tz_aware_datetime, get_min_time
 
 
 def get_changed_training_events(last_pulled_at, assignments):
@@ -57,3 +58,28 @@ def get_changed_training_events(last_pulled_at, assignments):
     print("Changes sent to device:\n", changes)
 
     return changes
+
+
+# WatermelonDB recommends using a procedure to verify that the timestamp
+# sent back to the client is "unique" and "monotonic",
+# meaning it should be greater than any updated_at field in any of the tables,
+# so this function makes sure of that
+def get_unique_monotonic_timestamp():
+    # Later when there are more models to sync, add them along with TrainingEvent
+    max_updated_at = max(
+        TrainingEvent.objects.all().aggregate(max_updated_at=Max("updated_at"))[
+            "max_updated_at"
+        ]
+        or get_min_time(),
+        Participant.objects.all().aggregate(max_updated_at=Max("updated_at"))[
+            "max_updated_at"
+        ]
+        or get_min_time(),
+    )
+
+    current_timestamp = timezone.now()
+
+    if max_updated_at >= current_timestamp:
+        current_timestamp = max_updated_at + timezone.timedelta(milliseconds=1)
+
+    return int(current_timestamp.timestamp() * 1000)

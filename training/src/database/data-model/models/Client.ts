@@ -5,6 +5,7 @@ import {
     children,
     writer,
     immutableRelation,
+    nochange,
 } from "@nozbe/watermelondb/decorators";
 import Village from "./Village";
 import Participant from "./Participant";
@@ -16,15 +17,15 @@ export default class Client extends Model {
         participant: { type: <const>"has_many", foreignKey: "client" },
     };
 
-    @readonly @field("first_name") firstName!: string;
-    @readonly @field("last_name") lastName!: string;
-    @readonly @field("sex") sex!: string;
-    @readonly @field("age_group") ageGroup!: string;
-    @readonly @field("phone_1") phone1!: string;
-    @readonly @field("phone_2") phone2!: string;
-    @readonly @field("is_leader") isLeader!: string;
-
-    @immutableRelation("village", "village") village!: Relation<Village>;
+    @nochange @field("first_name") firstName!: string;
+    @nochange @field("last_name") lastName!: string | null;
+    @nochange @field("sex") sex!: string | null;
+    @nochange @field("age_group") ageGroup!: string | null;
+    @nochange @field("phone_1") phone1!: string | null;
+    @nochange @field("phone_2") phone2!: string | null;
+    @nochange @field("is_leader") isLeader!: boolean;
+    @nochange @field("village") village!: string;
+    // @immutableRelation("village", "village") village!: Relation<Village>;
 
     @children("participant") participants!: Query<Participant>;
 

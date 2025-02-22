@@ -1,8 +1,8 @@
 import TrainingModulePicker from "@/components/planner-event-form/TrainingModulePicker";
 import VillageList from "@/components/village-list/VillageList";
 import { logRecords } from "@/database/db-utils";
-import mainSync from "@/database/main-sync";
-import secondarySync from "@/database/secondary-sync";
+import sync from "@/database/sync";
+import secondaryDataPull from "@/database/secondary-data-pull";
 import { useCurrentModule } from "@/hooks/useCurrentModule";
 import { useSession } from "@/hooks/useSession";
 import { Button, View } from "react-native";
@@ -11,13 +11,13 @@ const PlannerOperations = () => {
     const { logout, session } = useSession();
     const { currentModule } = useCurrentModule();
 
-    const handleMainSync = () => {
+    const handleSync = () => {
         if (session) {
             try {
                 const parsedSession = JSON.parse(session);
                 const token = parsedSession.token;
 
-                mainSync(token);
+                sync(token);
             } catch (error) {
                 console.error(`Failed to parse session: ${error}`);
             }
@@ -26,13 +26,13 @@ const PlannerOperations = () => {
         }
     };
 
-    const handleSecondarySync = () => {
+    const handleSecondaryDataPull = () => {
         if (session) {
             try {
                 const parsedSession = JSON.parse(session);
                 const token = parsedSession.token;
 
-                secondarySync(token);
+                secondaryDataPull(token);
             } catch (error) {
                 console.error(`Failed to parse session: ${error}`);
             }
@@ -52,8 +52,11 @@ const PlannerOperations = () => {
             testID="planner-home"
         >
             <Button title="Logout" onPress={logout} />
-            <Button title="Main Sync" onPress={handleMainSync} />
-            <Button title="Secondary Sync" onPress={handleSecondarySync} />
+            <Button title="Sync" onPress={handleSync} />
+            <Button
+                title="Secondary Data Pull"
+                onPress={handleSecondaryDataPull}
+            />
             <Button
                 title="Log Villages"
                 onPress={() => logRecords("village")}

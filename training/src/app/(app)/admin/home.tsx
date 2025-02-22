@@ -1,5 +1,5 @@
 import { logRecords } from "@/database/db-utils";
-import secondarySync from "@/database/secondary-sync";
+import secondarySync from "@/database/secondary-data-pull";
 import { useSession } from "@/hooks/useSession";
 import { Button, View } from "react-native";
 

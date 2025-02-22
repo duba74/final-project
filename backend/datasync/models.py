@@ -93,5 +93,22 @@ class Participant(SyncModel):
     pics_purchased = models.IntegerField(null=True, blank=True)
     pics_received = models.IntegerField(null=True, blank=True)
 
+    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
+        [
+            "village",
+            "first_name",
+            "last_name",
+            "sex",
+            "age_group",
+            "phone_1",
+            "phone_2",
+            "client",
+            "is_leader",
+            "tombola_tickets",
+            "pics_purchased",
+            "pics_received",
+        ]
+    )
+
     def __str__(self):
         return self.id
