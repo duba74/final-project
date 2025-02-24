@@ -4,16 +4,24 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { FlatList, StyleSheet } from "react-native";
 import VillageListItem from "./VillageListItem";
 
-type VillageListProps = { villages: Village[]; currentModule: string };
+type VillageListProps = {
+    villages: Village[];
+    currentModule: string;
+    role: string;
+};
 
-const VillageList = ({ villages, currentModule }: VillageListProps) => {
+const VillageList = ({ villages, currentModule, role }: VillageListProps) => {
     return (
         <FlatList
             style={{ width: "85%" }}
             data={villages}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-                <VillageListItem village={item} currentModule={currentModule} />
+                <VillageListItem
+                    village={item}
+                    currentModule={currentModule}
+                    role={role}
+                />
             )}
         />
     );

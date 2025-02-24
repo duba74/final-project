@@ -1,37 +1,46 @@
 import { compose, withObservables } from "@nozbe/watermelondb/react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import ThemedText from "../themed/ThemedText";
 import ThemedView from "../themed/ThemedView";
 import { useRouter } from "expo-router";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import { format } from "date-fns";
 import Village from "@/database/data-model/models/Village";
-import { Q, Query } from "@nozbe/watermelondb";
-import Assignment from "@/database/data-model/models/Assignment";
-import { assignmentCollection } from "@/database/database";
 import Staff from "@/database/data-model/models/Staff";
 
 type TrainingEventListItemProps = {
+    role: string;
     trainingEvent: TrainingEvent;
+    createdBy: Staff;
     village: Village;
     trainers: Staff[];
 };
 
 const TrainingEventListItem = ({
+    role,
     trainingEvent,
+    createdBy,
     village,
     trainers,
 }: TrainingEventListItemProps) => {
     const router = useRouter();
 
     const handleModifyEvent = async () => {
-        router.navigate({
-            pathname: "/(app)/planner/planner-event-modal",
-            params: { trainingEventId: trainingEvent.id },
-        });
+        if (role === "trainer") {
+            // NOW WHAT? Should go to a new tabs screen? Tabs on top? Maybe start with just links. Where there's a tab for each operation needed:
+            // Get coords, capture date. capture photo, capture particpant list photo, register participants
+            // Also have tab to go back to villages
+            // router.navigate({
+            //     pathname: ""
+            //     params: {trainingEventId: trainingEvent.id}
+            // })
+        } else if (role === "planner") {
+            router.navigate({
+                pathname: "/(app)/planner/planner-event-modal",
+                params: { trainingEventId: trainingEvent.id },
+            });
+        }
     };
-
-    console.log(trainers);
 
     return (
         <ThemedView>
@@ -51,7 +60,7 @@ const TrainingEventListItem = ({
                     </View>
                     <View style={{ flexDirection: "row" }}>
                         <ThemedText>Created by: </ThemedText>
-                        <ThemedText>{trainingEvent.createdBy}</ThemedText>
+                        <ThemedText>{`${createdBy.firstName} ${createdBy.lastName} - ${createdBy.id}`}</ThemedText>
                     </View>
                     <ThemedText>
                         Trainer(s):{" "}
@@ -85,6 +94,7 @@ const enhance = compose(
         ["trainingEvent"],
         ({ trainingEvent }: TrainingEventListItemProps) => ({
             trainingEvent,
+            createdBy: trainingEvent.createdBy,
             village: trainingEvent.village,
             trainers: trainingEvent.trainers,
         })

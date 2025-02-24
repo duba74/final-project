@@ -1,6 +1,6 @@
 import Village from "@/database/data-model/models/Village";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import ThemedText from "../themed/ThemedText";
 import ThemedView from "../themed/ThemedView";
@@ -10,6 +10,7 @@ import ThemedButton from "../themed/ThemedButton";
 import { Q } from "@nozbe/watermelondb";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import { format, startOfToday } from "date-fns";
+import { useSession } from "@/hooks/useSession";
 
 const getNextEventDate = (trainingEvents: TrainingEvent[]) => {
     const today = startOfToday(); //.getTime();
@@ -42,6 +43,7 @@ type VillageListItemProps = {
     village: Village;
     trainingEvents: TrainingEvent[];
     currentModule: string;
+    role: string;
     activeTrainingEventCount: number;
     canceledTrainingEventCount: number;
     completedTrainingEventCount: number;
@@ -50,6 +52,7 @@ type VillageListItemProps = {
 const VillageListItem = ({
     village,
     currentModule,
+    role,
     trainingEvents,
     activeTrainingEventCount,
     canceledTrainingEventCount,
@@ -113,16 +116,19 @@ const VillageListItem = ({
                         <TrainingEventList
                             village={village}
                             currentModule={currentModule}
+                            role={role}
                         />
-                        <ThemedButton
-                            title="Add Event"
-                            style={{
-                                marginVertical: 10,
-                                alignSelf: "center",
-                                width: 100,
-                            }}
-                            onPress={handleAddEvent}
-                        />
+                        {role !== "trainer" && (
+                            <ThemedButton
+                                title="Add Event"
+                                style={{
+                                    marginVertical: 10,
+                                    alignSelf: "center",
+                                    width: 100,
+                                }}
+                                onPress={handleAddEvent}
+                            />
+                        )}
                     </ThemedView>
                 )}
             </ThemedView>

@@ -5,6 +5,7 @@ import {
     readonly,
     children,
     writer,
+    nochange,
 } from "@nozbe/watermelondb/decorators";
 import TrainingEvent from "./TrainingEvent";
 
@@ -17,12 +18,12 @@ export default class TrainingModule extends Model {
         },
     };
 
-    @readonly @text("name") name!: string;
-    @readonly @text("topic") topic!: string;
-    @readonly @text("country") country!: string;
-    @readonly @date("start_date") startDate!: number;
-    @readonly @date("end_date") endDate!: number;
-    @readonly @date("is_active") isActive!: boolean;
+    @nochange @text("name") name!: string;
+    @nochange @text("topic") topic!: string;
+    @nochange @text("country") country!: string;
+    @nochange @date("start_date") startDate!: number;
+    @nochange @date("end_date") endDate!: number;
+    @nochange @date("is_active") isActive!: boolean;
 
     @children("training_event") trainingEvents!: Query<TrainingEvent>;
 

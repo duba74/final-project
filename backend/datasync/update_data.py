@@ -8,13 +8,23 @@ def apply_training_event_changes(last_pulled_at, changes):
     for record in changes.get("created", []):
         record = get_syncable_fields(record, TrainingEvent)
         record_id = record["id"]
-        defaults = record.copy()
+        data = record.copy()
 
+        if data.get("is_canceled") is None:
+            data["is_canceled"] = False
+
+        print(data)
         # server_created_at = timezone.now()
         # defaults["server_created_at"] = server_created_at
         # defaults["server_updated_at"] = server_created_at
 
-        TrainingEvent.objects.update_or_create(id=record_id, defaults=defaults)
+        obj, created = TrainingEvent.objects.update_or_create(
+            id=record_id, defaults=data
+        )
+        if created:
+            print("Created", obj)
+        else:
+            print("Updated", obj)
 
     for record in changes.get("updated", []):
         record = get_syncable_fields(record, TrainingEvent)

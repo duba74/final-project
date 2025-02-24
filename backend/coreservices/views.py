@@ -160,9 +160,12 @@ class AssignmentView(AuthenticatedAPIView):
 
         assigned_village_ids = assignments.values_list("village_id", flat=True)
 
-        assignments = Assignment.objects.filter(
-            staff=self.user.staff, village__in=assigned_village_ids
-        )
+        if self.user.staff.role.id == "trainer":
+            assignments = Assignment.objects.filter(
+                staff=self.user.staff, village__in=assigned_village_ids
+            )
+        else:
+            assignments = Assignment.objects.filter(village__in=assigned_village_ids)
 
         data = AssignmentSerializer(assignments, many=True).data
 

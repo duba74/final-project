@@ -19,12 +19,13 @@ import Staff from "./Staff";
 export default class TrainingEvent extends Model {
     static table = "training_event";
     static associations = {
+        staff: { type: <const>"belongs_to", key: "created_by" },
         training_module: { type: <const>"belongs_to", key: "training_module" },
         village: { type: <const>"belongs_to", key: "village" },
         participant: { type: <const>"has_many", foreignKey: "training_event" },
     };
 
-    @nochange @field("created_by") createdBy!: string;
+    // @nochange @field("created_by") createdBy!: string;
     @readonly @date("created_at") createdAt!: number;
     @readonly @date("updated_at") updatedAt!: number;
     @date("scheduled_for") scheduledFor!: Date;
@@ -38,6 +39,7 @@ export default class TrainingEvent extends Model {
     @nochange @field("location") location!: string;
     @text("comments") comments!: string | null;
 
+    @immutableRelation("staff", "created_by") createdBy!: Relation<Staff>;
     @immutableRelation("training_module", "training_module")
     trainingModule!: Relation<TrainingModule>;
     @immutableRelation("village", "village") village!: Relation<Village>;

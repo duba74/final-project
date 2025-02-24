@@ -1,4 +1,10 @@
-import { ClientData, VillageData } from "./data-model/models/dataTypes";
+import {
+    AssignmentData,
+    ClientData,
+    StaffData,
+    TrainingModuleData,
+    VillageData,
+} from "./data-model/models/dataTypes";
 import Village from "./data-model/models/Village";
 import database, {
     trainingEventCollection,
@@ -58,6 +64,7 @@ export const replaceVillages = async (newData: VillageData[]) => {
     const createOperations = newData.map((d) =>
         villageCollection.prepareCreate((r) => {
             r._raw.id = d.id;
+            r._raw._status = "synced";
             r.name = d.name;
             r.zoneCode = d.zone_code;
             r.zoneName = d.zone_name;
@@ -88,9 +95,11 @@ export const replaceClients = async (newData: ClientData[]) => {
     const deleteOperations = currentRecords.map((r) =>
         r.prepareDestroyPermanently()
     );
+
     const createOperations = newData.map((d) =>
         clientCollection.prepareCreate((r) => {
             r._raw.id = d.id;
+            r._raw._status = "synced";
             r.firstName = d.first_name;
             r.lastName = d.last_name;
             r.sex = d.sex;
@@ -98,7 +107,7 @@ export const replaceClients = async (newData: ClientData[]) => {
             r.phone1 = d.phone_1;
             r.phone2 = d.phone_2;
             r.isLeader = d.is_leader;
-            r.village = d.village;
+            r.village.id = d.village;
         })
     );
 
@@ -110,6 +119,93 @@ export const replaceClients = async (newData: ClientData[]) => {
         await database.batch(createOperations);
         console.log(
             `${createOperations.length} records have been created in the client table.`
+        );
+    });
+};
+
+export const replaceTrainingModules = async (newData: TrainingModuleData[]) => {
+    const currentRecords = await trainingModuleCollection.query().fetch();
+    const deleteOperations = currentRecords.map((r) =>
+        r.prepareDestroyPermanently()
+    );
+    const createOperations = newData.map((d) =>
+        trainingModuleCollection.prepareCreate((r) => {
+            r._raw.id = d.id;
+            r._raw._status = "synced";
+            r.name = d.name;
+            r.topic = d.topic;
+            r.country = d.country;
+            r.startDate = d.start_date;
+            r.endDate = d.end_date;
+            r.isActive = d.is_active;
+        })
+    );
+
+    await database.write(async () => {
+        await database.batch(deleteOperations);
+        console.log(
+            `${deleteOperations.length} records have been deleted from the training module table.`
+        );
+        await database.batch(createOperations);
+        console.log(
+            `${createOperations.length} records have been created in the training module table.`
+        );
+    });
+};
+
+export const replaceStaff = async (newData: StaffData[]) => {
+    const currentRecords = await staffCollection.query().fetch();
+    const deleteOperations = currentRecords.map((r) =>
+        r.prepareDestroyPermanently()
+    );
+    const createOperations = newData.map((d) =>
+        staffCollection.prepareCreate((r) => {
+            r._raw.id = d.id;
+            r._raw._status = "synced";
+            r.firstName = d.first_name;
+            r.lastName = d.last_name;
+            r.roleId = d.role_id;
+            r.roleName = d.role_name;
+            r.country = d.country;
+        })
+    );
+
+    await database.write(async () => {
+        await database.batch(deleteOperations);
+        console.log(
+            `${deleteOperations.length} records have been deleted from the staff table.`
+        );
+        await database.batch(createOperations);
+        console.log(
+            `${createOperations.length} records have been created in the staff table.`
+        );
+    });
+};
+
+export const replaceAssignments = async (newData: AssignmentData[]) => {
+    const currentRecords = await assignmentCollection.query().fetch();
+    const deleteOperations = currentRecords.map((r) =>
+        r.prepareDestroyPermanently()
+    );
+    const createOperations = newData.map((d) =>
+        assignmentCollection.prepareCreate((r) => {
+            r._raw.id = d.id;
+            r._raw._status = "synced";
+            r.staff.id = d.staff;
+            r.village.id = d.village;
+            r.startDate = d.start_date;
+            r.endDate = d.end_date;
+        })
+    );
+
+    await database.write(async () => {
+        await database.batch(deleteOperations);
+        console.log(
+            `${deleteOperations.length} records have been deleted from the assignment table.`
+        );
+        await database.batch(createOperations);
+        console.log(
+            `${createOperations.length} records have been created in the assignment table.`
         );
     });
 };

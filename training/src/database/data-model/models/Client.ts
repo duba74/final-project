@@ -24,8 +24,8 @@ export default class Client extends Model {
     @nochange @field("phone_1") phone1!: string | null;
     @nochange @field("phone_2") phone2!: string | null;
     @nochange @field("is_leader") isLeader!: boolean;
-    @nochange @field("village") village!: string;
-    // @immutableRelation("village", "village") village!: Relation<Village>;
+
+    @immutableRelation("village", "village") village!: Relation<Village>;
 
     @children("participant") participants!: Query<Participant>;
 

@@ -11,12 +11,14 @@ import { Q } from "@nozbe/watermelondb";
 type TrainingEventListProps = {
     village: Village;
     currentModule: string;
+    role: string;
     trainingEvents: TrainingEvent[];
 };
 
 const TrainingEventList = ({
     village,
     currentModule,
+    role,
     trainingEvents,
 }: TrainingEventListProps) => {
     console.log(`currentModule: ${currentModule}`);
@@ -26,7 +28,7 @@ const TrainingEventList = ({
             data={trainingEvents}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-                <TrainingEventListItem trainingEvent={item} />
+                <TrainingEventListItem trainingEvent={item} role={role} />
             )}
         />
     );

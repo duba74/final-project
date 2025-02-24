@@ -132,11 +132,13 @@ class Sync(APIView):
 
         print("Device is pushing...\nChanges sent from device:\n", changes)
 
+        apply_training_event_changes(last_pulled_at, changes.get("training_event", {}))
         try:
-            apply_training_event_changes(
-                last_pulled_at, changes.get("training_event", {})
-            )
-            apply_participant_changes(last_pulled_at, changes.get("participant", {}))
+            pass
+            # apply_training_event_changes(
+            #     last_pulled_at, changes.get("training_event", {})
+            # )
+            # apply_participant_changes(last_pulled_at, changes.get("participant", {}))
         except Exception as e:
             transaction.set_rollback(True)
 
@@ -290,14 +292,12 @@ class SecondaryDataPull(APIView):
                 assignments = response.data["data"]
 
             response_data = {
-                "village": villages,
-                "client": clients,
-                "training_module": training_modules,
+                "villages": villages,
+                "clients": clients,
+                "training_modules": training_modules,
                 "staff": staff,
-                "assignment": assignments,
+                "assignments": assignments,
             }
-
-            print(response_data["training_module"])
 
             return Response(response_data, status=status.HTTP_200_OK)
 

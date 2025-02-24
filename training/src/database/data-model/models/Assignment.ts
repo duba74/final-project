@@ -1,8 +1,8 @@
 import { Model, Query, Relation } from "@nozbe/watermelondb";
 import {
     field,
-    readonly,
     immutableRelation,
+    nochange,
 } from "@nozbe/watermelondb/decorators";
 import Village from "./Village";
 import Staff from "./Staff";
@@ -14,8 +14,8 @@ export default class Assignment extends Model {
         staff: { type: <const>"belongs_to", key: "staff" },
     };
 
-    @readonly @field("start_date") startDate!: number;
-    @readonly @field("end_date") endDate!: number;
+    @nochange @field("start_date") startDate!: number;
+    @nochange @field("end_date") endDate!: number;
 
     @immutableRelation("staff", "staff") staff!: Relation<Staff>;
     @immutableRelation("village", "village") village!: Relation<Village>;

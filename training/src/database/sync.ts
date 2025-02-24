@@ -16,7 +16,8 @@ const sync = async (authToken: string) => {
                 `🍉 Main sync - Attempting pull with lastPulledAt = ${lastPulledAt}`
             );
 
-            const urlParams = `lastPulledAt=${lastPulledAt}`;
+            // const urlParams = `lastPulledAt=${lastPulledAt}`;
+            const urlParams = `lastPulledAt=null`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
             const url = `${host}/api/sync/?${urlParams}`;
 
@@ -56,9 +57,8 @@ const sync = async (authToken: string) => {
             const headers = {
                 Authorization: `Bearer ${authToken}`,
                 "Content-Type": "application/json",
-                body: payload,
             };
-            const options = { method: "POST", headers: headers };
+            const options = { method: "POST", headers: headers, body: payload };
 
             console.log("payload");
             console.log(payload);

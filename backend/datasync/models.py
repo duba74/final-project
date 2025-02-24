@@ -52,18 +52,22 @@ class TrainingEvent(SyncModel):
     comments = models.TextField(null=True, blank=True)
     training_module = models.CharField(max_length=15, null=False, blank=False)
 
-    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
-        [
-            "scheduled_for",
-            "scheduled_time",
-            "is_canceled",
-            "village",
-            "completed_at",
-            "location",
-            "comments",
-            "training_module",
-        ]
-    )
+    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS + [
+        "scheduled_for",
+        "scheduled_time",
+        "is_canceled",
+        "village",
+        "completed_at",
+        "location",
+        "comments",
+        "training_module",
+    ]
+
+    def save(self, *args, **kwargs):
+        if isinstance(self.scheduled_for, (int, float)):
+            self.scheduled_for = convert_to_tz_aware_datetime(self.scheduled_for)
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.village} - {self.scheduled_for}, {self.scheduled_time}"
@@ -93,22 +97,20 @@ class Participant(SyncModel):
     pics_purchased = models.IntegerField(null=True, blank=True)
     pics_received = models.IntegerField(null=True, blank=True)
 
-    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS.append(
-        [
-            "village",
-            "first_name",
-            "last_name",
-            "sex",
-            "age_group",
-            "phone_1",
-            "phone_2",
-            "client",
-            "is_leader",
-            "tombola_tickets",
-            "pics_purchased",
-            "pics_received",
-        ]
-    )
+    SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS + [
+        "village",
+        "first_name",
+        "last_name",
+        "sex",
+        "age_group",
+        "phone_1",
+        "phone_2",
+        "client",
+        "is_leader",
+        "tombola_tickets",
+        "pics_purchased",
+        "pics_received",
+    ]
 
     def __str__(self):
         return self.id

@@ -1,10 +1,25 @@
 import TrainingModulePicker from "@/components/planner-event-form/TrainingModulePicker";
 import VillageList from "@/components/village-list/VillageList";
 import { useCurrentModule } from "@/hooks/useCurrentModule";
+import { useSession } from "@/hooks/useSession";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 
 const TrainerHome = () => {
     const { currentModule } = useCurrentModule();
+    const { session } = useSession();
+    const [role, setRole] = useState<string>();
+
+    useEffect(() => {
+        if (session) {
+            try {
+                const user = JSON.parse(session).user;
+                setRole(user.role);
+            } catch (error) {
+                console.error(`Failed to parse session: ${error}`);
+            }
+        }
+    }, [session]);
 
     return (
         <View
@@ -16,7 +31,7 @@ const TrainerHome = () => {
             testID="trainer-home"
         >
             <TrainingModulePicker currentModule={currentModule} />
-            <VillageList currentModule={currentModule} />
+            <VillageList currentModule={currentModule} role={role} />
         </View>
     );
 };

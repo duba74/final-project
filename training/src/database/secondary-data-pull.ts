@@ -1,6 +1,12 @@
 import database from "./database";
 import { Platform } from "react-native";
-import { replaceClients, replaceVillages } from "./db-utils";
+import {
+    replaceAssignments,
+    replaceClients,
+    replaceStaff,
+    replaceTrainingModules,
+    replaceVillages,
+} from "./db-utils";
 import URLS from "@/constants/Urls";
 
 const secondaryDataPull = async (authToken: string) => {
@@ -21,12 +27,14 @@ const secondaryDataPull = async (authToken: string) => {
         throw new Error(await response.text());
     }
 
-    // console.log(await response.text());
-    const { village, client, training_module, staff, assignment } =
+    const { villages, clients, training_modules, staff, assignments } =
         await response.json();
 
-    replaceVillages(village);
-    replaceClients(client);
+    await replaceVillages(villages);
+    await replaceClients(clients);
+    await replaceTrainingModules(training_modules);
+    await replaceStaff(staff);
+    await replaceAssignments(assignments);
 
     console.log(`🍉 Secondary data pull succeeded`);
 };
