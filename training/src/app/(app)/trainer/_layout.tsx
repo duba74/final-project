@@ -27,7 +27,8 @@ const TrainerLayout = () => {
     // This layout can be deferred because it's not the root layout.
     return (
         <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(home)" options={{ headerShown: false }} />
+            <Stack.Screen name="(event)" options={{ headerShown: false }} />
         </Stack>
     );
 };

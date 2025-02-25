@@ -1,5 +1,5 @@
 import React from "react";
-import TrainerHome from "../(tabs)/home";
+import TrainerHome from "../(home)/home";
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
