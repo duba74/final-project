@@ -15,6 +15,7 @@ import Village from "./Village";
 import Participant from "./Participant";
 import Assignment from "./Assignment";
 import Staff from "./Staff";
+import { format, formatISO } from "date-fns";
 
 export default class TrainingEvent extends Model {
     static table = "training_event";
@@ -36,7 +37,7 @@ export default class TrainingEvent extends Model {
     // @nochange @date("completed_at") completedAt!: number | null;
     @date("completed_at") completedAt!: number | null;
 
-    @nochange @field("location") location!: string;
+    @field("location") location!: string;
     @text("comments") comments!: string | null;
 
     @immutableRelation("staff", "created_by") createdBy!: Relation<Staff>;
@@ -59,19 +60,6 @@ export default class TrainingEvent extends Model {
                 ),
             ])
         );
-    // .observe()
-    // .pipe(
-    //     map((assignments) =>
-    //         assignments.length > 0 ? assignments[0].staff : null
-    //     )
-    // );
-    // where the assignment dates contain the event date
-    // Example nested join from watermelondb docs (https://watermelondb.dev/docs/Query#deep-qons)
-    // this queries tasks that are inside projects that are inside teams where team.foo == 'bar'
-    // tasksCollection.query(
-    //   Q.experimentalNestedJoin('projects', 'teams'),
-    //   Q.on('projects', Q.on('teams', 'foo', 'bar')),
-    // )
 
     // Should probably be irreversible, not toggle-able
     @writer async toggleCancelEvent() {
@@ -87,6 +75,28 @@ export default class TrainingEvent extends Model {
             trainingEvent.completedAt = !trainingEvent.completedAt
                 ? new Date().getTime()
                 : null;
+        });
+    }
+
+    @writer async registerCompletionTime(timestamp: number) {
+        await this.update((trainingEvent) => {
+            trainingEvent.completedAt = timestamp;
+        });
+    }
+
+    @writer async registerLocation(location: string) {
+        await this.update((trainingEvent) => {
+            trainingEvent.location = location;
+        });
+    }
+
+    @writer async appendToComments(commentText: string, username: string) {
+        await this.update((trainingEvent) => {
+            trainingEvent.comments = !trainingEvent.comments
+                ? `${formatISO(new Date())} - ${username} - ${commentText}`
+                : `${trainingEvent.comments}\n${formatISO(
+                      new Date()
+                  )} - ${username} - ${commentText}`;
         });
     }
 

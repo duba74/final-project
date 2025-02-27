@@ -67,6 +67,9 @@ class TrainingEvent(SyncModel):
         if isinstance(self.scheduled_for, (int, float)):
             self.scheduled_for = convert_to_tz_aware_datetime(self.scheduled_for)
 
+        if isinstance(self.completed_at, (int, float)):
+            self.completed_at = convert_to_tz_aware_datetime(self.completed_at)
+
         super().save(*args, **kwargs)
 
     def __str__(self):

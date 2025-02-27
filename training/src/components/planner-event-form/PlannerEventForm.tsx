@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import Village from "@/database/data-model/models/Village";
 import TrainingModule from "@/database/data-model/models/TrainingModule";
+import { staffCollection } from "@/database/database";
 
 const defaultDate = addDays(new Date(), 1);
 const defaultTimeOfDay = "AM";
@@ -56,11 +57,13 @@ const PlannerEventForm = ({
             const user = JSON.parse(session).user;
             console.log(user);
 
+            const staff = await staffCollection.find(user.username);
+
             const newTrainingEvent = await village.addTrainingEvent(
                 trainingModule,
                 format(eventDate, "yyyy-MM-dd"),
                 eventTimeOfDay,
-                user.username
+                staff
             );
 
             console.log(newTrainingEvent);

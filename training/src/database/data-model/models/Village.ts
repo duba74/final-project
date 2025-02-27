@@ -11,6 +11,7 @@ import Participant from "./Participant";
 import Client from "./Client";
 import Assignment from "./Assignment";
 import TrainingModule from "./TrainingModule";
+import Staff from "./Staff";
 
 export default class Village extends Model {
     static table = "village";
@@ -42,19 +43,19 @@ export default class Village extends Model {
         trainingModule: TrainingModule,
         scheduledFor: string | Date,
         scheduledTimeOfDay: string,
-        createdBy: string
+        createdBy: Staff
     ) {
         const newTrainingEvent = await this.collections
             .get<TrainingEvent>("training_event")
             .create((trainingEvent) => {
                 trainingEvent.village.set(this);
                 trainingEvent.trainingModule.set(trainingModule);
+                trainingEvent.createdBy.set(createdBy);
                 trainingEvent.scheduledFor =
                     scheduledFor instanceof Date
                         ? scheduledFor
                         : new Date(scheduledFor);
                 trainingEvent.scheduledTime = scheduledTimeOfDay;
-                trainingEvent.createdBy = createdBy;
             });
 
         return newTrainingEvent;

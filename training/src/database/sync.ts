@@ -16,10 +16,12 @@ const sync = async (authToken: string) => {
                 `🍉 Main sync - Attempting pull with lastPulledAt = ${lastPulledAt}`
             );
 
-            // const urlParams = `lastPulledAt=${lastPulledAt}`;
-            const urlParams = `lastPulledAt=null`;
+            const urlParams = `lastPulledAt=${lastPulledAt}`;
+            // const urlParams = `lastPulledAt=null`;
             // const urlParams = `lastPulledAt=${lastPulledAt}&schemaVersion=${schemaVersion}&migration=${migration}`;
             const url = `${host}/api/sync/?${urlParams}`;
+
+            console.log(url);
 
             const headers = { Authorization: `Bearer ${authToken}` };
             const options = { method: "GET", headers: headers };

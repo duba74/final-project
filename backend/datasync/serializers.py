@@ -21,6 +21,7 @@ class TrainingEventSerializer(serializers.ModelSerializer):
     created_at = UNIXTimestampField()
     updated_at = UNIXTimestampField()
     scheduled_for = UNIXTimestampField()
+    completed_at = UNIXTimestampField()
 
     class Meta:
         model = TrainingEvent

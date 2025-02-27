@@ -19,6 +19,7 @@ export const Colors = {
         icon: "#687076",
         tabIconDefault: "#687076",
         tabIconSelected: "#0a81a8",
+        textInputBackground: "#e8eaeb",
     },
     dark: {
         text: "#ecedee",
@@ -32,5 +33,6 @@ export const Colors = {
         icon: "#9ba1a6",
         tabIconDefault: "#9ba1a6",
         tabIconSelected: "#27c0f2",
+        textInputBackground: "#2e3335",
     },
 };

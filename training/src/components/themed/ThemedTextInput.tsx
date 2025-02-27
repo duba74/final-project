@@ -14,6 +14,10 @@ const ThemedTextInput = ({
     ...rest
 }: ThemedTextInputProps) => {
     const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+    const backgroundColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "textInputBackground"
+    );
     const borderColor = useThemeColor(
         { light: lightColor, dark: darkColor },
         "border"
@@ -21,7 +25,7 @@ const ThemedTextInput = ({
 
     return (
         <TextInput
-            style={[{ color, borderColor }, style]}
+            style={[{ color, borderColor, backgroundColor }, style]}
             placeholderTextColor={useThemeColor(
                 { light: lightColor, dark: darkColor },
                 "placeholderText"
