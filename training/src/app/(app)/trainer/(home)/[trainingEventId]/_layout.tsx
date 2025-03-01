@@ -1,7 +1,7 @@
+import TrainingEventProvider from "@/context/TrainingEventContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
-import { Text } from "react-native";
+import { Tabs } from "expo-router";
 
 type TrainerEventTabLayoutProps = {
     lightColor: string;

@@ -2,7 +2,7 @@ import { compose, withObservables } from "@nozbe/watermelondb/react";
 import { View, StyleSheet, Pressable } from "react-native";
 import ThemedText from "../themed/ThemedText";
 import ThemedView from "../themed/ThemedView";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import { format } from "date-fns";
 import Village from "@/database/data-model/models/Village";
@@ -30,10 +30,10 @@ const TrainingEventListItem = ({
             // NOW WHAT? Should go to a new tabs screen? Tabs on top? Maybe start with just links. Where there's a tab for each operation needed
             // Get coords, capture date. capture photo, capture particpant list photo, register participants
             // Also have tab to go back to villages
-            router.navigate({
-                pathname: "/(app)/trainer/(event)/event-completion",
-                params: { trainingEventId: trainingEvent.id },
-            });
+            // router.navigate(`/(app)/trainer/(home)/${trainingEvent.id}/event-completion`)
+            const path =
+                `/(app)/trainer/(home)/${trainingEvent.id}/event-completion` as Href;
+            router.navigate(path);
         } else if (role === "planner") {
             router.navigate({
                 pathname: "/(app)/planner/planner-event-modal",

@@ -1,6 +1,7 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Tabs, useSegments } from "expo-router";
 
 type TrainerTabLayoutProps = {
     lightColor: string;
@@ -19,21 +20,31 @@ export default function TrainerTabLayout({
         { light: lightColor, dark: darkColor },
         "tabIconSelected"
     );
+    const segments = useSegments();
+    const hide = segments.includes("event-completion");
+    console.log(segments);
 
     return (
         <Tabs
             screenOptions={{
                 tabBarInactiveTintColor: tabIconColor,
                 tabBarActiveTintColor: tabIconSelectedColor,
+                tabBarStyle: {
+                    display: hide ? "none" : "flex",
+                },
             }}
         >
             <Tabs.Screen
-                name="home"
+                name="villages"
                 options={{
-                    title: "Trainer Home",
+                    title: "Villages",
                     // headerShown: false,
                     tabBarIcon: ({ color }) => (
-                        <FontAwesome size={28} name="home" color={color} />
+                        <MaterialCommunityIcons
+                            size={28}
+                            name="home-group"
+                            color={color}
+                        />
                     ),
                 }}
             />
@@ -44,6 +55,12 @@ export default function TrainerTabLayout({
                     tabBarIcon: ({ color }) => (
                         <FontAwesome size={28} name="cog" color={color} />
                     ),
+                }}
+            />
+            <Tabs.Screen
+                name="[trainingEventId]"
+                options={{
+                    href: null,
                 }}
             />
         </Tabs>

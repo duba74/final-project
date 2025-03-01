@@ -17,9 +17,9 @@ const Index = () => {
                 try {
                     const user = JSON.parse(session).user;
                     if (user.role === "planner") {
-                        setRedirectPath("/(app)/planner/home" as Href);
+                        setRedirectPath("/(app)/planner/villages" as Href);
                     } else if (user.role === "trainer") {
-                        setRedirectPath("/(app)/trainer/home" as Href);
+                        setRedirectPath("/(app)/trainer/villages" as Href);
                     } else if (user.role === "admin") {
                         setRedirectPath("/(app)/admin/home" as Href);
                     } else {

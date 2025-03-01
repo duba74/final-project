@@ -1,5 +1,6 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
 
 type PlannerTabLayoutProps = {
@@ -28,12 +29,16 @@ export default function PlannerTabLayout({
             }}
         >
             <Tabs.Screen
-                name="home"
+                name="villages"
                 options={{
-                    title: "Planner Home",
+                    title: "Villages",
                     // headerShown: false,
                     tabBarIcon: ({ color }) => (
-                        <FontAwesome size={28} name="home" color={color} />
+                        <MaterialCommunityIcons
+                            size={28}
+                            name="home-group"
+                            color={color}
+                        />
                     ),
                 }}
             />

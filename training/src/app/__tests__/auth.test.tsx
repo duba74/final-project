@@ -86,7 +86,7 @@ describe("Auth", () => {
         });
     });
 
-    it("redirects to trainer home when role is trainer", async () => {
+    it("redirects to trainer villages when role is trainer", async () => {
         const session = JSON.stringify({ user: { role: "trainer" } });
 
         (useSession as MockedUseSession).mockReturnValue({
@@ -98,12 +98,12 @@ describe("Auth", () => {
 
         await waitFor(() => {
             expect(mockRouterReplace).toHaveBeenCalledWith(
-                "/(app)/trainer/home"
+                "/(app)/trainer/villages"
             );
         });
     });
 
-    it("redirects to planner home when role is planner", async () => {
+    it("redirects to planner villages when role is planner", async () => {
         const session = JSON.stringify({ user: { role: "planner" } });
 
         (useSession as MockedUseSession).mockReturnValue({
@@ -115,7 +115,7 @@ describe("Auth", () => {
 
         await waitFor(() => {
             expect(mockRouterReplace).toHaveBeenCalledWith(
-                "/(app)/planner/home"
+                "/(app)/planner/villages"
             );
         });
     });

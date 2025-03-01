@@ -27,7 +27,7 @@ const PlannerLayout = () => {
     // This layout can be deferred because it's not the root layout.
     return (
         <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(home)" options={{ headerShown: false }} />
             <Stack.Screen
                 name="planner-event-modal"
                 options={{

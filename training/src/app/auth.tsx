@@ -21,9 +21,9 @@ const Auth = () => {
                 console.log(user);
 
                 if (user.role === "trainer") {
-                    router.replace("/(app)/trainer/home");
+                    router.replace("/(app)/trainer/villages");
                 } else if (user.role === "planner") {
-                    router.replace("/(app)/planner/home");
+                    router.replace("/(app)/planner/villages");
                 } else if (user.role === "admin") {
                     router.replace("/(app)/admin/home");
                 } else {

@@ -1,5 +1,5 @@
 import React from "react";
-import PlannerHome from "../(tabs)/home";
+import PlannerVillages from "../(home)/villages";
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
@@ -22,10 +22,10 @@ jest.mock("expo-crypto", () => ({
     randomUUID: jest.fn(() => "mock-uuid"),
 }));
 
-describe("PlannerHome", () => {
-    it("renders planner home component", () => {
-        const { getByTestId } = render(<PlannerHome />);
+describe("PlannerVillages", () => {
+    it("renders planner villages component", () => {
+        const { getByTestId } = render(<PlannerVillages />);
 
-        expect(getByTestId("planner-home")).toBeTruthy();
+        expect(getByTestId("planner-villages")).toBeTruthy();
     });
 });

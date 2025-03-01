@@ -1,5 +1,5 @@
 import React from "react";
-import TrainerHome from "../(home)/home";
+import TrainerVillages from "../(home)/villages";
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
@@ -22,10 +22,10 @@ jest.mock("expo-crypto", () => ({
     randomUUID: jest.fn(() => "mock-uuid"),
 }));
 
-describe("TrainerHome", () => {
-    it("renders trainer home component", () => {
-        const { getByTestId } = render(<TrainerHome />);
+describe("TrainerVillages", () => {
+    it("renders trainer villages component", () => {
+        const { getByTestId } = render(<TrainerVillages />);
 
-        expect(getByTestId("trainer-home")).toBeTruthy();
+        expect(getByTestId("trainer-villages")).toBeTruthy();
     });
 });

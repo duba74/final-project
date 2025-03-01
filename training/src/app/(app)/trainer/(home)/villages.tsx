@@ -5,7 +5,7 @@ import { useSession } from "@/hooks/useSession";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 
-const PlannerHome = () => {
+const TrainerVillages = () => {
     const { currentModule } = useCurrentModule();
     const { session } = useSession();
     const [role, setRole] = useState<string>();
@@ -28,7 +28,7 @@ const PlannerHome = () => {
                 justifyContent: "center",
                 alignItems: "center",
             }}
-            testID="planner-home"
+            testID="trainer-villages"
         >
             <TrainingModulePicker currentModule={currentModule} />
             <VillageList currentModule={currentModule} role={role} />
@@ -36,4 +36,4 @@ const PlannerHome = () => {
     );
 };
 
-export default PlannerHome;
+export default TrainerVillages;
