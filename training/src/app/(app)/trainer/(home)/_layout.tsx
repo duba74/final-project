@@ -21,7 +21,7 @@ export default function TrainerTabLayout({
         "tabIconSelected"
     );
     const segments = useSegments();
-    const hide = segments.includes("event-completion");
+    const hide = segments.includes("[trainingEventId]" as never);
     console.log(segments);
 
     return (

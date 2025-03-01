@@ -4,28 +4,33 @@ import ThemedTextInput from "@/components/themed/ThemedTextInput";
 import ThemedView from "@/components/themed/ThemedView";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import Village from "@/database/data-model/models/Village";
-import { withObservables } from "@nozbe/watermelondb/react";
+import { compose, withObservables } from "@nozbe/watermelondb/react";
 import { useState } from "react";
 import { View } from "react-native";
 import { format } from "date-fns";
 import { useSession } from "@/hooks/useSession";
 import * as Location from "expo-location";
+import { trainingEventCollection } from "@/database/database";
+import { Relation } from "@nozbe/watermelondb";
+import EventVillageDescription from "./EventVillageDescription";
 
 type EventCompletionFormProps = {
     username: string;
+    trainingEventId: string;
     trainingEvent: TrainingEvent;
-    village: Village;
 };
 
 const EventCompletionForm = ({
     username,
+    trainingEventId,
     trainingEvent,
-    village,
 }: EventCompletionFormProps) => {
     const { session } = useSession();
     const [commentText, setCommentText] = useState("");
     const [locPermErrorMsg, setLocPermErrorMsg] = useState<string | null>(null);
     const [locationLoading, setLocationLoading] = useState(false);
+
+    console.log("event-completion-form: " + trainingEventId);
 
     const handleToggleCompletionTime = () => {
         trainingEvent.toggleCompleteEvent();
@@ -61,12 +66,7 @@ const EventCompletionForm = ({
 
     return (
         <ThemedView style={{ gap: 35 }}>
-            <View>
-                <ThemedText>{`${village.zoneName} - ${village.name}`}</ThemedText>
-                <ThemedText>{`${format(trainingEvent.scheduledFor, "PPPP")} - ${
-                    trainingEvent.scheduledTime
-                }`}</ThemedText>
-            </View>
+            <EventVillageDescription trainingEvent={trainingEvent} />
             {/* <View>
                 <ThemedButton
                     title="Toggle Completion Time"
@@ -133,10 +133,9 @@ const EventCompletionForm = ({
 };
 
 const enhance = withObservables(
-    ["trainingEvent"],
-    ({ trainingEvent }: EventCompletionFormProps) => ({
-        trainingEvent,
-        village: trainingEvent.village,
+    ["trainingEventId"],
+    ({ trainingEventId }: EventCompletionFormProps) => ({
+        trainingEvent: trainingEventCollection.findAndObserve(trainingEventId),
     })
 );
 
