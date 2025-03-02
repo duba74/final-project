@@ -38,7 +38,7 @@ export default function TrainerTabLayout({
                 name="villages"
                 options={{
                     title: "Villages",
-                    // headerShown: false,
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons
                             size={28}
@@ -52,6 +52,7 @@ export default function TrainerTabLayout({
                 name="operations"
                 options={{
                     title: "Trainer Operations",
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome size={28} name="cog" color={color} />
                     ),
@@ -61,6 +62,7 @@ export default function TrainerTabLayout({
                 name="[trainingEventId]"
                 options={{
                     href: null,
+                    headerShown: false,
                 }}
             />
         </Tabs>

@@ -16,6 +16,7 @@ import Participant from "./Participant";
 import Assignment from "./Assignment";
 import Staff from "./Staff";
 import { format, formatISO } from "date-fns";
+import Client from "./Client";
 
 export default class TrainingEvent extends Model {
     static table = "training_event";
@@ -60,6 +61,10 @@ export default class TrainingEvent extends Model {
                 ),
             ])
         );
+
+    @lazy potentialParticipants = this.collections
+        .get<Client>("client")
+        .query(Q.where("village", this.village.id));
 
     // Should probably be irreversible, not toggle-able
     @writer async toggleCancelEvent() {

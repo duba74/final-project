@@ -1,4 +1,4 @@
-import TrainingModulePicker from "@/components/planner-event-form/TrainingModulePicker";
+import TrainingModulePicker from "@/components/event-form/TrainingModulePicker";
 import VillageList from "@/components/village-list/VillageList";
 import { logRecords } from "@/database/db-utils";
 import sync from "@/database/sync";

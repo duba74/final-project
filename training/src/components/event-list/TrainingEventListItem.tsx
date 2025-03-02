@@ -27,10 +27,6 @@ const TrainingEventListItem = ({
 
     const handleModifyEvent = async () => {
         if (role === "trainer") {
-            // NOW WHAT? Should go to a new tabs screen? Tabs on top? Maybe start with just links. Where there's a tab for each operation needed
-            // Get coords, capture date. capture photo, capture particpant list photo, register participants
-            // Also have tab to go back to villages
-            // router.navigate(`/(app)/trainer/(home)/${trainingEvent.id}/event-completion`)
             const path =
                 `/(app)/trainer/(home)/${trainingEvent.id}/event-completion` as Href;
             router.navigate(path);

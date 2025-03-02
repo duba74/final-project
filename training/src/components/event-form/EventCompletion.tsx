@@ -3,50 +3,39 @@ import ThemedText from "@/components/themed/ThemedText";
 import ThemedTextInput from "@/components/themed/ThemedTextInput";
 import ThemedView from "@/components/themed/ThemedView";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
-import Village from "@/database/data-model/models/Village";
-import { compose, withObservables } from "@nozbe/watermelondb/react";
+import { withObservables } from "@nozbe/watermelondb/react";
 import { useState } from "react";
 import { View } from "react-native";
 import { format } from "date-fns";
-import { useSession } from "@/hooks/useSession";
-import * as Location from "expo-location";
 import { trainingEventCollection } from "@/database/database";
-import { Relation } from "@nozbe/watermelondb";
 import EventVillageDescription from "./EventVillageDescription";
+import {
+    getGpsLocation,
+    getGpsLocationPermission,
+} from "@/services/GpsService";
 
-type EventCompletionFormProps = {
+type EventCompletionProps = {
     username: string;
     trainingEventId: string;
     trainingEvent: TrainingEvent;
 };
 
-const EventCompletionForm = ({
+const EventCompletion = ({
     username,
     trainingEventId,
     trainingEvent,
-}: EventCompletionFormProps) => {
-    const { session } = useSession();
+}: EventCompletionProps) => {
     const [commentText, setCommentText] = useState("");
-    const [locPermErrorMsg, setLocPermErrorMsg] = useState<string | null>(null);
+    const [hasLocationPermission, setHasLocationPermission] = useState(false);
     const [locationLoading, setLocationLoading] = useState(false);
 
-    console.log("event-completion-form: " + trainingEventId);
-
-    const handleToggleCompletionTime = () => {
-        trainingEvent.toggleCompleteEvent();
-    };
-
     const handleRegisterEventCompletion = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-            setLocPermErrorMsg("Location access not granted");
-            return;
-        }
+        const permission = await getGpsLocationPermission();
+        setHasLocationPermission(permission);
+        if (!permission) return;
 
         setLocationLoading(true);
-        let location = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.High,
-        });
+        const location = await getGpsLocation();
         setLocationLoading(false);
 
         console.log(location.coords);
@@ -54,8 +43,6 @@ const EventCompletionForm = ({
 
         trainingEvent.registerCompletionTime(location.timestamp);
         trainingEvent.registerLocation(JSON.stringify(location.coords));
-        // Write the location to the DB
-        // Write the timestamp to completion time
     };
 
     const handleSaveComment = () => {
@@ -67,25 +54,14 @@ const EventCompletionForm = ({
     return (
         <ThemedView style={{ gap: 35 }}>
             <EventVillageDescription trainingEvent={trainingEvent} />
-            {/* <View>
-                <ThemedButton
-                    title="Toggle Completion Time"
-                    onPress={handleToggleCompletionTime}
-                />
-                {trainingEvent.completedAt ? (
-                    <ThemedText>{`Completed at: ${format(
-                        trainingEvent.completedAt,
-                        "PPPPp"
-                    )}`}</ThemedText>
-                ) : (
-                    <ThemedText>Completion time not yet recorded</ThemedText>
-                )}
-            </View> */}
             <View style={{ gap: 10 }}>
                 <ThemedButton
                     title="Register Event Completion"
                     onPress={handleRegisterEventCompletion}
                 />
+                {!hasLocationPermission && (
+                    <ThemedText>Location permissions not granted!</ThemedText>
+                )}
                 {locationLoading && (
                     <ThemedText>Capturing coordinates...</ThemedText>
                 )}
@@ -134,9 +110,9 @@ const EventCompletionForm = ({
 
 const enhance = withObservables(
     ["trainingEventId"],
-    ({ trainingEventId }: EventCompletionFormProps) => ({
+    ({ trainingEventId }: EventCompletionProps) => ({
         trainingEvent: trainingEventCollection.findAndObserve(trainingEventId),
     })
 );
 
-export default enhance(EventCompletionForm);
+export default enhance(EventCompletion);

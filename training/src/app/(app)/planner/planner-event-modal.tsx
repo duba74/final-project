@@ -1,4 +1,4 @@
-import PlannerEventForm from "@/components/planner-event-form/PlannerEventForm";
+import PlannerEventForm from "@/components/event-form/PlannerEventForm";
 import ThemedText from "@/components/themed/ThemedText";
 import ThemedView from "@/components/themed/ThemedView";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";

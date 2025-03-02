@@ -1,7 +1,7 @@
 import { Redirect } from "expo-router";
 
 const NavigateHome = () => {
-    return <Redirect href={"/(app)/trainer/(home)/villages"} />;
+    return <Redirect href={"/(app)/trainer"} />;
 };
 
 export default NavigateHome;

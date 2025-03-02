@@ -5,7 +5,7 @@ import { View, StyleSheet, Pressable } from "react-native";
 import ThemedText from "../themed/ThemedText";
 import ThemedView from "../themed/ThemedView";
 import { useRouter } from "expo-router";
-import TrainingEventList from "../training-event-list/TrainingEventList";
+import TrainingEventList from "../event-list/TrainingEventList";
 import ThemedButton from "../themed/ThemedButton";
 import { Q } from "@nozbe/watermelondb";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";

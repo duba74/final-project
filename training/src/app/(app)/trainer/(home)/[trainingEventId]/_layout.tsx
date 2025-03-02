@@ -41,8 +41,8 @@ export default function TrainerEventTabLayout({
             <Tabs.Screen
                 name="event-completion"
                 options={{
-                    title: "Event Completion",
-                    // headerShown: false,
+                    title: "Completion",
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome
                             size={28}
@@ -53,12 +53,20 @@ export default function TrainerEventTabLayout({
                 }}
             />
             <Tabs.Screen
-                name="participants"
+                name="event-participants"
                 options={{
-                    title: "Event Participants",
+                    title: "Participants",
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome size={28} name="group" color={color} />
                     ),
+                }}
+            />
+            <Tabs.Screen
+                name="participant-modal"
+                options={{
+                    href: null,
+                    headerShown: false,
                 }}
             />
         </Tabs>
