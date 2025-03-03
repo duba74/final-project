@@ -18,12 +18,14 @@ type ParticipantPickerProps = {
     darkColor?: string;
     trainingEvent: TrainingEvent;
     potentialParticipants: Client[];
+    setSelectedParticipant: (id: string) => void;
 };
 
 const ParticipantPicker = ({
     lightColor,
     darkColor,
     potentialParticipants,
+    setSelectedParticipant,
 }: ParticipantPickerProps) => {
     const textColor = useThemeColor(
         { light: lightColor, dark: darkColor },
@@ -77,6 +79,7 @@ const ParticipantPicker = ({
 
     const handleValueChange = (itemValue: string, itemIndex: number) => {
         setParticipantId(itemValue);
+        setSelectedParticipant(itemValue);
         console.log(itemValue);
     };
 
@@ -92,7 +95,7 @@ const ParticipantPicker = ({
                 style={{
                     color: textColor,
                     backgroundColor: backgroundColor,
-                    width: "50%",
+                    width: "100%",
                 }}
                 dropdownIconColor={textColor}
                 selectedValue={participantId ? participantId : undefined}

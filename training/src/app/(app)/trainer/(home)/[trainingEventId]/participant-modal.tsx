@@ -1,18 +1,21 @@
 import ParticipantForm from "@/components/event-form/ParticipantForm";
 import ThemedText from "@/components/themed/ThemedText";
 import ThemedView from "@/components/themed/ThemedView";
-import { useGlobalSearchParams } from "expo-router";
+import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { SafeAreaView, ScrollView } from "react-native";
 
 const ParticipantModal = () => {
-    const { trainingEventId } = useGlobalSearchParams<{
+    const { trainingEventId } = useLocalSearchParams<{
         trainingEventId: string;
     }>();
 
     return (
-        <ThemedView>
+        <ThemedView style={{ flex: 1 }}>
             <ThemedText>Add participant modal</ThemedText>
             <ThemedText>{trainingEventId}</ThemedText>
-            <ParticipantForm trainingEventId={trainingEventId} />
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <ParticipantForm trainingEventId={trainingEventId} />
+            </ScrollView>
         </ThemedView>
     );
 };
