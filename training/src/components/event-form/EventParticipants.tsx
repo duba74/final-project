@@ -31,7 +31,7 @@ const EventParticipants = ({
                 title="Add Participant"
                 onPress={handleAddParticipant}
             />
-            <ParticipantList trainingEventId={trainingEventId} />
+            <ParticipantList trainingEvent={trainingEvent} />
         </ThemedView>
     );
 };

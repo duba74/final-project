@@ -2,7 +2,11 @@ import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import ThemedText from "../themed/ThemedText";
 import ThemedView from "../themed/ThemedView";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { clientCollection, trainingEventCollection } from "@/database/database";
+import {
+    clientCollection,
+    staffCollection,
+    trainingEventCollection,
+} from "@/database/database";
 import ParticipantPicker from "./ParticipantPicker";
 import ThemedButton from "../themed/ThemedButton";
 import { Pressable, ScrollView, View } from "react-native";
@@ -12,6 +16,8 @@ import ThemedTextInput from "../themed/ThemedTextInput";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { AGE_GROUP_CHOICES, SEX_CHOICES } from "@/constants/Choices";
 import Client from "@/database/data-model/models/Client";
+import { useRouter } from "expo-router";
+import { useSession } from "@/hooks/useSession";
 
 type ParticipantFormProps = {
     trainingEventId: string;
@@ -24,17 +30,19 @@ const ParticipantForm = ({
     trainingEvent,
 }: // PARTICIPANT ID IF EDITING
 ParticipantFormProps) => {
+    const router = useRouter();
+    const { session } = useSession();
     // SET DEFAULTS IF THE PARTICIPANT IS ALREADY CREATED, SET UP WITHOBSERVABLES FOR THE PARTICIPANT?
     const [selectedParticipant, setSelectedParticipant] = useState();
-    const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+    const [selectedClient, setSelectedClient] = useState<Client | undefined>();
     const [isNewParticipant, setIsNewParticipant] = useState(false);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone1, setPhone1] = useState("");
     const [phone2, setPhone2] = useState("");
     const [isLeader, setIsLeader] = useState(false);
-    const [sexIndex, setSexIndex] = useState<number | undefined>(undefined);
-    const [ageGroupIndex, setAgeGroupIndex] = useState(0);
+    const [sexIndex, setSexIndex] = useState<number | undefined>();
+    const [ageGroupIndex, setAgeGroupIndex] = useState<number | undefined>();
     const [tombolaTickets, setTombolaTickets] = useState("");
     const [picsPurchased, setPicsPurchased] = useState("");
     const [picsReceived, setPicsReceived] = useState("");
@@ -86,7 +94,46 @@ ParticipantFormProps) => {
         }
     }, [selectedClient]);
 
-    // Write the participant to the database
+    const handleCancel = () => {
+        router.back();
+    };
+
+    const handleSave = async () => {
+        if (!session) {
+            console.log("No session");
+            return;
+        }
+
+        try {
+            const user = JSON.parse(session).user;
+            console.log(user);
+
+            const staff = await staffCollection.find(user.username);
+
+            const newParticipant = await trainingEvent.addParticipant(
+                staff,
+                selectedClient,
+                firstName,
+                lastName,
+                sexIndex ? SEX_CHOICES.at(sexIndex)?.value : undefined,
+                ageGroupIndex
+                    ? AGE_GROUP_CHOICES.at(ageGroupIndex)?.value
+                    : undefined,
+                phone1,
+                phone2,
+                isLeader,
+                tombolaTickets,
+                picsPurchased,
+                picsReceived
+            );
+
+            console.log(newParticipant);
+
+            router.back();
+        } catch (error) {
+            console.error(`Failed to create event ${error}`);
+        }
+    };
 
     return (
         <ThemedView style={{ marginTop: 20, gap: 25 }}>
@@ -192,6 +239,21 @@ ParticipantFormProps) => {
                         keyboardType="numeric"
                     />
                 </View>
+            </View>
+            <View
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: 20,
+                }}
+            >
+                <ThemedButton title="Delete" type="danger" />
+                <ThemedButton
+                    title="Cancel"
+                    type="cancel"
+                    onPress={handleCancel}
+                />
+                <ThemedButton title="Save" onPress={handleSave} />
             </View>
             {/* BUTTONS TO SAVE, CANCEL/GOBACK, DELETE */}
         </ThemedView>

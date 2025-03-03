@@ -34,7 +34,6 @@ export default appSchema({
                 { name: "phone_2", type: "string", isOptional: true },
                 { name: "client", type: "string", isOptional: true },
                 { name: "is_leader", type: "boolean" },
-                { name: "village", type: "string" },
                 { name: "tombola_tickets", type: "number", isOptional: true },
                 { name: "pics_purchased", type: "number", isOptional: true },
                 { name: "pics_received", type: "number", isOptional: true },

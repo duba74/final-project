@@ -109,18 +109,41 @@ export default class TrainingEvent extends Model {
         await this.markAsDeleted();
     }
 
-    //   @writer async markAsSpam() {
-    //     await this.update(comment => {
-    //       comment.isSpam = true
-    //     })
-    //   }
+    @writer async addParticipant(
+        createdBy: Staff,
+        client: Client | undefined,
+        firstName: string,
+        lastName: string,
+        sex: string | undefined,
+        ageGroup: string | undefined,
+        phone1: string,
+        phone2: string,
+        isLeader: boolean | undefined,
+        tombolaTickets: string,
+        picsPurchased: string,
+        picsReceived: string
+    ) {
+        const newParticipant = await this.collections
+            .get<Participant>("participant")
+            .create((participant) => {
+                participant.trainingEvent.set(this);
+                participant.createdBy.set(createdBy);
+                if (client) participant.client.set(client);
+                participant.firstName = firstName;
+                participant.lastName = lastName !== "" ? lastName : null;
+                participant.sex = sex ? sex : null;
+                participant.ageGroup = ageGroup ? ageGroup : null;
+                participant.phone1 = phone1 !== "" ? phone1 : null;
+                participant.phone2 = phone2 !== "" ? phone2 : null;
+                participant.isLeader = isLeader ? isLeader : false;
+                participant.tombolaTickets =
+                    tombolaTickets !== "" ? parseInt(tombolaTickets) : null;
+                participant.picsPurchased =
+                    picsPurchased !== "" ? parseInt(picsPurchased) : null;
+                participant.picsReceived =
+                    picsReceived !== "" ? parseInt(picsReceived) : null;
+            });
 
-    //       @writer async addComment(body, author) {
-    //     const newComment = await this.collections.get('comments').create(comment => {
-    //       comment.post.set(this)
-    //       comment.author.set(author)
-    //       comment.body = body
-    //     })
-    //     return newComment
-    //   }
+        return newParticipant;
+    }
 }
