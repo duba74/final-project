@@ -41,11 +41,6 @@ const PlannerEventForm = ({
     // Get the user ID from the session for created_by
 
     const handleCreateEvent = async () => {
-        console.log(`Training module: ${trainingModule?.name}`);
-        console.log(`Event village: ${village?.name}`);
-        console.log(`Event date: ${eventDate}`);
-        console.log(`Event time of day: ${eventTimeOfDay}`);
-
         if (!village || !trainingModule) return;
 
         if (!session) {
@@ -55,7 +50,6 @@ const PlannerEventForm = ({
 
         try {
             const user = JSON.parse(session).user;
-            console.log(user);
 
             const staff = await staffCollection.find(user.username);
 
@@ -65,8 +59,6 @@ const PlannerEventForm = ({
                 eventTimeOfDay,
                 staff
             );
-
-            console.log(newTrainingEvent);
 
             router.back();
         } catch (error) {

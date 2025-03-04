@@ -33,11 +33,6 @@ const Index = () => {
         }
     }, [isLoading, session, redirectPath]);
 
-    // Logging to help diagnose issues
-    console.log("Session:", session);
-    console.log("Is Loading:", isLoading);
-    console.log("Redirect Path:", redirectPath);
-
     if (isLoading) {
         return (
             <View>

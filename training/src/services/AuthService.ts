@@ -14,9 +14,6 @@ export const login = async (username: string, password: string) => {
         password: password,
     };
 
-    console.log(credentials);
-    console.log(JSON.stringify(credentials));
-
     const host =
         Platform.OS === "web" ? URLS.backend.web : URLS.backend.android;
     const endpoint = "/api/login/";
@@ -55,7 +52,6 @@ export const login = async (username: string, password: string) => {
         }
 
         const data = await response.json();
-        console.log(data);
 
         return data;
     } catch (error) {

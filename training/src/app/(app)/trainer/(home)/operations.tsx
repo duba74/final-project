@@ -15,7 +15,6 @@ const TrainerOperations = () => {
         if (session) {
             try {
                 const parsedSession = JSON.parse(session);
-                console.log(parsedSession);
                 const token = parsedSession.token;
 
                 sync(token);
@@ -78,6 +77,10 @@ const TrainerOperations = () => {
             <Button
                 title="Log Assignments"
                 onPress={() => logRecords("assignment")}
+            />
+            <Button
+                title="Log Participants"
+                onPress={() => logRecords("participant")}
             />
         </View>
     );

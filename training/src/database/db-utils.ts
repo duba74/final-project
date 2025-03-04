@@ -13,6 +13,7 @@ import database, {
     clientCollection,
     staffCollection,
     assignmentCollection,
+    participantCollection,
 } from "./database";
 
 export const logRecords = async (collection: string) => {
@@ -41,6 +42,10 @@ export const logRecords = async (collection: string) => {
 
         case "assignment":
             data = await assignmentCollection.query().fetch();
+            break;
+
+        case "participant":
+            data = await participantCollection.query().fetch();
             break;
 
         default:

@@ -24,7 +24,6 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
         try {
             const result = await AuthService.login(username, password);
             const { token, user } = result;
-            console.log({ token, user });
             setSession(JSON.stringify({ token, user }));
 
             return true;

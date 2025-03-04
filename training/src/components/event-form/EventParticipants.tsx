@@ -19,9 +19,13 @@ const EventParticipants = ({
     const router = useRouter();
 
     const handleAddParticipant = () => {
-        const path =
-            `/(app)/trainer/(home)/${trainingEventId}/participant-modal` as Href;
-        router.navigate(path);
+        router.navigate({
+            pathname:
+                "/(app)/trainer/(home)/[trainingEventId]/participant-modal",
+            params: {
+                trainingEventId: trainingEvent.id,
+            },
+        });
     };
 
     return (

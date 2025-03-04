@@ -55,7 +55,7 @@ const ParticipantPicker = ({
             ? potentialParticipant.firstName
             : "";
         label += potentialParticipant.lastName
-            ? " " + potentialParticipant.firstName
+            ? " " + potentialParticipant.lastName
             : "";
         label += " - " + potentialParticipant.id;
         label += makePhoneLabel(
@@ -80,7 +80,6 @@ const ParticipantPicker = ({
     const handleValueChange = (itemValue: string, itemIndex: number) => {
         setParticipantId(itemValue);
         setSelectedParticipant(itemValue);
-        console.log(itemValue);
     };
 
     return (

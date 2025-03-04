@@ -1,4 +1,4 @@
-import { Model, Relation } from "@nozbe/watermelondb";
+import { Model, Q, Relation } from "@nozbe/watermelondb";
 import {
     field,
     text,
@@ -6,6 +6,8 @@ import {
     nochange,
     readonly,
     immutableRelation,
+    lazy,
+    writer,
 } from "@nozbe/watermelondb/decorators";
 import TrainingEvent from "./TrainingEvent";
 import Client from "./Client";
@@ -34,5 +36,44 @@ export default class Participant extends Model {
     @immutableRelation("staff", "created_by") createdBy!: Relation<Staff>;
     @immutableRelation("training_event", "training_event")
     trainingEvent!: Relation<TrainingEvent>;
-    @immutableRelation("client", "client") client!: Relation<Client>;
+    @immutableRelation("client", "client") client!: Relation<Client> | null;
+
+    @lazy clients = this.collections
+        .get<Client>("client")
+        .query(Q.where("id", this.client?.id));
+
+    @writer async updateParticipant(
+        firstName: string,
+        lastName: string,
+        sex: string | undefined,
+        ageGroup: string | undefined,
+        phone1: string,
+        phone2: string,
+        isLeader: boolean | undefined,
+        tombolaTickets: string,
+        picsPurchased: string,
+        picsReceived: string
+    ) {
+        await this.update((participant) => {
+            participant.firstName = firstName;
+            participant.lastName = lastName !== "" ? lastName : null;
+            participant.sex = sex ? sex : null;
+            participant.ageGroup = ageGroup ? ageGroup : null;
+            participant.phone1 = phone1 !== "" ? phone1 : null;
+            participant.phone2 = phone2 !== "" ? phone2 : null;
+            participant.isLeader = isLeader ? isLeader : false;
+            participant.tombolaTickets =
+                tombolaTickets !== "" ? parseInt(tombolaTickets) : null;
+            participant.picsPurchased =
+                picsPurchased !== "" ? parseInt(picsPurchased) : null;
+            participant.picsReceived =
+                picsReceived !== "" ? parseInt(picsReceived) : null;
+        });
+
+        return this;
+    }
+
+    @writer async deleteParticipant() {
+        await this.markAsDeleted();
+    }
 }

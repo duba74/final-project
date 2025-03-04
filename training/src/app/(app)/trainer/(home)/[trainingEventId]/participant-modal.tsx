@@ -5,8 +5,9 @@ import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { SafeAreaView, ScrollView } from "react-native";
 
 const ParticipantModal = () => {
-    const { trainingEventId } = useLocalSearchParams<{
+    const { trainingEventId, participantId } = useLocalSearchParams<{
         trainingEventId: string;
+        participantId?: string;
     }>();
 
     return (
@@ -14,7 +15,10 @@ const ParticipantModal = () => {
             <ThemedText>Add participant modal</ThemedText>
             <ThemedText>{trainingEventId}</ThemedText>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <ParticipantForm trainingEventId={trainingEventId} />
+                <ParticipantForm
+                    trainingEventId={trainingEventId}
+                    participantId={participantId}
+                />
             </ScrollView>
         </ThemedView>
     );

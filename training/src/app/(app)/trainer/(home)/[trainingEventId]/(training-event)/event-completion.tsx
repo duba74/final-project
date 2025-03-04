@@ -10,8 +10,6 @@ const EventCompletionPage = () => {
     }>();
     const [username, setUsername] = useState("");
 
-    console.log("trainingEventId: " + trainingEventId);
-
     useEffect(() => {
         const parseUser = () => {
             if (!session) {
@@ -19,7 +17,6 @@ const EventCompletionPage = () => {
                 setUsername("");
             } else {
                 const user = JSON.parse(session).user;
-                console.log(user);
                 setUsername(user.username);
             }
         };

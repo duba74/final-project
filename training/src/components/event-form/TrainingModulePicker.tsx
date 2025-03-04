@@ -39,7 +39,6 @@ const TrainingModulePicker = ({
         setCurrentModule(itemValue);
     };
 
-    console.log(trainingModules);
     return (
         <Picker
             style={{

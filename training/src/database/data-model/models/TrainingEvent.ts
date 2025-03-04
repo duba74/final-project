@@ -128,7 +128,7 @@ export default class TrainingEvent extends Model {
             .create((participant) => {
                 participant.trainingEvent.set(this);
                 participant.createdBy.set(createdBy);
-                if (client) participant.client.set(client);
+                if (client) participant.client?.set(client);
                 participant.firstName = firstName;
                 participant.lastName = lastName !== "" ? lastName : null;
                 participant.sex = sex ? sex : null;

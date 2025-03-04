@@ -21,8 +21,6 @@ const TrainingEventList = ({
     role,
     trainingEvents,
 }: TrainingEventListProps) => {
-    console.log(`currentModule: ${currentModule}`);
-
     return (
         <FlatList
             data={trainingEvents}

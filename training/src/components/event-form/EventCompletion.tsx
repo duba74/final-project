@@ -38,15 +38,11 @@ const EventCompletion = ({
         const location = await getGpsLocation();
         setLocationLoading(false);
 
-        console.log(location.coords);
-        console.log(location.timestamp);
-
         trainingEvent.registerCompletionTime(location.timestamp);
         trainingEvent.registerLocation(JSON.stringify(location.coords));
     };
 
     const handleSaveComment = () => {
-        console.log(commentText);
         trainingEvent.appendToComments(commentText, username);
         setCommentText("");
     };

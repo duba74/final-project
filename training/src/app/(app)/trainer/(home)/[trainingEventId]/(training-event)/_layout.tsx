@@ -22,7 +22,6 @@ export default function TrainerEventTabLayout({
     );
     const segments = useSegments();
     const hide = segments.includes("participant-modal" as never);
-    console.log(segments);
 
     return (
         <Tabs

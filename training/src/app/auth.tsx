@@ -11,14 +11,12 @@ const Auth = () => {
 
     const handleLogin = async (username: string, password: string) => {
         const isAuthenticated = await login(username, password);
-        console.log("isAuthenticated: " + isAuthenticated);
     };
 
     useEffect(() => {
         if (session) {
             try {
                 const user = JSON.parse(session).user;
-                console.log(user);
 
                 if (user.role === "trainer") {
                     router.replace("/(app)/trainer/villages");

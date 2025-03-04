@@ -22,7 +22,6 @@ export default function TrainerTabLayout({
     );
     const segments = useSegments();
     const hide = segments.includes("[trainingEventId]" as never);
-    console.log(segments);
 
     return (
         <Tabs
