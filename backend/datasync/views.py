@@ -25,6 +25,8 @@ from datasync.utils import convert_to_tz_aware_datetime, get_min_time
 from datasync.get_data import (
     get_unique_monotonic_timestamp,
     get_changed_training_events,
+    get_changed_participants,
+    convert_assignments_to_datetime,
 )
 from datasync.update_data import apply_training_event_changes, apply_participant_changes
 
@@ -85,7 +87,8 @@ class Sync(APIView):
         else:
             assignments = response.data["data"]
 
-        print(assignments)
+        assignments = convert_assignments_to_datetime(assignments)
+        # print(assignments)
 
         last_pulled_at = request.query_params.get("lastPulledAt")
 
@@ -104,6 +107,7 @@ class Sync(APIView):
                 "training_event": get_changed_training_events(
                     last_pulled_at, assignments
                 ),
+                "participant": get_changed_participants(last_pulled_at, assignments),
             },
             "timestamp": get_unique_monotonic_timestamp(),
         }
@@ -132,13 +136,11 @@ class Sync(APIView):
 
         print("Device is pushing...\nChanges sent from device:\n", changes)
 
-        apply_training_event_changes(last_pulled_at, changes.get("training_event", {}))
         try:
-            pass
-            # apply_training_event_changes(
-            #     last_pulled_at, changes.get("training_event", {})
-            # )
-            # apply_participant_changes(last_pulled_at, changes.get("participant", {}))
+            apply_training_event_changes(
+                last_pulled_at, changes.get("training_event", {})
+            )
+            apply_participant_changes(last_pulled_at, changes.get("participant", {}))
         except Exception as e:
             transaction.set_rollback(True)
 

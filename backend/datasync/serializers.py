@@ -1,6 +1,6 @@
 import datetime
 from rest_framework import serializers
-from .models import TrainingEvent
+from .models import TrainingEvent, Participant
 
 
 class LoginSerializer(serializers.Serializer):
@@ -25,4 +25,16 @@ class TrainingEventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TrainingEvent
+        exclude = ["server_deleted_at"]
+
+
+class ParticipantSerializer(serializers.ModelSerializer):
+    created_at = UNIXTimestampField()
+    updated_at = UNIXTimestampField()
+    training_event = serializers.PrimaryKeyRelatedField(
+        queryset=TrainingEvent.objects.all()
+    )
+
+    class Meta:
+        model = Participant
         exclude = ["server_deleted_at"]

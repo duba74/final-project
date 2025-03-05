@@ -26,6 +26,8 @@ const Login = ({ onLogin }: LoginProps) => {
                 value={username}
                 onChangeText={setUsername}
                 testID="username-input"
+                autoCapitalize="none"
+                autoCorrect={false}
             />
             <ThemedTextInput
                 style={styles.input}
@@ -33,6 +35,10 @@ const Login = ({ onLogin }: LoginProps) => {
                 value={password}
                 onChangeText={setPassword}
                 testID="password-input"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={true}
+                onSubmitEditing={() => onLogin(username, password)}
             />
             <ThemedButton
                 title={"Login"}
@@ -48,7 +54,6 @@ export default Login;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: "center",
         alignItems: "center",
     },

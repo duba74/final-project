@@ -15,7 +15,7 @@ import Village from "./Village";
 import Participant from "./Participant";
 import Assignment from "./Assignment";
 import Staff from "./Staff";
-import { format, formatISO } from "date-fns";
+import { formatISO, startOfDay, startOfToday } from "date-fns";
 import Client from "./Client";
 
 export default class TrainingEvent extends Model {
@@ -47,6 +47,10 @@ export default class TrainingEvent extends Model {
     @immutableRelation("village", "village") village!: Relation<Village>;
 
     @children("participant") participants!: Query<Participant>;
+
+    @lazy isCompleted = this.completedAt !== null;
+
+    @lazy isDeletable = startOfToday() < startOfDay(this.scheduledFor);
 
     @lazy trainers = this.collections
         .get<Staff>("staff")

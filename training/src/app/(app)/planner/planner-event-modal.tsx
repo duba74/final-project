@@ -1,3 +1,4 @@
+import ParticipantList from "@/components/event-form/ParticipantList";
 import PlannerEventForm from "@/components/event-form/PlannerEventForm";
 import ThemedText from "@/components/themed/ThemedText";
 import ThemedView from "@/components/themed/ThemedView";
@@ -73,11 +74,14 @@ const TrainingEventFormModal = () => {
     return (
         <View>
             {isEditing ? (
-                <PlannerEventForm
-                    village={village}
-                    trainingModule={trainingModule}
-                    trainingEvent={trainingEvent}
-                />
+                <>
+                    <PlannerEventForm
+                        village={village}
+                        trainingModule={trainingModule}
+                        trainingEvent={trainingEvent}
+                    />
+                    <ParticipantList trainingEvent={trainingEvent} />
+                </>
             ) : (
                 <PlannerEventForm
                     village={village}

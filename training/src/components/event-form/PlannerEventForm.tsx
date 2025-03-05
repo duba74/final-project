@@ -7,7 +7,7 @@ import { useState } from "react";
 import { addDays } from "date-fns";
 import WebEventDatePicker from "./WebEventDatePicker";
 import ThemedButton from "../themed/ThemedButton";
-import { format } from "date-fns";
+import { format, startOfDay, startOfToday } from "date-fns";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
@@ -34,11 +34,6 @@ const PlannerEventForm = ({
     const [eventDate, setEventDate] = useState<Date>(defaultDate);
     const [eventTimeOfDay, setEventTimeOfDay] =
         useState<string>(defaultTimeOfDay);
-
-    // Fetch the village data (name, country, etc.), just for labels
-    // Get the assigned trainer
-    // Get the module from context provider (still need to make this)
-    // Get the user ID from the session for created_by
 
     const handleCreateEvent = async () => {
         if (!village || !trainingModule) return;
@@ -116,10 +111,23 @@ const PlannerEventForm = ({
                             defaultTimeOfDay={defaultTimeOfDay}
                             setEventTimeOfDay={setEventTimeOfDay}
                         />
-                        <ThemedButton
-                            title="Create Event"
-                            onPress={handleCreateEvent}
-                        />
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: 20,
+                            }}
+                        >
+                            <ThemedButton
+                                title="Go Back"
+                                type="cancel"
+                                onPress={handleGoBack}
+                            />
+                            <ThemedButton
+                                title="Create Event"
+                                onPress={handleCreateEvent}
+                            />
+                        </View>
                     </>
                 ))}
             {trainingEvent && (
@@ -131,21 +139,35 @@ const PlannerEventForm = ({
                     <ThemedText>
                         Scheduled time of day: {trainingEvent.scheduledTime}
                     </ThemedText>
-                    <ThemedButton
-                        title="Cancel Event"
-                        onPress={handleCancelEvent}
-                    />
-                    <ThemedButton
-                        title="Delete Event"
-                        onPress={handleDeleteEvent}
-                    />
-                    <ThemedButton
-                        title="Toggle Completion"
-                        onPress={handleToggleCompletion}
-                    />
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: 20,
+                        }}
+                    >
+                        <ThemedButton
+                            title="Go Back"
+                            type="cancel"
+                            onPress={handleGoBack}
+                        />
+                        {!trainingEvent.isCompleted &&
+                            trainingEvent.isDeletable && (
+                                <ThemedButton
+                                    title="Delete Event"
+                                    type="danger"
+                                    onPress={handleDeleteEvent}
+                                />
+                            )}
+                        {!trainingEvent.isCompleted && (
+                            <ThemedButton
+                                title="Cancel Event"
+                                onPress={handleCancelEvent}
+                            />
+                        )}
+                    </View>
                 </>
             )}
-            <ThemedButton title="Go Back" onPress={handleGoBack} />
         </ThemedView>
     );
 };

@@ -1,41 +1,64 @@
 import Login from "@/components/login/Login";
+import ThemedText from "@/components/themed/ThemedText";
 import ThemedView from "@/components/themed/ThemedView";
+import secondaryDataPull from "@/database/secondary-data-pull";
+import sync from "@/database/sync";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
 
 const Auth = () => {
     const { login, session } = useSession();
     const router = useRouter();
+    const [isAuthenticating, setIsAuthenticating] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
 
     const handleLogin = async (username: string, password: string) => {
+        setIsAuthenticating(true);
         const isAuthenticated = await login(username, password);
+        setIsAuthenticating(false);
     };
 
     useEffect(() => {
-        if (session) {
-            try {
-                const user = JSON.parse(session).user;
+        const syncAndRedirect = async () => {
+            setIsSyncing(true);
+            if (session) {
+                try {
+                    const user = JSON.parse(session).user;
+                    const token = JSON.parse(session).token;
 
-                if (user.role === "trainer") {
-                    router.replace("/(app)/trainer/villages");
-                } else if (user.role === "planner") {
-                    router.replace("/(app)/planner/villages");
-                } else if (user.role === "admin") {
-                    router.replace("/(app)/admin/home");
-                } else {
-                    router.replace("/(app)/norole/home");
+                    await secondaryDataPull(token);
+                    await sync(token);
+
+                    if (user.role === "trainer") {
+                        router.replace("/(app)/trainer/villages");
+                    } else if (user.role === "planner") {
+                        router.replace("/(app)/planner/villages");
+                    } else if (user.role === "admin") {
+                        router.replace("/(app)/admin/home");
+                    } else {
+                        router.replace("/(app)/norole/home");
+                    }
+                } catch (error) {
+                    console.error(`Failed to parse session: ${error}`);
+                } finally {
                 }
-            } catch (error) {
-                console.error(`Failed to parse session: ${error}`);
             }
-        }
+            setIsSyncing(false);
+        };
+
+        syncAndRedirect();
     }, [session, router]);
 
     return (
         <ThemedView style={styles.container}>
             <Login onLogin={handleLogin} />
+            {(isAuthenticating || isSyncing) && (
+                <ActivityIndicator size="large" />
+            )}
+            {isAuthenticating && <ThemedText>Authenticating...</ThemedText>}
+            {isSyncing && <ThemedText>Syncing data...</ThemedText>}
         </ThemedView>
     );
 };
@@ -47,5 +70,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        gap: 15,
     },
 });

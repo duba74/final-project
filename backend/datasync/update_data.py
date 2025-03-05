@@ -67,6 +67,8 @@ def apply_training_event_changes(last_pulled_at, changes):
 
 
 def apply_participant_changes(last_pulled_at, changes):
+    print("Participant changes")
+    print(changes)
     for record in changes.get("created", []):
         try:
             training_event = TrainingEvent.objects.get(id=record["training_event"])
@@ -82,9 +84,13 @@ def apply_participant_changes(last_pulled_at, changes):
         # defaults["server_created_at"] = server_created_at
         # defaults["server_updated_at"] = server_created_at
 
-        Participant.objects.update_or_create(
+        obj, created = Participant.objects.update_or_create(
             id=record_id, training_event=training_event, defaults=defaults
         )
+        # if created:
+        #     print("Created", obj)
+        # else:
+        #     print("Updated", obj)
 
     for record in changes.get("updated", []):
         try:
@@ -93,9 +99,11 @@ def apply_participant_changes(last_pulled_at, changes):
             raise Exception(
                 f"Error: TrainingEvent with ID {record["training_event"]} for Participant with ID {record["id"]} does not yet exist"
             )
-        record = get_syncable_fields(record, TrainingEvent)
+        record = get_syncable_fields(record, Participant)
         record_id = record["id"]
         obj = Participant.objects.filter(id=record_id).first()
+
+        # print(obj)
 
         if obj:
             if obj.server_deleted_at:
@@ -111,6 +119,8 @@ def apply_participant_changes(last_pulled_at, changes):
                 )
 
             for k, v in record.items():
+                # print(k, v)
+                # print(obj)
                 setattr(obj, k, v)
 
             obj.server_updated_at = timezone.now()

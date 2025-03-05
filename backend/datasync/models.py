@@ -80,7 +80,6 @@ class Participant(SyncModel):
     training_event = models.ForeignKey(
         TrainingEvent, on_delete=models.CASCADE, null=False, blank=False
     )
-    village = models.CharField(max_length=7, null=False, blank=False)
     first_name = models.CharField(max_length=255, null=False, blank=False)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     sex = models.CharField(
@@ -101,7 +100,6 @@ class Participant(SyncModel):
     pics_received = models.IntegerField(null=True, blank=True)
 
     SYNCABLE_FIELDS = SyncModel.SYNCABLE_FIELDS + [
-        "village",
         "first_name",
         "last_name",
         "sex",

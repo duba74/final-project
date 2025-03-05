@@ -35,7 +35,6 @@ const sync = async (authToken: string) => {
             const { changes, timestamp } = await response.json();
 
             console.log(`🍉 Pull succeeded at timestamp = ${timestamp}`);
-            console.log(`🍉 Pull succeeded with changes:`);
 
             return { changes, timestamp };
         },
@@ -43,8 +42,6 @@ const sync = async (authToken: string) => {
             console.log(
                 `🍉 Attempting push with lastPulledAt = ${lastPulledAt}`
             );
-            console.log(`🍉 Changes:`);
-            console.log(changes);
 
             const urlParams = `lastPulledAt=${lastPulledAt}`;
             const url = `${host}/api/sync/?${urlParams}`;
