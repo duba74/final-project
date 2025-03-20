@@ -1,4 +1,4 @@
-import TrainingModulePicker from "@/components/event-form/TrainingModulePicker";
+import TrainingModulePicker from "@/components/operations-menu/TrainingModulePicker";
 import VillageList from "@/components/village-list/VillageList";
 import { useCurrentModule } from "@/hooks/useCurrentModule";
 import { useSession } from "@/hooks/useSession";

@@ -20,15 +20,6 @@ def convert_assignments_to_datetime(assignments):
 
 
 def get_changed_training_events(last_pulled_at, assignments):
-    # for assignment in assignments:
-    #     assignment["start_date"] = convert_to_tz_aware_datetime(
-    #         assignment["start_date"]
-    #     )
-    #     if assignment["end_date"]:
-    #         assignment["end_date"] = convert_to_tz_aware_datetime(
-    #             assignment["end_date"]
-    #         )
-
     assigned_events_query = Q()
 
     for assignment in assignments:
@@ -74,15 +65,6 @@ def get_changed_training_events(last_pulled_at, assignments):
 
 
 def get_changed_participants(last_pulled_at, assignments):
-    # for assignment in assignments:
-    #     assignment["start_date"] = convert_to_tz_aware_datetime(
-    #         assignment["start_date"]
-    #     )
-    #     if assignment["end_date"]:
-    #         assignment["end_date"] = convert_to_tz_aware_datetime(
-    #             assignment["end_date"]
-    #         )
-
     assigned_events_query = Q()
 
     for assignment in assignments:
@@ -137,7 +119,6 @@ def get_changed_participants(last_pulled_at, assignments):
 # meaning it should be greater than any updated_at field in any of the tables,
 # so this function makes sure of that
 def get_unique_monotonic_timestamp():
-    # Later when there are more models to sync, add them along with TrainingEvent
     max_updated_at = max(
         TrainingEvent.objects.all().aggregate(max_updated_at=Max("updated_at"))[
             "max_updated_at"

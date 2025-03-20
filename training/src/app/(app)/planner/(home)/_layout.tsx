@@ -32,7 +32,7 @@ export default function PlannerTabLayout({
                 name="villages"
                 options={{
                     title: "Villages",
-                    // headerShown: false,
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons
                             size={28}
@@ -46,6 +46,7 @@ export default function PlannerTabLayout({
                 name="operations"
                 options={{
                     title: "Planner Operations",
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome size={28} name="cog" color={color} />
                     ),

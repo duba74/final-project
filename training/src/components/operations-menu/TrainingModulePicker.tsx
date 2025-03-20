@@ -44,7 +44,7 @@ const TrainingModulePicker = ({
             style={{
                 color: textColor,
                 backgroundColor: backgroundColor,
-                width: "50%",
+                width: "100%",
             }}
             dropdownIconColor={textColor}
             selectedValue={module ? module : undefined}

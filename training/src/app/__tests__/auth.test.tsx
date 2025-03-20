@@ -120,21 +120,6 @@ describe("Auth", () => {
         });
     });
 
-    it("redirects to admin home when role is admin", async () => {
-        const session = JSON.stringify({ user: { role: "admin" } });
-
-        (useSession as MockedUseSession).mockReturnValue({
-            ...realUseSession,
-            session: session,
-        });
-
-        render(<Auth />);
-
-        await waitFor(() => {
-            expect(mockRouterReplace).toHaveBeenCalledWith("/(app)/admin/home");
-        });
-    });
-
     it("redirects to index when user has no role", async () => {
         const session = JSON.stringify({ user: "foo" });
 

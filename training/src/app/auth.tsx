@@ -35,8 +35,6 @@ const Auth = () => {
                         router.replace("/(app)/trainer/villages");
                     } else if (user.role === "planner") {
                         router.replace("/(app)/planner/villages");
-                    } else if (user.role === "admin") {
-                        router.replace("/(app)/admin/home");
                     } else {
                         router.replace("/(app)/norole/home");
                     }
