@@ -28,7 +28,7 @@ const TrainingEventListItem = ({
     const handleModifyEvent = async () => {
         if (role === "trainer") {
             const path =
-                `/(app)/trainer/(home)/${trainingEvent.id}/event-completion` as Href;
+                `/(app)/trainer/(home)/${trainingEvent.id}/event-registration` as Href;
             router.navigate(path);
         } else if (role === "planner") {
             router.navigate({

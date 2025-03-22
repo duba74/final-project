@@ -14,17 +14,17 @@ import {
     getGpsLocationPermission,
 } from "@/services/GpsService";
 
-type EventCompletionProps = {
+type EventRegistrationProps = {
     username: string;
     trainingEventId: string;
     trainingEvent: TrainingEvent;
 };
 
-const EventCompletion = ({
+const EventRegistration = ({
     username,
     trainingEventId,
     trainingEvent,
-}: EventCompletionProps) => {
+}: EventRegistrationProps) => {
     const [commentText, setCommentText] = useState("");
     const [hasLocationPermission, setHasLocationPermission] = useState(false);
     const [locationLoading, setLocationLoading] = useState(false);
@@ -106,9 +106,9 @@ const EventCompletion = ({
 
 const enhance = withObservables(
     ["trainingEventId"],
-    ({ trainingEventId }: EventCompletionProps) => ({
+    ({ trainingEventId }: EventRegistrationProps) => ({
         trainingEvent: trainingEventCollection.findAndObserve(trainingEventId),
     })
 );
 
-export default enhance(EventCompletion);
+export default enhance(EventRegistration);

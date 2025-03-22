@@ -1,9 +1,9 @@
-import EventCompletion from "@/components/event-form/EventCompletion";
+import EventRegistration from "@/components/event-form/EventRegistration";
 import { useSession } from "@/hooks/useSession";
 import { useGlobalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 
-const EventCompletionPage = () => {
+const EventRegistrationPage = () => {
     const { session } = useSession();
     const { trainingEventId } = useGlobalSearchParams<{
         trainingEventId: string;
@@ -25,11 +25,11 @@ const EventCompletionPage = () => {
     }, [session]);
 
     return (
-        <EventCompletion
+        <EventRegistration
             username={username}
             trainingEventId={trainingEventId}
         />
     );
 };
 
-export default EventCompletionPage;
+export default EventRegistrationPage;

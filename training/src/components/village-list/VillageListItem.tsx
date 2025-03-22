@@ -1,24 +1,14 @@
 import Village from "@/database/data-model/models/Village";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { useEffect, useRef, useState } from "react";
-import {
-    View,
-    StyleSheet,
-    Pressable,
-    Animated,
-    LayoutChangeEvent,
-    ScrollView,
-} from "react-native";
+import { useRef, useState } from "react";
+import { View, StyleSheet, Pressable, Animated } from "react-native";
 import ThemedText from "../themed/ThemedText";
-import ThemedView from "../themed/ThemedView";
 import { useRouter } from "expo-router";
-import TrainingEventList from "../event-list/TrainingEventList";
 import ThemedButton from "../themed/ThemedButton";
 import { Q } from "@nozbe/watermelondb";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import { format, startOfToday } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
-import { useSession } from "@/hooks/useSession";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslation } from "react-i18next";
 import TrainingEventListItem from "../event-list/TrainingEventListItem";
@@ -108,7 +98,6 @@ const VillageListItem = ({
     const nextEventDate = getNextEventDate(trainingEvents);
 
     const toggleExpanded = () => {
-        // setIsExpanded(!isExpanded);
         if (isExpanded) {
             Animated.timing(animationValue, {
                 toValue: 0,
@@ -268,6 +257,7 @@ const createStyles = (villageListItemBackground: string, shadowColor: string) =>
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.2,
             shadowRadius: 3,
+            elevation: 3,
         },
         villageComponents: {
             flex: 1,

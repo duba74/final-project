@@ -1,3 +1,4 @@
+import TabBarIcon from "@/components/tab-bar-icon/TabBarIcon";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -12,44 +13,52 @@ export default function PlannerTabLayout({
     lightColor,
     darkColor,
 }: PlannerTabLayoutProps) {
-    const tabIconColor = useThemeColor(
-        { light: lightColor, dark: darkColor },
-        "tabIconDefault"
-    );
-    const tabIconSelectedColor = useThemeColor(
-        { light: lightColor, dark: darkColor },
-        "tabIconSelected"
-    );
-
     return (
         <Tabs
-            screenOptions={{
-                tabBarInactiveTintColor: tabIconColor,
-                tabBarActiveTintColor: tabIconSelectedColor,
-            }}
+            screenOptions={({ route }) => ({
+                tabBarShowLabel: false,
+                tabBarIcon: ({ focused }) => {
+                    switch (route.name) {
+                        case "villages":
+                            return (
+                                <TabBarIcon
+                                    IconComponent={MaterialCommunityIcons}
+                                    iconName="home-group"
+                                    focused={focused}
+                                    title={"Villages"}
+                                    lightColor={lightColor}
+                                    darkColor={darkColor}
+                                />
+                            );
+
+                        case "operations":
+                            return (
+                                <TabBarIcon
+                                    IconComponent={FontAwesome}
+                                    iconName="cog"
+                                    focused={focused}
+                                    title={"Operations"}
+                                    lightColor={lightColor}
+                                    darkColor={darkColor}
+                                />
+                            );
+
+                        default:
+                            return null;
+                    }
+                },
+            })}
         >
             <Tabs.Screen
                 name="villages"
                 options={{
-                    title: "Villages",
                     headerShown: false,
-                    tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons
-                            size={28}
-                            name="home-group"
-                            color={color}
-                        />
-                    ),
                 }}
             />
             <Tabs.Screen
                 name="operations"
                 options={{
-                    title: "Planner Operations",
                     headerShown: false,
-                    tabBarIcon: ({ color }) => (
-                        <FontAwesome size={28} name="cog" color={color} />
-                    ),
                 }}
             />
         </Tabs>

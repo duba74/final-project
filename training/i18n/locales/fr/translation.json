@@ -21,5 +21,10 @@
         "completedEventNumberLabel": "Complété",
         "canceledEventNumberLabel": "Annulé",
         "nextEventDateLabel": "Date du prochain événement"
+    },
+    "trainingEventLayout": {
+        "villageIconLabel": "Villages",
+        "registrationIconLabel": "Enregistrement",
+        "participantsIconLabel": "Participants"
     }
 }
