@@ -6,13 +6,17 @@ import sync from "@/database/sync";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { useTranslation } from "react-i18next";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const Auth = () => {
+    const { t } = useTranslation();
     const { login, session } = useSession();
     const router = useRouter();
     const [isAuthenticating, setIsAuthenticating] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
+    // const [isAuthenticating, setIsAuthenticating] = useState(true);
+    // const [isSyncing, setIsSyncing] = useState(true);
 
     const handleLogin = async (username: string, password: string) => {
         setIsAuthenticating(true);
@@ -51,12 +55,20 @@ const Auth = () => {
 
     return (
         <ThemedView style={styles.container}>
-            <Login onLogin={handleLogin} />
-            {(isAuthenticating || isSyncing) && (
-                <ActivityIndicator size="large" />
-            )}
-            {isAuthenticating && <ThemedText>Authenticating...</ThemedText>}
-            {isSyncing && <ThemedText>Syncing data...</ThemedText>}
+            <View style={styles.mainContent}>
+                <Login onLogin={handleLogin} />
+            </View>
+            <View style={styles.statusIndicatorContent}>
+                {(isAuthenticating || isSyncing) && (
+                    <ActivityIndicator size="large" />
+                )}
+                {isAuthenticating && (
+                    <ThemedText>{t("login.authenticatingMessage")}</ThemedText>
+                )}
+                {isSyncing && (
+                    <ThemedText>{t("login.syncInProgressMessage")}</ThemedText>
+                )}
+            </View>
         </ThemedView>
     );
 };
@@ -66,8 +78,16 @@ export default Auth;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: "space-between",
+    },
+    mainContent: {
+        flex: 5,
         justifyContent: "center",
         alignItems: "center",
         gap: 15,
+    },
+    statusIndicatorContent: {
+        flex: 1,
+        alignItems: "center",
     },
 });

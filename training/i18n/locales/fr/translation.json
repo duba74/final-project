@@ -2,7 +2,9 @@
     "login": {
         "title": "Se connecter",
         "usernamePlaceholder": "Nom d'utilisateur",
-        "passwordPlaceholder": "Mot de passe"
+        "passwordPlaceholder": "Mot de passe",
+        "authenticatingMessage": "Authentification en cours...",
+        "syncInProgressMessage": "Synchronisation en cours..."
     },
     "noRoleHome": {
         "message": "Vous n'avez pas de rôle d'utilisateur défini pour cette application",
@@ -13,5 +15,11 @@
         "syncButtonText": "Synchroniser",
         "logoutButtonText": "Déconnexion",
         "syncInProgressMessage": "Synchronisation en cours..."
+    },
+    "villageList": {
+        "scheduledEventNumberLabel": "Programmée",
+        "completedEventNumberLabel": "Complété",
+        "canceledEventNumberLabel": "Annulé",
+        "nextEventDateLabel": "Date du prochain événement"
     }
 }

@@ -13,7 +13,7 @@ type VillageListProps = {
 const VillageList = ({ villages, currentModule, role }: VillageListProps) => {
     return (
         <FlatList
-            style={{ width: "85%" }}
+            style={styles.container}
             data={villages}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
@@ -33,4 +33,8 @@ const enhance = withObservables([], () => ({
 
 export default enhance(VillageList);
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    container: {
+        width: "90%",
+    },
+});

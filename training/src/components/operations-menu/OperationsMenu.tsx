@@ -39,11 +39,22 @@ const OperationsMenu = () => {
         setIsSyncing(false);
     };
 
+    const getUserData = (property: string) => {
+        if (session) {
+            return JSON.parse(session).user[property];
+        }
+    };
+
     return (
         <View style={styles.container} testID="planner-home">
             <View style={styles.mainContent}>
+                {session && (
+                    <ThemedText type="subtitle">{`${getUserData(
+                        "first_name"
+                    )} ${getUserData("last_name")}`}</ThemedText>
+                )}
                 <View style={styles.moduleSelectorContainer}>
-                    <ThemedText>
+                    <ThemedText type="defaultSemiBold">
                         {t("operations.trainingModulePickerLabel")}
                     </ThemedText>
                     <TrainingModulePicker currentModule={currentModule} />
@@ -87,7 +98,6 @@ const styles = StyleSheet.create({
     syncIndicatorContainer: {
         flex: 1,
         alignItems: "center",
-        // paddingVertical: 50,
     },
     moduleSelectorContainer: {
         alignItems: "center",

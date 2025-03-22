@@ -2,7 +2,9 @@
     "login": {
         "title": "Login",
         "usernamePlaceholder": "Username",
-        "passwordPlaceholder": "Password"
+        "passwordPlaceholder": "Password",
+        "authenticatingMessage": "Authenticating...",
+        "syncInProgressMessage": "Syncing data..."
     },
     "noRoleHome": {
         "message": "You don't have a user role set for this app",
@@ -13,5 +15,11 @@
         "syncButtonText": "Synchronize",
         "logoutButtonText": "Logout",
         "syncInProgressMessage": "Syncing data..."
+    },
+    "villageList": {
+        "scheduledEventNumberLabel": "Scheduled",
+        "completedEventNumberLabel": "Completed",
+        "canceledEventNumberLabel": "Canceled",
+        "nextEventDateLabel": "Next event date"
     }
 }
