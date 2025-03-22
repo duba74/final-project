@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 type PlannerTabLayoutProps = {
     lightColor: string;
@@ -13,6 +14,8 @@ export default function PlannerTabLayout({
     lightColor,
     darkColor,
 }: PlannerTabLayoutProps) {
+    const { t } = useTranslation();
+
     return (
         <Tabs
             screenOptions={({ route }) => ({
@@ -25,7 +28,7 @@ export default function PlannerTabLayout({
                                     IconComponent={MaterialCommunityIcons}
                                     iconName="home-group"
                                     focused={focused}
-                                    title={"Villages"}
+                                    title={t("homeLayout.villagesIconLabel")}
                                     lightColor={lightColor}
                                     darkColor={darkColor}
                                 />
@@ -37,7 +40,7 @@ export default function PlannerTabLayout({
                                     IconComponent={FontAwesome}
                                     iconName="cog"
                                     focused={focused}
-                                    title={"Operations"}
+                                    title={t("homeLayout.operationsIconLabel")}
                                     lightColor={lightColor}
                                     darkColor={darkColor}
                                 />

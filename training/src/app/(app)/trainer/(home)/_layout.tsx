@@ -2,6 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs, useSegments } from "expo-router";
 import TabBarIcon from "@/components/tab-bar-icon/TabBarIcon";
+import { useTranslation } from "react-i18next";
 
 type TrainerTabLayoutProps = {
     lightColor: string;
@@ -12,6 +13,7 @@ export default function TrainerTabLayout({
     lightColor,
     darkColor,
 }: TrainerTabLayoutProps) {
+    const { t } = useTranslation();
     const segments = useSegments();
     const hide = segments.includes("[trainingEventId]" as never);
 
@@ -30,7 +32,7 @@ export default function TrainerTabLayout({
                                     IconComponent={MaterialCommunityIcons}
                                     iconName="home-group"
                                     focused={focused}
-                                    title={"Villages"}
+                                    title={t("homeLayout.villagesIconLabel")}
                                     lightColor={lightColor}
                                     darkColor={darkColor}
                                 />
@@ -42,7 +44,7 @@ export default function TrainerTabLayout({
                                     IconComponent={FontAwesome}
                                     iconName="cog"
                                     focused={focused}
-                                    title={"Operations"}
+                                    title={t("homeLayout.operationsIconLabel")}
                                     lightColor={lightColor}
                                     darkColor={darkColor}
                                 />
