@@ -1,44 +1,17 @@
 import Village from "@/database/data-model/models/Village";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Pressable, Animated } from "react-native";
 import ThemedText from "../themed/ThemedText";
 import { useRouter } from "expo-router";
 import ThemedButton from "../themed/ThemedButton";
 import { Q } from "@nozbe/watermelondb";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
-import { format, startOfToday } from "date-fns";
-import { enUS, fr } from "date-fns/locale";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslation } from "react-i18next";
 import TrainingEventListItem from "../event-list/TrainingEventListItem";
-
-const getNextEventDate = (trainingEvents: TrainingEvent[]) => {
-    const today = startOfToday(); //.getTime();
-
-    const futureEvents = trainingEvents.filter(
-        (e) => e.scheduledFor >= today && !e.isCanceled
-    );
-    const pastEvents = trainingEvents.filter(
-        (e) => e.scheduledFor < today && !e.isCanceled
-    );
-
-    const nextEventTime = Math.min(
-        ...futureEvents.map((e) => e.scheduledFor.getTime())
-    );
-    const mostRecentEventTime = Math.max(
-        ...pastEvents.map((e) => e.scheduledFor.getTime())
-    );
-
-    const nextEventDate = isFinite(nextEventTime)
-        ? new Date(nextEventTime)
-        : null;
-    const mostRecentEventDate = isFinite(mostRecentEventTime)
-        ? new Date(mostRecentEventTime)
-        : null;
-
-    return nextEventDate || mostRecentEventDate;
-};
+import { getLocalizedDateString } from "@/utils/localized-date";
+import { getNextEventDate } from "@/utils/next-event";
 
 type VillageListItemProps = {
     village: Village;
@@ -63,57 +36,58 @@ const VillageListItem = ({
     lightColor,
     darkColor,
 }: VillageListItemProps) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const router = useRouter();
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [eventListHeight, setEventListHeight] = useState(0);
-    const animationValue = useRef(new Animated.Value(0)).current;
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [nextEventDate, setNextEventDate] = useState<Date | undefined>();
+    const backgroundAnimationValue = useRef(new Animated.Value(0)).current;
 
-    let locale;
-    switch (i18n.language) {
-        case "en":
-            locale = enUS;
-            break;
-
-        case "fr":
-            locale = fr;
-            break;
-
-        default:
-            locale = enUS;
-            break;
-    }
+    useEffect(() => {
+        const nextDate = getNextEventDate(trainingEvents);
+        if (nextDate) setNextEventDate(nextDate);
+    }, [trainingEvents]);
 
     const villageListItemBackground = useThemeColor(
         { light: lightColor, dark: darkColor },
         "villageListItemBackground"
+    );
+    const villageListItemBackgroundPressed = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "villageListItemBackgroundPressed"
     );
     const shadowColor = useThemeColor(
         { light: lightColor, dark: darkColor },
         "shadowColor"
     );
 
+    const onPressIn = () => {
+        Animated.timing(backgroundAnimationValue, {
+            toValue: 1,
+            duration: 80,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const onPressOut = () => {
+        Animated.timing(backgroundAnimationValue, {
+            toValue: 0,
+            duration: 80,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const backgroundColor = backgroundAnimationValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [
+            villageListItemBackground,
+            villageListItemBackgroundPressed,
+        ],
+    });
+
     const styles = createStyles(villageListItemBackground, shadowColor);
 
-    const nextEventDate = getNextEventDate(trainingEvents);
-
     const toggleExpanded = () => {
-        if (isExpanded) {
-            Animated.timing(animationValue, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start(() => {
-                setIsExpanded(false);
-            });
-        } else {
-            setIsExpanded(true);
-            Animated.timing(animationValue, {
-                toValue: 1,
-                duration: 300,
-                useNativeDriver: false,
-            }).start();
-        }
+        setIsExpanded(!isExpanded);
     };
 
     const handleAddEvent = () => {
@@ -125,73 +99,69 @@ const VillageListItem = ({
 
     return (
         <View style={styles.container}>
-            <Pressable style={styles.villageContainer} onPress={toggleExpanded}>
-                <View style={styles.villageComponents}>
-                    <ThemedText style={styles.villageTitle} type="subtitle">
-                        {village.name} - {village.zoneName}
-                    </ThemedText>
-                    <View style={styles.statusIndicatorsContainer}>
-                        <View>
-                            <ThemedText style={styles.counterNumber}>
-                                {activeTrainingEventCount}
-                            </ThemedText>
-                            <ThemedText style={styles.villageInfoLabel}>
-                                {t("villageList.scheduledEventNumberLabel")}
-                            </ThemedText>
-                        </View>
-                        <View>
-                            <ThemedText style={styles.counterNumber}>
-                                {completedTrainingEventCount}
-                            </ThemedText>
-                            <ThemedText style={styles.villageInfoLabel}>
-                                {t("villageList.completedEventNumberLabel")}
-                            </ThemedText>
-                        </View>
-                        <View>
-                            <ThemedText style={styles.counterNumber}>
-                                {canceledTrainingEventCount}
-                            </ThemedText>
-                            <ThemedText style={styles.villageInfoLabel}>
-                                {t("villageList.canceledEventNumberLabel")}
-                            </ThemedText>
-                        </View>
-                    </View>
-
-                    {nextEventDate && nextEventDate !== new Date(0) && (
-                        <View>
-                            <ThemedText style={styles.nextEventDate}>
-                                {format(nextEventDate, "PPPP", {
-                                    locale: locale,
-                                })}
-                            </ThemedText>
-                            <ThemedText style={styles.villageInfoLabel}>
-                                {t("villageList.nextEventDateLabel")}
-                            </ThemedText>
-                        </View>
-                    )}
-                </View>
-                <ThemedText style={styles.villageExpanderArrow}>
-                    {isExpanded ? "▲" : "▼"}
-                </ThemedText>
-            </Pressable>
-            <Animated.View
-                style={{
-                    overflow: "hidden",
-                    height: animationValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, eventListHeight || 20],
-                    }),
-                }}
+            <Pressable
+                onPressIn={onPressIn}
+                onPressOut={onPressOut}
+                onPress={toggleExpanded}
             >
-                <View
-                    onLayout={(event) => {
-                        const { height } = event.nativeEvent.layout;
-                        if (height > 0) setEventListHeight(height);
-                    }}
+                <Animated.View
+                    style={[styles.villageContainer, { backgroundColor }]}
                 >
+                    <View style={styles.villageComponents}>
+                        <ThemedText type="subtitle">
+                            {village.name} - {village.zoneName}
+                        </ThemedText>
+                        <View style={styles.statusIndicatorsContainer}>
+                            <View>
+                                <ThemedText style={styles.counterNumber}>
+                                    {activeTrainingEventCount}
+                                </ThemedText>
+                                <ThemedText style={styles.villageInfoLabel}>
+                                    {t("villageList.scheduledEventNumberLabel")}
+                                </ThemedText>
+                            </View>
+                            <View>
+                                <ThemedText style={styles.counterNumber}>
+                                    {completedTrainingEventCount}
+                                </ThemedText>
+                                <ThemedText style={styles.villageInfoLabel}>
+                                    {t("villageList.completedEventNumberLabel")}
+                                </ThemedText>
+                            </View>
+                            <View>
+                                <ThemedText style={styles.counterNumber}>
+                                    {canceledTrainingEventCount}
+                                </ThemedText>
+                                <ThemedText style={styles.villageInfoLabel}>
+                                    {t("villageList.canceledEventNumberLabel")}
+                                </ThemedText>
+                            </View>
+                        </View>
+
+                        {nextEventDate && nextEventDate !== new Date(0) && (
+                            <View>
+                                <ThemedText style={styles.nextEventDate}>
+                                    {getLocalizedDateString(
+                                        nextEventDate,
+                                        "PPPP"
+                                    )}
+                                </ThemedText>
+                                <ThemedText style={styles.villageInfoLabel}>
+                                    {t("villageList.nextEventDateLabel")}
+                                </ThemedText>
+                            </View>
+                        )}
+                    </View>
+                    <ThemedText style={styles.villageExpanderArrow}>
+                        {isExpanded ? "▲" : "▼"}
+                    </ThemedText>
+                </Animated.View>
+            </Pressable>
+            {isExpanded && (
+                <View style={styles.trainingEventsContainer}>
                     {role !== "trainer" && (
                         <ThemedButton
-                            title="Add Event"
+                            title={t("villageList.addEventButtonTitle")}
                             style={styles.addEventButton}
                             onPress={handleAddEvent}
                         />
@@ -206,7 +176,7 @@ const VillageListItem = ({
                         );
                     })}
                 </View>
-            </Animated.View>
+            )}
         </View>
     );
 };
@@ -245,6 +215,7 @@ const createStyles = (villageListItemBackground: string, shadowColor: string) =>
     StyleSheet.create({
         container: {
             marginBottom: 18,
+            alignItems: "stretch",
         },
         villageContainer: {
             flexDirection: "row",
@@ -263,7 +234,6 @@ const createStyles = (villageListItemBackground: string, shadowColor: string) =>
             flex: 1,
             gap: 12,
         },
-        villageTitle: {},
         statusIndicatorsContainer: {
             alignSelf: "stretch",
             flexDirection: "row",
@@ -284,8 +254,12 @@ const createStyles = (villageListItemBackground: string, shadowColor: string) =>
             alignSelf: "center",
             fontSize: 18,
         },
+        trainingEventsContainer: {
+            marginVertical: 15,
+            gap: 12,
+            // alignItems: "center",
+        },
         addEventButton: {
-            marginVertical: 10,
             alignSelf: "center",
             width: 160,
         },

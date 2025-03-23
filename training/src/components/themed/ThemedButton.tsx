@@ -3,9 +3,10 @@ import {
     Text,
     StyleSheet,
     type PressableProps,
-    ViewStyle,
+    Animated,
 } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useRef } from "react";
 
 export type ThemedButtonProps = PressableProps & {
     title: string;
@@ -89,19 +90,48 @@ const ThemedButton = ({
             break;
     }
 
-    const pressableStyle = ({ pressed }: { pressed: boolean }): ViewStyle => ({
-        backgroundColor: pressed ? pressedBackgroundColor : backgroundColor,
-        borderColor: borderColor ? borderColor : undefined,
-        borderWidth: borderColor ? 1 : undefined,
-        ...styles.button,
-        ...(style as Object),
+    const animationValue = useRef(new Animated.Value(0)).current;
+
+    const onPressIn = () => {
+        Animated.timing(animationValue, {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const onPressOut = () => {
+        Animated.timing(animationValue, {
+            toValue: 0,
+            duration: 100,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const animatedBackgroundColor = animationValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [backgroundColor, pressedBackgroundColor],
     });
 
     return (
-        <Pressable style={pressableStyle} onPress={onPress} {...rest}>
-            <Text style={[styles.buttonText, { color: textColor }]}>
-                {title}
-            </Text>
+        <Pressable
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+            onPress={onPress}
+            {...rest}
+        >
+            <Animated.View
+                style={[
+                    styles.button,
+                    { backgroundColor: animatedBackgroundColor },
+                    borderColor ? { borderColor, borderWidth: 1 } : null,
+                    style as Object,
+                ]}
+            >
+                <Text style={[styles.buttonText, { color: textColor }]}>
+                    {title}
+                </Text>
+            </Animated.View>
         </Pressable>
     );
 };

@@ -20,7 +20,13 @@
         "scheduledEventNumberLabel": "Scheduled",
         "completedEventNumberLabel": "Completed",
         "canceledEventNumberLabel": "Canceled",
-        "nextEventDateLabel": "Next event date"
+        "nextEventDateLabel": "Next event date",
+        "addEventButtonTitle": "Add event"
+    },
+    "trainingEventList": {
+        "eventCreatorLabel": "Creator",
+        "eventTrainerLabel": "Trainer",
+        "completedDateLabel": "Date completed"
     },
     "homeLayout": {
         "villagesIconLabel": "Villages",

@@ -1,12 +1,15 @@
-import { compose, withObservables } from "@nozbe/watermelondb/react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { Animated, View, StyleSheet, Pressable } from "react-native";
 import ThemedText from "../themed/ThemedText";
-import ThemedView from "../themed/ThemedView";
 import { Href, useRouter } from "expo-router";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import { format } from "date-fns";
 import Village from "@/database/data-model/models/Village";
 import Staff from "@/database/data-model/models/Staff";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useRef } from "react";
+import { getLocalizedDateString } from "@/utils/localized-date";
+import { useTranslation } from "react-i18next";
 
 type TrainingEventListItemProps = {
     role: string;
@@ -14,15 +17,19 @@ type TrainingEventListItemProps = {
     createdBy: Staff;
     village: Village;
     trainers: Staff[];
+    lightColor: string;
+    darkColor: string;
 };
 
 const TrainingEventListItem = ({
     role,
     trainingEvent,
     createdBy,
-    village,
     trainers,
+    lightColor,
+    darkColor,
 }: TrainingEventListItemProps) => {
+    const { t } = useTranslation();
     const router = useRouter();
 
     const handleModifyEvent = async () => {
@@ -38,71 +45,142 @@ const TrainingEventListItem = ({
         }
     };
 
+    const trainingEventListItemBackground = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "trainingEventListItemBackground"
+    );
+    const trainingEventListItemBackgroundPressed = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "trainingEventListItemBackgroundPressed"
+    );
+    const shadowColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "shadowColor"
+    );
+
+    const animationValue = useRef(new Animated.Value(0)).current;
+
+    const onPressIn = () => {
+        Animated.timing(animationValue, {
+            toValue: 1,
+            duration: 180,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const onPressOut = () => {
+        Animated.timing(animationValue, {
+            toValue: 0,
+            duration: 180,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const backgroundColor = animationValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [
+            trainingEventListItemBackground,
+            trainingEventListItemBackgroundPressed,
+        ],
+    });
+
+    const styles = createStyles(shadowColor);
+
     return (
-        <ThemedView>
-            <Pressable onPress={handleModifyEvent}>
-                <ThemedView
-                    style={{
-                        gap: 15,
-                        marginVertical: 10,
-                    }}
-                >
-                    <View style={{ flexDirection: "row" }}>
-                        <ThemedText>
-                            {format(trainingEvent.scheduledFor, "PPPP")}
-                            {", "}
+        <Pressable
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+            onPress={handleModifyEvent}
+        >
+            <Animated.View style={[styles.container, { backgroundColor }]}>
+                <ThemedText style={styles.eventDate}>
+                    {`${getLocalizedDateString(
+                        trainingEvent.scheduledFor,
+                        "PPPP"
+                    )}, ${trainingEvent.scheduledTime}`}
+                </ThemedText>
+                <View style={styles.personnelInfoContainer}>
+                    <View style={styles.personnelInfo}>
+                        <ThemedText>{`${createdBy.firstName} ${createdBy.lastName}`}</ThemedText>
+                        <ThemedText style={styles.personnelInfoLabelText}>
+                            {t("trainingEventList.eventCreatorLabel")}
                         </ThemedText>
-                        <ThemedText>{trainingEvent.scheduledTime}</ThemedText>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                        <ThemedText>Created by: </ThemedText>
-                        <ThemedText>{`${createdBy.firstName} ${createdBy.lastName} - ${createdBy.id}`}</ThemedText>
-                    </View>
-                    <ThemedText>
-                        Trainer(s):{" "}
-                        {trainers.length < 1
-                            ? `No assigned trainer!`
-                            : trainers
-                                  .map(
-                                      (trainer) =>
-                                          `${trainer.firstName} ${trainer.lastName} - ${trainer.id}`
-                                  )
-                                  .join(", ")}
-                    </ThemedText>
-                    {trainingEvent.isCanceled && (
-                        <ThemedText>Canceled!</ThemedText>
-                    )}
-                    {trainingEvent.completedAt && (
+                    <View style={styles.personnelInfo}>
                         <ThemedText>
-                            Completed on{" "}
-                            {format(trainingEvent.completedAt, "PPPPp")}
+                            {trainers.length < 1
+                                ? `No assigned trainer!`
+                                : trainers
+                                      .map(
+                                          (trainer) =>
+                                              `${trainer.firstName} ${trainer.lastName}`
+                                      )
+                                      .join(", ")}
                         </ThemedText>
-                    )}
-                </ThemedView>
-                <View style={styles.separator} />
-            </Pressable>
-        </ThemedView>
+                        <ThemedText style={styles.personnelInfoLabelText}>
+                            {t("trainingEventList.eventTrainerLabel")}
+                        </ThemedText>
+                    </View>
+                </View>
+                {trainingEvent.isCanceled && <ThemedText>Canceled!</ThemedText>}
+
+                {trainingEvent.completedAt && (
+                    <View style={styles.completedInfo}>
+                        <ThemedText style={styles.eventDate}>
+                            {getLocalizedDateString(
+                                trainingEvent.completedAt,
+                                "PPPPp"
+                            )}
+                        </ThemedText>
+                        <ThemedText>
+                            {t("trainingEventList.completedDateLabel")}
+                        </ThemedText>
+                    </View>
+                )}
+            </Animated.View>
+        </Pressable>
     );
 };
 
-const enhance = compose(
-    withObservables(
-        ["trainingEvent"],
-        ({ trainingEvent }: TrainingEventListItemProps) => ({
-            trainingEvent,
-            createdBy: trainingEvent.createdBy,
-            village: trainingEvent.village,
-            trainers: trainingEvent.trainers,
-        })
-    )
+const enhance = withObservables(
+    ["trainingEvent"],
+    ({ trainingEvent }: TrainingEventListItemProps) => ({
+        trainingEvent,
+        createdBy: trainingEvent.createdBy,
+        trainers: trainingEvent.trainers,
+    })
 );
 
 export default enhance(TrainingEventListItem);
 
-const styles = StyleSheet.create({
-    separator: {
-        height: 1,
-        backgroundColor: "#aaa",
-        marginVertical: 10,
-    },
-});
+const createStyles = (shadowColor: string) =>
+    StyleSheet.create({
+        container: {
+            alignSelf: "center",
+            gap: 10,
+            width: "90%",
+            paddingVertical: 10,
+            paddingHorizontal: 8,
+            borderRadius: 8,
+            shadowColor: shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
+            elevation: 3,
+        },
+        eventDate: {
+            fontSize: 20,
+        },
+        personnelInfoContainer: {
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            gap: 15,
+        },
+        personnelInfo: {
+            flex: 1,
+        },
+        personnelInfoLabelText: {
+            fontStyle: "italic",
+        },
+        completedInfo: {},
+    });
