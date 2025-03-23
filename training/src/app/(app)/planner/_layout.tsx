@@ -31,6 +31,7 @@ const PlannerLayout = () => {
             <Stack.Screen
                 name="planner-event-modal"
                 options={{
+                    headerShown: false,
                     presentation: "modal",
                     title: "Schedule an event",
                 }}

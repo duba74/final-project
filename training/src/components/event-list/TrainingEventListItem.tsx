@@ -10,6 +10,8 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useRef } from "react";
 import { getLocalizedDateString } from "@/utils/localized-date";
 import { useTranslation } from "react-i18next";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 type TrainingEventListItemProps = {
     role: string;
@@ -45,17 +47,33 @@ const TrainingEventListItem = ({
         }
     };
 
-    const trainingEventListItemBackground = useThemeColor(
+    const trainingEventBackgroundColor = useThemeColor(
         { light: lightColor, dark: darkColor },
         "trainingEventListItemBackground"
     );
-    const trainingEventListItemBackgroundPressed = useThemeColor(
+    const trainingEventBackgroundPressedColor = useThemeColor(
         { light: lightColor, dark: darkColor },
         "trainingEventListItemBackgroundPressed"
+    );
+    const canceledEventBackgroundColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "canceledEventListItemBackground"
+    );
+    const canceledEventBackgroundPressedColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "canceledEventListItemBackgroundPressed"
     );
     const shadowColor = useThemeColor(
         { light: lightColor, dark: darkColor },
         "shadowColor"
+    );
+    const canceldEventIconColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "canceledEventIcon"
+    );
+    const completedEventIconColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "completedEventIcon"
     );
 
     const animationValue = useRef(new Animated.Value(0)).current;
@@ -76,15 +94,39 @@ const TrainingEventListItem = ({
         }).start();
     };
 
+    const eventBackgroundColor = trainingEvent.isCanceled
+        ? canceledEventBackgroundColor
+        : trainingEventBackgroundColor;
+    const eventBackgroundColorPressed = trainingEvent.isCanceled
+        ? canceledEventBackgroundPressedColor
+        : trainingEventBackgroundPressedColor;
+
     const backgroundColor = animationValue.interpolate({
         inputRange: [0, 1],
-        outputRange: [
-            trainingEventListItemBackground,
-            trainingEventListItemBackgroundPressed,
-        ],
+        outputRange: [eventBackgroundColor, eventBackgroundColorPressed],
     });
 
     const styles = createStyles(shadowColor);
+
+    const getStatusIcon = (trainingEvent: TrainingEvent) => {
+        if (trainingEvent.completedAt)
+            return (
+                <FontAwesome
+                    size={28}
+                    name="check-circle"
+                    color={completedEventIconColor}
+                />
+            );
+
+        if (trainingEvent.isCanceled)
+            return (
+                <MaterialCommunityIcons
+                    size={28}
+                    name="close-circle"
+                    color={canceldEventIconColor}
+                />
+            );
+    };
 
     return (
         <Pressable
@@ -93,12 +135,17 @@ const TrainingEventListItem = ({
             onPress={handleModifyEvent}
         >
             <Animated.View style={[styles.container, { backgroundColor }]}>
-                <ThemedText style={styles.eventDate}>
-                    {`${getLocalizedDateString(
-                        trainingEvent.scheduledFor,
-                        "PPPP"
-                    )}, ${trainingEvent.scheduledTime}`}
-                </ThemedText>
+                <View style={styles.dateAndStatusIconContainer}>
+                    <ThemedText style={styles.eventDate}>
+                        {`${getLocalizedDateString(
+                            trainingEvent.scheduledFor,
+                            "PPPP"
+                        )}, ${trainingEvent.scheduledTime}`}
+                    </ThemedText>
+                    <View style={styles.statusIconContainer}>
+                        {getStatusIcon(trainingEvent)}
+                    </View>
+                </View>
                 <View style={styles.personnelInfoContainer}>
                     <View style={styles.personnelInfo}>
                         <ThemedText>{`${createdBy.firstName} ${createdBy.lastName}`}</ThemedText>
@@ -122,7 +169,11 @@ const TrainingEventListItem = ({
                         </ThemedText>
                     </View>
                 </View>
-                {trainingEvent.isCanceled && <ThemedText>Canceled!</ThemedText>}
+                {trainingEvent.isCanceled && (
+                    <ThemedText style={styles.canceledText}>
+                        {t("trainingEventList.eventCanceledLabel")}
+                    </ThemedText>
+                )}
 
                 {trainingEvent.completedAt && (
                     <View style={styles.completedInfo}>
@@ -132,7 +183,7 @@ const TrainingEventListItem = ({
                                 "PPPPp"
                             )}
                         </ThemedText>
-                        <ThemedText>
+                        <ThemedText style={styles.completedInfoLabelText}>
                             {t("trainingEventList.completedDateLabel")}
                         </ThemedText>
                     </View>
@@ -168,7 +219,16 @@ const createStyles = (shadowColor: string) =>
             shadowRadius: 3,
             elevation: 3,
         },
+        dateAndStatusIconContainer: {
+            flexDirection: "row",
+            alignItems: "center",
+        },
+        statusIconContainer: {
+            justifyContent: "center",
+            alignItems: "center",
+        },
         eventDate: {
+            flex: 1,
             fontSize: 20,
         },
         personnelInfoContainer: {
@@ -182,5 +242,12 @@ const createStyles = (shadowColor: string) =>
         personnelInfoLabelText: {
             fontStyle: "italic",
         },
+        canceledText: {
+            fontSize: 20,
+            fontStyle: "italic",
+        },
         completedInfo: {},
+        completedInfoLabelText: {
+            fontStyle: "italic",
+        },
     });

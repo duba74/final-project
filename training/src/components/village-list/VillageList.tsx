@@ -11,6 +11,7 @@ type VillageListProps = {
 };
 
 const VillageList = ({ villages, currentModule, role }: VillageListProps) => {
+    console.log("module: " + currentModule);
     return (
         <FlatList
             style={styles.container}
@@ -35,6 +36,6 @@ export default enhance(VillageList);
 
 const styles = StyleSheet.create({
     container: {
-        width: "90%",
+        width: "95%",
     },
 });

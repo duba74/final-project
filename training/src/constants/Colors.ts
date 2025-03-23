@@ -69,6 +69,10 @@ export const Colors = {
         trainingEventListItemBackground: tint2,
         trainingEventListItemBackgroundPressed: tint3,
         shadowColor: black,
+        canceledEventIcon: compTint1,
+        completedEventIcon: tint7,
+        canceledEventListItemBackground: gray2,
+        canceledEventListItemBackgroundPressed: gray3,
     },
     dark: {
         text: tint0,
@@ -93,5 +97,9 @@ export const Colors = {
         trainingEventListItemBackground: tint9,
         trainingEventListItemBackgroundPressed: tint8,
         shadowColor: white,
+        canceledEventIcon: compTint1,
+        completedEventIcon: tint7,
+        canceledEventListItemBackground: gray5,
+        canceledEventListItemBackgroundPressed: gray4,
     },
 };

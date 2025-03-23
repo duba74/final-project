@@ -26,6 +26,7 @@
     "trainingEventList": {
         "eventCreatorLabel": "Créateur",
         "eventTrainerLabel": "Formateur",
+        "eventCanceledLabel": "Evénement annulé",
         "completedDateLabel": "Date de réalisation"
     },
     "homeLayout": {
@@ -36,5 +37,19 @@
         "villageIconLabel": "Villages",
         "registrationIconLabel": "Enregistrement",
         "participantsIconLabel": "Participants"
+    },
+    "trainingModuleIndicator": {
+        "noModuleSelectedMessage": "Aucun module de formation sélectionné"
+    },
+    "plannerEventForm": {
+        "eventDateSelectorLabel": "Date de l'événement",
+        "eventTimeOfDaySelectorLabel": "Moment de l'événement",
+        "goBackButtonTitle": "Retourner",
+        "eventDateLabel": "Date programmée",
+        "eventTimeOfDayLabel": "Moment de la journée programmé",
+        "eventCompletionTimeLabel": "Date de réalisation",
+        "deleteEventButtonTitle": "Supprimer l'événement",
+        "cancelEventButtonTitle": "Annuler l'événement",
+        "createEventButtonTitle": "Créer l'événement"
     }
 }

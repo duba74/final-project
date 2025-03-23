@@ -22,7 +22,6 @@ const TrainingEventFormModal = () => {
             trainingEventId?: string;
         }>();
     const isEditing = !!trainingEventId;
-    const [isLoading, setIsLoading] = useState(true);
     const [trainingEvent, setTrainingEvent] = useState<TrainingEvent | null>(
         null
     );
@@ -56,40 +55,38 @@ const TrainingEventFormModal = () => {
                 }
             } catch (error) {
                 console.error(`Error fetching records from DB: ${error}`);
-            } finally {
-                setIsLoading(false);
             }
         };
         fetchData();
     }, [isEditing, trainingEventId, villageId, currentModuleId]);
 
-    if (isLoading) {
+    if (village && trainingModule) {
         return (
-            <ThemedView>
-                <ThemedText>Loading data...</ThemedText>
-            </ThemedView>
-        );
-    }
-
-    return (
-        <View>
-            {isEditing ? (
-                <>
+            <View>
+                {isEditing ? (
+                    <>
+                        <PlannerEventForm
+                            village={village}
+                            trainingModule={trainingModule}
+                            trainingEvent={trainingEvent}
+                        />
+                        <ParticipantList trainingEvent={trainingEvent} />
+                    </>
+                ) : (
                     <PlannerEventForm
                         village={village}
                         trainingModule={trainingModule}
                         trainingEvent={trainingEvent}
                     />
-                    <ParticipantList trainingEvent={trainingEvent} />
-                </>
-            ) : (
-                <PlannerEventForm
-                    village={village}
-                    trainingModule={trainingModule}
-                    trainingEvent={trainingEvent}
-                />
-            )}
-        </View>
+                )}
+            </View>
+        );
+    }
+
+    return (
+        <ThemedView>
+            <ThemedText>Loading data...</ThemedText>
+        </ThemedView>
     );
 };
 

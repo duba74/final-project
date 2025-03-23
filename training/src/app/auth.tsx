@@ -1,8 +1,10 @@
 import Login from "@/components/login/Login";
 import ThemedText from "@/components/themed/ThemedText";
 import ThemedView from "@/components/themed/ThemedView";
+import { trainingModuleCollection } from "@/database/database";
 import secondaryDataPull from "@/database/secondary-data-pull";
 import sync from "@/database/sync";
+import { useCurrentModule } from "@/hooks/useCurrentModule";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -17,6 +19,7 @@ const Auth = () => {
     const [isSyncing, setIsSyncing] = useState(false);
     // const [isAuthenticating, setIsAuthenticating] = useState(true);
     // const [isSyncing, setIsSyncing] = useState(true);
+    const { setCurrentModule } = useCurrentModule();
 
     const handleLogin = async (username: string, password: string) => {
         setIsAuthenticating(true);
@@ -34,6 +37,11 @@ const Auth = () => {
 
                     await secondaryDataPull(token);
                     await sync(token);
+
+                    const modules = await trainingModuleCollection
+                        .query()
+                        .fetch();
+                    if (modules.length > 0) setCurrentModule(modules[0].id);
 
                     if (user.role === "trainer") {
                         router.replace("/(app)/trainer/villages");

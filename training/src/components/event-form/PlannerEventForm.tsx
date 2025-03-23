@@ -1,4 +1,4 @@
-import { View, Platform } from "react-native";
+import { View, Platform, StyleSheet } from "react-native";
 import EventDatePicker from "./EventDatePicker";
 import ThemedView from "../themed/ThemedView";
 import ThemedText from "../themed/ThemedText";
@@ -14,6 +14,9 @@ import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import Village from "@/database/data-model/models/Village";
 import TrainingModule from "@/database/data-model/models/TrainingModule";
 import { staffCollection } from "@/database/database";
+import TrainingModuleIndicator from "../training-module-indicator/TrainingModuleIndicator";
+import { useTranslation } from "react-i18next";
+import { getLocalizedDateString } from "@/utils/localized-date";
 
 const defaultDate = addDays(new Date(), 1);
 const defaultTimeOfDay = "AM";
@@ -29,11 +32,14 @@ const PlannerEventForm = ({
     trainingModule,
     trainingEvent,
 }: PlannerEventFormProps) => {
+    const { t } = useTranslation();
     const router = useRouter();
     const { session } = useSession();
     const [eventDate, setEventDate] = useState<Date>(defaultDate);
     const [eventTimeOfDay, setEventTimeOfDay] =
         useState<string>(defaultTimeOfDay);
+
+    console.log(village);
 
     const handleCreateEvent = async () => {
         if (!village || !trainingModule) return;
@@ -80,96 +86,176 @@ const PlannerEventForm = ({
         router.back();
     };
 
+    const getDatePicker = () => {
+        if (Platform.OS === "web") {
+            return (
+                <WebEventDatePicker
+                    defaultDate={defaultDate}
+                    setEventDate={setEventDate}
+                />
+            );
+        } else {
+            return (
+                <EventDatePicker
+                    defaultDate={defaultDate}
+                    setEventDate={setEventDate}
+                />
+            );
+        }
+    };
+
     return (
-        <ThemedView>
-            <ThemedText>Event Form For Planner</ThemedText>
-            <ThemedText>Training Module: {trainingModule?.name}</ThemedText>
-            <ThemedText>Village: {village?.name}</ThemedText>
-            {!trainingEvent &&
-                (Platform.OS === "web" ? (
-                    <>
-                        <WebEventDatePicker
-                            defaultDate={defaultDate}
-                            setEventDate={setEventDate}
-                        />
+        <View style={styles.container}>
+            <View style={styles.moduleVillageInfoContainer}>
+                <ThemedText style={styles.moduleVillageInfoText}>
+                    {trainingModule?.name}
+                </ThemedText>
+                <ThemedText style={styles.moduleVillageInfoText}>
+                    {village?.name}
+                </ThemedText>
+            </View>
+
+            {!trainingEvent && (
+                <View style={styles.eventInputsContainer}>
+                    <View>
+                        <ThemedText style={styles.eventInputsLabel}>
+                            {t("plannerEventForm.eventDateSelectorLabel")}
+                        </ThemedText>
+                        {getDatePicker()}
+                    </View>
+                    <View>
+                        <ThemedText style={styles.eventInputsLabel}>
+                            {t("plannerEventForm.eventTimeOfDaySelectorLabel")}
+                        </ThemedText>
                         <EventTimeOfDayPicker
                             defaultTimeOfDay={defaultTimeOfDay}
                             setEventTimeOfDay={setEventTimeOfDay}
                         />
-                        <ThemedButton
-                            title="Create Event"
-                            onPress={handleCreateEvent}
-                        />
-                    </>
-                ) : (
-                    <>
-                        <EventDatePicker
-                            defaultDate={defaultDate}
-                            setEventDate={setEventDate}
-                        />
-                        <EventTimeOfDayPicker
-                            defaultTimeOfDay={defaultTimeOfDay}
-                            setEventTimeOfDay={setEventTimeOfDay}
-                        />
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "space-evenly",
-                                marginBottom: 20,
-                            }}
-                        >
-                            <ThemedButton
-                                title="Go Back"
-                                type="cancel"
-                                onPress={handleGoBack}
-                            />
-                            <ThemedButton
-                                title="Create Event"
-                                onPress={handleCreateEvent}
-                            />
-                        </View>
-                    </>
-                ))}
+                    </View>
+                </View>
+            )}
             {trainingEvent && (
-                <>
-                    <ThemedText>
-                        Scheduled date:{" "}
-                        {format(trainingEvent.scheduledFor, "PPPP")}
-                    </ThemedText>
-                    <ThemedText>
-                        Scheduled time of day: {trainingEvent.scheduledTime}
-                    </ThemedText>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                            marginBottom: 20,
-                        }}
-                    >
-                        <ThemedButton
-                            title="Go Back"
-                            type="cancel"
-                            onPress={handleGoBack}
-                        />
-                        {!trainingEvent.isCompleted &&
-                            trainingEvent.isDeletable && (
-                                <ThemedButton
-                                    title="Delete Event"
-                                    type="danger"
-                                    onPress={handleDeleteEvent}
-                                />
+                <View style={styles.eventInfoContainer}>
+                    <View>
+                        <ThemedText style={styles.eventInfo}>
+                            {getLocalizedDateString(
+                                trainingEvent.scheduledFor,
+                                "PPPP"
                             )}
-                        {!trainingEvent.isCompleted && (
+                        </ThemedText>
+                        <ThemedText style={styles.eventInfoLabel}>
+                            {t("plannerEventForm.eventDateLabel")}
+                        </ThemedText>
+                    </View>
+                    <View>
+                        <ThemedText style={styles.eventInfo}>
+                            {trainingEvent.scheduledTime}
+                        </ThemedText>
+                        <ThemedText style={styles.eventInfoLabel}>
+                            {t("plannerEventForm.eventTimeOfDayLabel")}
+                        </ThemedText>
+                    </View>
+                    {trainingEvent.completedAt !== null && (
+                        <View>
+                            <ThemedText style={styles.eventInfo}>
+                                {getLocalizedDateString(
+                                    trainingEvent.completedAt,
+                                    "PPPPp"
+                                )}
+                            </ThemedText>
+                            <ThemedText style={styles.eventInfoLabel}>
+                                {t("plannerEventForm.eventCompletionTimeLabel")}
+                            </ThemedText>
+                        </View>
+                    )}
+                </View>
+            )}
+            {!trainingEvent && (
+                <View style={styles.buttonContainer}>
+                    <ThemedButton
+                        style={styles.button}
+                        title={t("plannerEventForm.goBackButtonTitle")}
+                        type="cancel"
+                        onPress={handleGoBack}
+                    />
+                    <ThemedButton
+                        style={styles.button}
+                        title={t("plannerEventForm.createEventButtonTitle")}
+                        onPress={handleCreateEvent}
+                    />
+                </View>
+            )}
+            {trainingEvent && (
+                <View style={styles.buttonContainer}>
+                    <ThemedButton
+                        style={styles.button}
+                        title={t("plannerEventForm.goBackButtonTitle")}
+                        type="cancel"
+                        onPress={handleGoBack}
+                    />
+                    {!trainingEvent.isCompleted &&
+                        trainingEvent.isDeletable && (
                             <ThemedButton
-                                title="Cancel Event"
-                                onPress={handleCancelEvent}
+                                style={styles.button}
+                                title={t(
+                                    "plannerEventForm.deleteEventButtonTitle"
+                                )}
+                                type="danger"
+                                onPress={handleDeleteEvent}
                             />
                         )}
-                    </View>
-                </>
+                    {!trainingEvent.isCompleted && (
+                        <ThemedButton
+                            style={styles.button}
+                            title={t("plannerEventForm.cancelEventButtonTitle")}
+                            onPress={handleCancelEvent}
+                        />
+                    )}
+                </View>
             )}
-        </ThemedView>
+        </View>
     );
 };
 
 export default PlannerEventForm;
+
+const styles = StyleSheet.create({
+    container: {
+        marginTop: 20,
+        alignItems: "center",
+        gap: 34,
+    },
+    moduleVillageInfoContainer: {
+        alignItems: "center",
+        gap: 10,
+    },
+    moduleVillageInfoText: {
+        fontSize: 22,
+    },
+    eventInputsContainer: {
+        width: "65%",
+        gap: 28,
+    },
+    eventInputsLabel: {
+        fontSize: 22,
+        marginBottom: 4,
+    },
+    eventInfoContainer: {
+        gap: 24,
+    },
+    eventInfo: {
+        fontSize: 22,
+    },
+    eventInfoLabel: {
+        fontStyle: "italic",
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        gap: 20,
+    },
+    button: {
+        width: 200,
+    },
+});
