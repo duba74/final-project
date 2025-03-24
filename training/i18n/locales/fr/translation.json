@@ -51,5 +51,21 @@
         "deleteEventButtonTitle": "Supprimer l'événement",
         "cancelEventButtonTitle": "Annuler l'événement",
         "createEventButtonTitle": "Créer l'événement"
+    },
+    "eventDescription": {
+        "eventDateLabel": "Date programmée",
+        "eventTimeOfDayLabel": "Moment de la journée programmé",
+        "eventModuleLabel": "Module de formation",
+        "eventVillageLabel": "Village - Zone"
+    },
+    "eventRegistration": {
+        "registrationButtonTitle": "Enregistrer réalisation de l'événement",
+        "locationPermissionNotGrantedMessage": "L'autorisation de localisation n'a pas été accordée",
+        "capturingCoordinatesMessage": "Capture des coordonnées...",
+        "eventTimeOfCompletionLabel": "Date de réalisation",
+        "latitudeLabel": "Latitude",
+        "longitudeLabel": "Longitude",
+        "altitudeLabel": "Altitude",
+        "accuracyLabel": "Accuracy"
     }
 }

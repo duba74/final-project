@@ -1,7 +1,7 @@
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";
 import ThemedButton from "../themed/ThemedButton";
 import ThemedView from "../themed/ThemedView";
-import EventVillageDescription from "./EventVillageDescription";
+import EventDescription from "./EventDescription";
 import ParticipantList from "./ParticipantList";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Href, useRouter } from "expo-router";
@@ -30,7 +30,7 @@ const EventParticipants = ({
 
     return (
         <ThemedView>
-            <EventVillageDescription trainingEvent={trainingEvent} />
+            <EventDescription trainingEvent={trainingEvent} />
             <ThemedButton
                 title="Add Participant"
                 onPress={handleAddParticipant}

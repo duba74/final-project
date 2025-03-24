@@ -2,6 +2,7 @@ import EventRegistration from "@/components/event-form/EventRegistration";
 import { useSession } from "@/hooks/useSession";
 import { useGlobalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
+import { ScrollView } from "react-native";
 
 const EventRegistrationPage = () => {
     const { session } = useSession();
@@ -25,10 +26,12 @@ const EventRegistrationPage = () => {
     }, [session]);
 
     return (
-        <EventRegistration
-            username={username}
-            trainingEventId={trainingEventId}
-        />
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <EventRegistration
+                username={username}
+                trainingEventId={trainingEventId}
+            />
+        </ScrollView>
     );
 };
 

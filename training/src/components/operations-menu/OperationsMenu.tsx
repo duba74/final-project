@@ -69,10 +69,6 @@ const OperationsMenu = () => {
                     title={t("operations.logoutButtonText")}
                     onPress={logout}
                 />
-                <Button
-                    title="Log Training Events"
-                    onPress={() => logRecords("trainingEvent")}
-                />
             </View>
             <View style={styles.syncIndicatorContainer}>
                 {isSyncing && <ActivityIndicator size="large" />}
@@ -168,4 +164,8 @@ const styles = StyleSheet.create({
 // <Button
 //     title="Log Assignments"
 //     onPress={() => logRecords("assignment")}
+// />
+// <Button
+//     title="Log Training Events"
+//     onPress={() => logRecords("trainingEvent")}
 // />
