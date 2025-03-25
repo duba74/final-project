@@ -1,5 +1,5 @@
-import ParticipantList from "@/components/event-form/ParticipantList";
-import PlannerEventForm from "@/components/event-form/PlannerEventForm";
+import ParticipantList from "@/components/event-details/ParticipantList";
+import PlannerEventForm from "@/components/event-details/PlannerEventForm";
 import ThemedText from "@/components/themed/ThemedText";
 import ThemedView from "@/components/themed/ThemedView";
 import TrainingEvent from "@/database/data-model/models/TrainingEvent";

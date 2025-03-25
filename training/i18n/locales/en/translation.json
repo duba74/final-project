@@ -56,7 +56,8 @@
         "eventDateLabel": "Scheduled date",
         "eventTimeOfDayLabel": "Scheduled time of day",
         "eventModuleLabel": "Training module",
-        "eventVillageLabel": "Village - Zone"
+        "eventVillageLabel": "Village - Zone",
+        "eventCompletionTimeLabel": "Completion date"
     },
     "eventRegistration": {
         "registrationButtonTitle": "Register event completion",
@@ -65,7 +66,14 @@
         "eventTimeOfCompletionLabel": "Completion date",
         "latitudeLabel": "Latitude",
         "longitudeLabel": "Longitude",
-        "altitudeLabel": "Altitude",
-        "accuracyLabel": "Accuracy"
+        "altitudeLabel": "Altitude (meters)",
+        "accuracyLabel": "Accuracy (meters)",
+        "writeCommentsPlaceholder": "Write comments here",
+        "noCommentsMessage": "No comments recorded yet"
+    },
+    "participantList": {
+        "addParticipantButtonTitle": "Add participant",
+        "femaleLabel": "Female",
+        "maleLabel": "Male"
     }
 }

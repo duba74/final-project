@@ -1,4 +1,4 @@
-import ParticipantForm from "@/components/event-form/ParticipantForm";
+import ParticipantForm from "@/components/event-details/ParticipantForm";
 import ThemedText from "@/components/themed/ThemedText";
 import ThemedView from "@/components/themed/ThemedView";
 import { useLocalSearchParams } from "expo-router";

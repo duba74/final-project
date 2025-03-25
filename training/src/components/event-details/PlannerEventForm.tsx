@@ -17,6 +17,8 @@ import { staffCollection } from "@/database/database";
 import TrainingModuleIndicator from "../training-module-indicator/TrainingModuleIndicator";
 import { useTranslation } from "react-i18next";
 import { getLocalizedDateString } from "@/utils/localized-date";
+import EventDescription from "./EventDescription";
+import EventCoordinates from "./EventCoordinates";
 
 const defaultDate = addDays(new Date(), 1);
 const defaultTimeOfDay = "AM";
@@ -106,15 +108,6 @@ const PlannerEventForm = ({
 
     return (
         <View style={styles.container}>
-            <View style={styles.moduleVillageInfoContainer}>
-                <ThemedText style={styles.moduleVillageInfoText}>
-                    {trainingModule?.name}
-                </ThemedText>
-                <ThemedText style={styles.moduleVillageInfoText}>
-                    {village?.name}
-                </ThemedText>
-            </View>
-
             {!trainingEvent && (
                 <View style={styles.eventInputsContainer}>
                     <View>
@@ -135,39 +128,9 @@ const PlannerEventForm = ({
                 </View>
             )}
             {trainingEvent && (
-                <View style={styles.eventInfoContainer}>
-                    <View>
-                        <ThemedText style={styles.eventInfo}>
-                            {getLocalizedDateString(
-                                trainingEvent.scheduledFor,
-                                "PPPP"
-                            )}
-                        </ThemedText>
-                        <ThemedText style={styles.eventInfoLabel}>
-                            {t("plannerEventForm.eventDateLabel")}
-                        </ThemedText>
-                    </View>
-                    <View>
-                        <ThemedText style={styles.eventInfo}>
-                            {trainingEvent.scheduledTime}
-                        </ThemedText>
-                        <ThemedText style={styles.eventInfoLabel}>
-                            {t("plannerEventForm.eventTimeOfDayLabel")}
-                        </ThemedText>
-                    </View>
-                    {trainingEvent.completedAt !== null && (
-                        <View>
-                            <ThemedText style={styles.eventInfo}>
-                                {getLocalizedDateString(
-                                    trainingEvent.completedAt,
-                                    "PPPPp"
-                                )}
-                            </ThemedText>
-                            <ThemedText style={styles.eventInfoLabel}>
-                                {t("plannerEventForm.eventCompletionTimeLabel")}
-                            </ThemedText>
-                        </View>
-                    )}
+                <View>
+                    <EventDescription trainingEvent={trainingEvent} />
+                    <EventCoordinates trainingEvent={trainingEvent} />
                 </View>
             )}
             {!trainingEvent && (

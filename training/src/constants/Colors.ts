@@ -73,6 +73,9 @@ export const Colors = {
         completedEventIcon: tint7,
         canceledEventListItemBackground: gray2,
         canceledEventListItemBackgroundPressed: gray3,
+        eventInfoBackground: tint3,
+        participantListItemBackground: tint2,
+        participantListItemBackgroundPressed: tint3,
     },
     dark: {
         text: tint0,
@@ -101,5 +104,8 @@ export const Colors = {
         completedEventIcon: tint7,
         canceledEventListItemBackground: gray5,
         canceledEventListItemBackgroundPressed: gray4,
+        eventInfoBackground: tint10,
+        participantListItemBackground: tint9,
+        participantListItemBackgroundPressed: tint8,
     },
 };

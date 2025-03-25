@@ -23,3 +23,15 @@ export const getLocalizedDateString = (
 
     return format(date, dateFormat, { locale });
 };
+
+export const replaceIsoDate = (textString: string, dateFormat: string) => {
+    const isoDateRegex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/g;
+
+    const isoDatesReplaced = textString.replace(isoDateRegex, (match) => {
+        const matchedDate = new Date(match);
+
+        return getLocalizedDateString(matchedDate, dateFormat);
+    });
+
+    return isoDatesReplaced;
+};

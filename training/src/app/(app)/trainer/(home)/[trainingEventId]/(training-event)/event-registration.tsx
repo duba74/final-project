@@ -1,4 +1,4 @@
-import EventRegistration from "@/components/event-form/EventRegistration";
+import EventRegistration from "@/components/event-details/EventRegistration";
 import { useSession } from "@/hooks/useSession";
 import { useGlobalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";

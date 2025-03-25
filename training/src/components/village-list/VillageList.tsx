@@ -37,5 +37,6 @@ export default enhance(VillageList);
 const styles = StyleSheet.create({
     container: {
         width: "95%",
+        maxWidth: 500,
     },
 });

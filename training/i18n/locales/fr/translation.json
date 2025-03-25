@@ -56,16 +56,23 @@
         "eventDateLabel": "Date programmée",
         "eventTimeOfDayLabel": "Moment de la journée programmé",
         "eventModuleLabel": "Module de formation",
-        "eventVillageLabel": "Village - Zone"
+        "eventVillageLabel": "Village - Zone",
+        "eventCompletionTimeLabel": "Date de réalisation"
     },
     "eventRegistration": {
         "registrationButtonTitle": "Enregistrer réalisation de l'événement",
         "locationPermissionNotGrantedMessage": "L'autorisation de localisation n'a pas été accordée",
         "capturingCoordinatesMessage": "Capture des coordonnées...",
-        "eventTimeOfCompletionLabel": "Date de réalisation",
         "latitudeLabel": "Latitude",
         "longitudeLabel": "Longitude",
-        "altitudeLabel": "Altitude",
-        "accuracyLabel": "Accuracy"
+        "altitudeLabel": "Altitude (mètres)",
+        "accuracyLabel": "Précision (mètres)",
+        "writeCommentsPlaceholder": "Écrire des commentaires ici",
+        "noCommentsMessage": "Aucun commentaire n'a encore été enregistré"
+    },
+    "participantList": {
+        "addParticipantButtonTitle": "Ajouter participant",
+        "femaleLabel": "Femme",
+        "maleLabel": "Homme"
     }
 }

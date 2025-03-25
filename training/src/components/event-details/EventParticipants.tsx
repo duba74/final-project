@@ -6,6 +6,8 @@ import ParticipantList from "./ParticipantList";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { Href, useRouter } from "expo-router";
 import { trainingEventCollection } from "@/database/database";
+import { StyleSheet, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 type EventParticipantsProps = {
     trainingEventId: string;
@@ -16,6 +18,7 @@ const EventParticipants = ({
     trainingEventId,
     trainingEvent,
 }: EventParticipantsProps) => {
+    const { t } = useTranslation();
     const router = useRouter();
 
     const handleAddParticipant = () => {
@@ -29,14 +32,18 @@ const EventParticipants = ({
     };
 
     return (
-        <ThemedView>
+        <View style={styles.container}>
             <EventDescription trainingEvent={trainingEvent} />
             <ThemedButton
-                title="Add Participant"
+                style={styles.button}
+                title={t("participantList.addParticipantButtonTitle")}
                 onPress={handleAddParticipant}
             />
-            <ParticipantList trainingEvent={trainingEvent} />
-        </ThemedView>
+            <ParticipantList
+                style={{ flex: 1 }}
+                trainingEvent={trainingEvent}
+            />
+        </View>
     );
 };
 
@@ -48,3 +55,14 @@ const enhance = withObservables(
 );
 
 export default enhance(EventParticipants);
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginTop: 20,
+    },
+    button: {
+        alignSelf: "center",
+        width: 300,
+    },
+});

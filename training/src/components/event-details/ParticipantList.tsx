@@ -15,17 +15,15 @@ const ParticipantList = ({
     participantList,
 }: ParticipantListProps) => {
     return (
-        <ThemedView>
-            <FlatList
-                data={participantList}
-                renderItem={({ item }) => (
-                    <ParticipantListItem
-                        participant={item}
-                        trainingEvent={trainingEvent}
-                    />
-                )}
-            />
-        </ThemedView>
+        <FlatList
+            data={participantList}
+            renderItem={({ item }) => (
+                <ParticipantListItem
+                    participant={item}
+                    trainingEvent={trainingEvent}
+                />
+            )}
+        />
     );
 };
 

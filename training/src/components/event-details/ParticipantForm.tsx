@@ -346,29 +346,32 @@ const ParticipantForm = ({
                             />
                         </View>
                     </View>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                            marginBottom: 20,
-                        }}
-                    >
-                        {isEditing && (
-                            <ThemedButton
-                                title="Delete"
-                                type="danger"
-                                onPress={handleDelete}
-                            />
-                        )}
-                        <ThemedButton
-                            title="Cancel"
-                            type="cancel"
-                            onPress={handleCancel}
-                        />
-                        <ThemedButton title="Save" onPress={handleSave} />
-                    </View>
                 </View>
             )}
+            <View
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: 20,
+                }}
+            >
+                {(isNewParticipant || selectedClient || participant) &&
+                    isEditing && (
+                        <ThemedButton
+                            title="Delete"
+                            type="danger"
+                            onPress={handleDelete}
+                        />
+                    )}
+                <ThemedButton
+                    title="Cancel"
+                    type="cancel"
+                    onPress={handleCancel}
+                />
+                {(isNewParticipant || selectedClient || participant) && (
+                    <ThemedButton title="Save" onPress={handleSave} />
+                )}
+            </View>
         </ThemedView>
     );
 };
