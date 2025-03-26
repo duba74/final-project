@@ -123,7 +123,7 @@ const EventRegistration = ({
                 />
                 <ThemedButton
                     style={styles.button}
-                    title="Save Comment"
+                    title={t("eventRegistration.saveCommentButtonTitle")}
                     onPress={handleSaveComment}
                 />
                 {trainingEvent.comments ? (

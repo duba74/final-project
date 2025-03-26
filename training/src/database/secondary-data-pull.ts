@@ -16,7 +16,6 @@ const secondaryDataPull = async (authToken: string) => {
     console.log(`🍉 Attempting secondary data pull`);
 
     const url = `${host}/api/secondarydatapull/`;
-    console.log(url);
 
     const headers = { Authorization: `Bearer ${authToken}` };
     const options = { method: "GET", headers: headers };

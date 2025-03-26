@@ -76,6 +76,8 @@ export const Colors = {
         eventInfoBackground: tint3,
         participantListItemBackground: tint2,
         participantListItemBackgroundPressed: tint3,
+        iconColor: tint13,
+        pickerBackground: tint1,
     },
     dark: {
         text: tint0,
@@ -107,5 +109,7 @@ export const Colors = {
         eventInfoBackground: tint10,
         participantListItemBackground: tint9,
         participantListItemBackgroundPressed: tint8,
+        iconColor: tint0,
+        pickerBackground: tint11,
     },
 };

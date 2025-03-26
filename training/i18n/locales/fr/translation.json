@@ -68,11 +68,29 @@
         "altitudeLabel": "Altitude (mètres)",
         "accuracyLabel": "Précision (mètres)",
         "writeCommentsPlaceholder": "Écrire des commentaires ici",
-        "noCommentsMessage": "Aucun commentaire n'a encore été enregistré"
+        "noCommentsMessage": "Aucun commentaire n'a encore été enregistré",
+        "saveCommentButtonTitle": "Enregistrer commentaire"
     },
     "participantList": {
         "addParticipantButtonTitle": "Ajouter participant",
         "femaleLabel": "Femme",
         "maleLabel": "Homme"
+    },
+    "participantForm": {
+        "participantPickerLabel": "Sélectionner un client ou un ancien participant",
+        "newParticipantLabel": "Cochez ici si le participant est nouveau",
+        "firstNameLabel": "Prénom",
+        "lastNameLabel": "Nom",
+        "phone1Label": "Numéro de téléphone principal",
+        "phone2Label": "Numéro de téléphone secondaire",
+        "isLeaderLabel": "Cochez cette case si le participant est un leader de groupe",
+        "sexLabel": "Sexe",
+        "ageGroupLabel": "Groupe d'âge",
+        "tombolaTicketsLabel": "Tombola tickets",
+        "picsPurchasedLabel": "PICS bags purchased",
+        "picsReceivedLabel": "PICS bags received",
+        "cancelButtonTitle": "Annuler",
+        "saveButtonTitle": "Enregistrer",
+        "deleteButtonTitle": "Supprimer"
     }
 }

@@ -4,10 +4,16 @@ import {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { createElement, useEffect, useState } from "react";
-import { Platform, Pressable, Text /*useColorScheme*/ } from "react-native";
+import {
+    Platform,
+    Pressable,
+    StyleSheet,
+    Text /*useColorScheme*/,
+} from "react-native";
 import ThemedText from "../themed/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { format } from "date-fns";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 type EventDatePickerProps = {
     lightColor?: string;
@@ -23,20 +29,22 @@ const EventDatePicker = ({
     setEventDate,
 }: EventDatePickerProps) => {
     // const webTheme = useColorScheme() ?? "light";
-    const textColor = useThemeColor(
+    const iconColor = useThemeColor(
         { light: lightColor, dark: darkColor },
-        "text"
+        "iconColor"
     );
     const backgroundColor = useThemeColor(
         { light: lightColor, dark: darkColor },
-        "background"
+        "pickerBackground"
     );
-    const [date, setDate] = useState<Date | undefined>(defaultDate);
+    const borderColor = useThemeColor(
+        { light: lightColor, dark: darkColor },
+        "border"
+    );
 
-    // useEffect(() => {
-    //     setDate(defaultDate);
-    //     // setEventDate(defaultDate);
-    // }, [defaultDate]);
+    const styles = createStyles(backgroundColor, borderColor);
+
+    const [date, setDate] = useState<Date | undefined>(defaultDate);
 
     const onChange = (event: DateTimePickerEvent, date?: Date) => {
         setDate(date);
@@ -54,7 +62,10 @@ const EventDatePicker = ({
         };
 
         return (
-            <Pressable onPress={showDatepicker}>
+            <Pressable
+                style={styles.androidDatePicker}
+                onPress={showDatepicker}
+            >
                 <ThemedText>
                     {date
                         ? date.toLocaleDateString([], {
@@ -65,9 +76,13 @@ const EventDatePicker = ({
                           })
                         : "Select a date"}
                 </ThemedText>
+                <MaterialCommunityIcons
+                    size={20}
+                    name="calendar-blank"
+                    color={iconColor}
+                />
             </Pressable>
         );
-    } else if (Platform.OS === "web") {
     } else {
         return (
             <DateTimePicker
@@ -81,3 +96,18 @@ const EventDatePicker = ({
 };
 
 export default EventDatePicker;
+
+const createStyles = (backgroundColor: string, borderColor: string) =>
+    StyleSheet.create({
+        androidDatePicker: {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: backgroundColor,
+            borderColor: borderColor,
+            borderWidth: 1,
+            borderRadius: 8,
+            paddingHorizontal: 16,
+            paddingVertical: 16,
+        },
+    });

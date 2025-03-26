@@ -11,7 +11,6 @@ type VillageListProps = {
 };
 
 const VillageList = ({ villages, currentModule, role }: VillageListProps) => {
-    console.log("module: " + currentModule);
     return (
         <FlatList
             style={styles.container}

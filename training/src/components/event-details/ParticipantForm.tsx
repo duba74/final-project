@@ -10,7 +10,7 @@ import {
 } from "@/database/database";
 import ParticipantPicker from "./ParticipantPicker";
 import ThemedButton from "../themed/ThemedButton";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
 import Checkbox from "expo-checkbox";
 import ThemedTextInput from "../themed/ThemedTextInput";
@@ -21,6 +21,7 @@ import { useRouter } from "expo-router";
 import { useSession } from "@/hooks/useSession";
 import Participant from "@/database/data-model/models/Participant";
 import { use } from "i18next";
+import { useTranslation } from "react-i18next";
 
 type ParticipantFormProps = {
     trainingEventId: string;
@@ -35,9 +36,9 @@ const ParticipantForm = ({
     participantId,
     participant,
 }: ParticipantFormProps) => {
+    const { t } = useTranslation();
     const router = useRouter();
     const { session } = useSession();
-    // SET DEFAULTS IF THE PARTICIPANT IS ALREADY CREATED, SET UP WITHOBSERVABLES FOR THE PARTICIPANT?
     const [isEditing, setIsEditing] = useState(participantId ? true : false);
     const [selectedParticipant, setSelectedParticipant] = useState();
     const [selectedClient, setSelectedClient] = useState<Client | undefined>();
@@ -67,6 +68,8 @@ const ParticipantForm = ({
             setSelectedClient(undefined);
         }
     }, [isNewParticipant]);
+
+    const styles = createStyles();
 
     useEffect(() => {
         if (participant) {
@@ -236,10 +239,12 @@ const ParticipantForm = ({
     };
 
     return (
-        <ThemedView style={{ marginTop: 20, gap: 25 }}>
+        <View style={styles.container}>
             {!isEditing && !isNewParticipant && (
-                <View>
-                    <ThemedText>Select participant from the list</ThemedText>
+                <View style={styles.participantFinderContainer}>
+                    <ThemedText type="defaultSemiBold">
+                        {t("participantForm.participantPickerLabel")}
+                    </ThemedText>
                     <ParticipantPicker
                         trainingEvent={trainingEvent}
                         setSelectedParticipant={setSelectedParticipant}
@@ -256,37 +261,51 @@ const ParticipantForm = ({
                     onPress={toggleNewParticipant}
                 >
                     <Checkbox value={isNewParticipant} />
-                    <ThemedText>New Participant</ThemedText>
+                    <ThemedText type="defaultSemiBold">
+                        {t("participantForm.newParticipantLabel")}
+                    </ThemedText>
                 </Pressable>
             )}
             {(isNewParticipant || selectedClient || participant) && (
                 <View>
                     <View style={{ gap: 50 }}>
                         <View>
-                            <ThemedText>First Name</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.firstNameLabel")}
+                            </ThemedText>
                             <ThemedTextInput
+                                style={styles.textInput}
                                 value={firstName}
                                 onChangeText={setFirstName}
                             />
                         </View>
                         <View>
-                            <ThemedText>Last Name</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.lastNameLabel")}
+                            </ThemedText>
                             <ThemedTextInput
+                                style={styles.textInput}
                                 value={lastName}
                                 onChangeText={setLastName}
                             />
                         </View>
                         <View>
-                            <ThemedText>Phone 1</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.phone1Label")}
+                            </ThemedText>
                             <ThemedTextInput
+                                style={styles.textInput}
                                 value={phone1}
                                 onChangeText={setPhone1}
                                 keyboardType="numeric"
                             />
                         </View>
                         <View>
-                            <ThemedText>Phone 2</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.phone2Label")}
+                            </ThemedText>
                             <ThemedTextInput
+                                style={styles.textInput}
                                 value={phone2}
                                 onChangeText={setPhone2}
                                 keyboardType="numeric"
@@ -301,45 +320,66 @@ const ParticipantForm = ({
                             onPress={toggleIsLeader}
                         >
                             <Checkbox value={isLeader} />
-                            <ThemedText>Is Leader</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.isLeaderLabel")}
+                            </ThemedText>
                         </Pressable>
-                        <SegmentedControl
-                            values={SEX_CHOICES.map((c) => c.label)}
-                            selectedIndex={sexIndex}
-                            onChange={(event) => {
-                                setSexIndex(
-                                    event.nativeEvent.selectedSegmentIndex
-                                );
-                            }}
-                        />
-                        <SegmentedControl
-                            values={AGE_GROUP_CHOICES.map((c) => c.label)}
-                            selectedIndex={ageGroupIndex}
-                            onChange={(event) => {
-                                setAgeGroupIndex(
-                                    event.nativeEvent.selectedSegmentIndex
-                                );
-                            }}
-                        />
                         <View>
-                            <ThemedText>Tombola Tickets Purchased</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.sexLabel")}
+                            </ThemedText>
+                            <SegmentedControl
+                                values={SEX_CHOICES.map((c) => c.label)}
+                                selectedIndex={sexIndex}
+                                onChange={(event) => {
+                                    setSexIndex(
+                                        event.nativeEvent.selectedSegmentIndex
+                                    );
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <ThemedText>
+                                {t("participantForm.ageGroupLabel")}
+                            </ThemedText>
+                            <SegmentedControl
+                                values={AGE_GROUP_CHOICES.map((c) => c.label)}
+                                selectedIndex={ageGroupIndex}
+                                onChange={(event) => {
+                                    setAgeGroupIndex(
+                                        event.nativeEvent.selectedSegmentIndex
+                                    );
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <ThemedText>
+                                {t("participantForm.tombolaTicketsLabel")}
+                            </ThemedText>
                             <ThemedTextInput
+                                style={styles.textInput}
                                 value={tombolaTickets}
                                 onChangeText={setTombolaTickets}
                                 keyboardType="numeric"
                             />
                         </View>
                         <View>
-                            <ThemedText>PICS Bags Purchased</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.picsPurchasedLabel")}
+                            </ThemedText>
                             <ThemedTextInput
+                                style={styles.textInput}
                                 value={picsPurchased}
                                 onChangeText={setPicsPurchased}
                                 keyboardType="numeric"
                             />
                         </View>
                         <View>
-                            <ThemedText>PICS Bags Received</ThemedText>
+                            <ThemedText>
+                                {t("participantForm.picsReceivedLabel")}
+                            </ThemedText>
                             <ThemedTextInput
+                                style={styles.textInput}
                                 value={picsReceived}
                                 onChangeText={setPicsReceived}
                                 keyboardType="numeric"
@@ -358,21 +398,27 @@ const ParticipantForm = ({
                 {(isNewParticipant || selectedClient || participant) &&
                     isEditing && (
                         <ThemedButton
-                            title="Delete"
+                            style={styles.button}
+                            title={t("participantForm.deleteButtonTitle")}
                             type="danger"
                             onPress={handleDelete}
                         />
                     )}
                 <ThemedButton
-                    title="Cancel"
+                    style={styles.button}
+                    title={t("participantForm.cancelButtonTitle")}
                     type="cancel"
                     onPress={handleCancel}
                 />
                 {(isNewParticipant || selectedClient || participant) && (
-                    <ThemedButton title="Save" onPress={handleSave} />
+                    <ThemedButton
+                        style={styles.button}
+                        title={t("participantForm.saveButtonTitle")}
+                        onPress={handleSave}
+                    />
                 )}
             </View>
-        </ThemedView>
+        </View>
     );
 };
 
@@ -396,3 +442,26 @@ const enhance = withObservables(
 );
 
 export default enhance(ParticipantForm);
+
+const createStyles = () =>
+    StyleSheet.create({
+        container: {
+            marginTop: 28,
+            maxWidth: 500,
+            marginHorizontal: 20,
+            gap: 25,
+        },
+        participantFinderContainer: {
+            gap: 10,
+        },
+        textInput: {
+            fontSize: 18,
+            borderWidth: 1,
+            borderRadius: 6,
+            paddingVertical: 6,
+            paddingHorizontal: 10,
+        },
+        button: {
+            width: 120,
+        },
+    });

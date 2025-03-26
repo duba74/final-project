@@ -1,8 +1,6 @@
 import ParticipantForm from "@/components/event-details/ParticipantForm";
-import ThemedText from "@/components/themed/ThemedText";
-import ThemedView from "@/components/themed/ThemedView";
 import { useLocalSearchParams } from "expo-router";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 
 const ParticipantModal = () => {
     const { trainingEventId, participantId } = useLocalSearchParams<{
@@ -11,16 +9,14 @@ const ParticipantModal = () => {
     }>();
 
     return (
-        <ThemedView style={{ flex: 1 }}>
-            <ThemedText>Add participant modal</ThemedText>
-            <ThemedText>{trainingEventId}</ThemedText>
+        <View style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <ParticipantForm
                     trainingEventId={trainingEventId}
                     participantId={participantId}
                 />
             </ScrollView>
-        </ThemedView>
+        </View>
     );
 };
 

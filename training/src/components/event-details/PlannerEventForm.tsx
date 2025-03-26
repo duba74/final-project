@@ -41,8 +41,6 @@ const PlannerEventForm = ({
     const [eventTimeOfDay, setEventTimeOfDay] =
         useState<string>(defaultTimeOfDay);
 
-    console.log(village);
-
     const handleCreateEvent = async () => {
         if (!village || !trainingModule) return;
 
